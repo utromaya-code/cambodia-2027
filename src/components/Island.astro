@@ -1,0 +1,123 @@
+---
+import Photo from './Photo.astro';
+import { island } from '../data/island';
+
+/**
+ * Секция дополнительной программы. Весь текст приходит из src/data/island.ts,
+ * поэтому позже её можно отрендерить как отдельную страницу /island,
+ * не переписывая контент.
+ */
+---
+
+<section class="island section section--sea" id="ostrov">
+  <div class="island__media" aria-hidden="true">
+    <!-- Без ratio: снимок тянется на всю высоту секции как фон -->
+    <Photo src={island.image} alt="" sizes="100vw" />
+  </div>
+
+  <div class="wrap island__inner">
+    <p class="kicker reveal">{island.eyebrow}</p>
+    <h2 class="island__title reveal">{island.title}</h2>
+
+    <p class="island__when reveal">
+      <span>{island.dates}</span>
+      <span aria-hidden="true">·</span>
+      <span>{island.place}</span>
+    </p>
+
+    <div class="prose prose--lead island__text reveal">
+      <p>{island.lead}</p>
+      {island.text.map((line) => <p>{line}</p>)}
+    </div>
+
+    <ul class="island__list reveal">
+      {island.includes.map((item) => <li>{item}</li>)}
+    </ul>
+
+    <p class="island__price reveal">{island.price}</p>
+    <p class="island__note reveal">{island.priceNote}</p>
+
+    <a class="btn island__cta reveal" href="#zayavka" data-analytics="retreat_cta" data-prefill-island>
+      {island.cta}
+    </a>
+  </div>
+</section>
+
+<style>
+  .island {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .island__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.3;
+  }
+
+  .island__media :global(.photo) {
+    height: 100%;
+  }
+
+  .island__title {
+    max-width: 18ch;
+    font-size: var(--step-4);
+    text-transform: uppercase;
+  }
+
+  .island__when {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.2rem;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .island__text {
+    max-width: 52ch;
+    margin-top: 1.6rem;
+    color: color-mix(in srgb, #ffffff 88%, transparent);
+  }
+
+  .island__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.8rem;
+  }
+
+  .island__list li {
+    padding: 0.4rem 0.9rem;
+    border: 1px solid color-mix(in srgb, #ffffff 45%, transparent);
+    border-radius: 999px;
+    font-size: var(--step--1);
+  }
+
+  .island__price {
+    margin-top: 2rem;
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+    line-height: 1;
+  }
+
+  .island__note {
+    margin-top: 0.5rem;
+    font-size: var(--step--1);
+    color: color-mix(in srgb, #ffffff 75%, transparent);
+  }
+
+  .island__cta {
+    margin-top: 1.6rem;
+    background: #ffffff;
+    color: var(--sea);
+  }
+
+  .island__cta:hover {
+    background: #ffe9c9;
+  }
+</style>

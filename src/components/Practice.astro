@@ -1,0 +1,123 @@
+---
+import Photo from './Photo.astro';
+import { practice, audience, accommodation } from '../data/sections';
+---
+
+<section class="practice section">
+  <div class="wrap practice__grid">
+    <Photo
+      src={practice.image}
+      alt="Утренняя практика на природе"
+      class="practice__photo reveal"
+      sizes="(min-width: 60rem) 45vw, 100vw"
+      ratio="3 / 2"
+    />
+
+    <div class="practice__text reveal">
+      <h2 class="section__title">{practice.title}</h2>
+      <div class="prose practice__prose">
+        {practice.lines.map((line) => <p>{line}</p>)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--stone">
+  <div class="wrap audience__grid">
+    <div class="reveal">
+      <h2 class="section__title">{audience.title}</h2>
+      <p class="audience__lead">{audience.lead}</p>
+      <ul class="audience__list">
+        {audience.items.map((item) => <li>{item}</li>)}
+      </ul>
+      <p class="audience__note">{audience.note}</p>
+    </div>
+
+    <div class="reveal">
+      <h2 class="section__title">{accommodation.title}</h2>
+      <div class="prose accommodation__prose">
+        {accommodation.lines.map((line) => <p>{line}</p>)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .practice__grid {
+    display: grid;
+    gap: 2.2rem;
+  }
+
+  .practice__prose {
+    max-width: 46ch;
+    margin-top: 1.4rem;
+    color: var(--ink-soft);
+  }
+
+  .practice__prose p:first-child {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.15;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .audience__grid {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .audience__lead {
+    margin-top: 1.3rem;
+    color: var(--ink-soft);
+  }
+
+  .audience__list {
+    display: grid;
+    gap: 0.9rem;
+    margin-top: 1.1rem;
+    max-width: 46ch;
+  }
+
+  .audience__list li {
+    position: relative;
+    padding-left: 1.4rem;
+    color: var(--ink-soft);
+  }
+
+  .audience__list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--laterite);
+  }
+
+  .audience__note {
+    margin-top: 1.6rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--rule);
+    font-size: var(--step--1);
+    color: var(--ink-mute);
+    max-width: 46ch;
+  }
+
+  .accommodation__prose {
+    max-width: 46ch;
+    margin-top: 1.3rem;
+    color: var(--ink-soft);
+  }
+
+  @media (min-width: 60rem) {
+    .practice__grid {
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 3.5rem;
+      align-items: center;
+    }
+
+    .audience__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+  }
+</style>

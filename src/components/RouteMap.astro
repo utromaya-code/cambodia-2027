@@ -1,0 +1,330 @@
+---
+import Photo from './Photo.astro';
+import { routePoints, islandPoint } from '../data/route';
+import { cambodiaPath, mapViewBox, projectPoint } from '../data/cambodia-shape';
+
+const points = routePoints.map((p) => ({ ...p, ...projectPoint(p.lon, p.lat) }));
+const island = { ...islandPoint, ...projectPoint(islandPoint.lon, islandPoint.lat) };
+
+/** Линия маршрута по точкам — её и «прорисовывает» скролл. */
+const routeLine = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x} ${p.y}`).join(' ');
+
+/**
+ * Смещения подписей. Точки стоят плотно в двух местах — Сиемреап с Ангкором
+ * на севере и весь южный кластер у побережья, — поэтому положение каждой
+ * подписи задано вручную: сторона и сдвиг по вертикали.
+ */
+const labelOffsets: Record<string, { side: 'start' | 'end'; dy: number }> = {
+  'siem-reap': { side: 'start', dy: 26 },
+  // Ангкор подписываем слева: справа стоит точка Пном Кулена
+  angkor: { side: 'end', dy: 2 },
+  'phnom-kulen': { side: 'start', dy: -4 },
+  battambang: { side: 'end', dy: 4 },
+  'kampong-chhnang': { side: 'start', dy: 6 },
+  kirirom: { side: 'start', dy: 6 },
+  bokor: { side: 'start', dy: -18 },
+  kampot: { side: 'start', dy: 26 },
+  ream: { side: 'end', dy: 40 },
+  sihanoukville: { side: 'end', dy: 8 },
+};
+
+const labelFor = (id: string) => labelOffsets[id] ?? { side: 'start' as const, dy: 6 };
+---
+
+<section class="route section section--dark" id="marshrut">
+  <div class="wrap">
+    <p class="kicker reveal">Маршрут</p>
+    <h2 class="section__title reveal">С севера на юг, через всю страну</h2>
+    <p class="section__lead reveal">
+      Десять точек, десять дней и одна дорога — от храмов Ангкора до побережья.
+    </p>
+  </div>
+
+  <div class="wrap route__layout">
+    <!-- Карта: на узких экранах скрыта в пользу вертикального списка -->
+    <figure class="route__map reveal" aria-hidden="true">
+      <svg viewBox={mapViewBox} class="route__svg" role="presentation">
+        <path class="route__country" d={cambodiaPath} />
+
+        <path class="route__line" d={routeLine} pathLength="1" />
+
+        {
+          points.map((p) => (
+            <g class="route__pin" data-point={p.id}>
+              <circle cx={p.x} cy={p.y} r="9" class="route__dot" />
+              <text
+                x={labelFor(p.id).side === 'end' ? p.x - 17 : p.x + 17}
+                y={p.y + labelFor(p.id).dy}
+                text-anchor={labelFor(p.id).side}
+                class="route__label"
+              >
+                {p.latin}
+              </text>
+            </g>
+          ))
+        }
+
+        <g class="route__pin route__pin--island">
+          <circle cx={island.x} cy={island.y} r="7" class="route__dot route__dot--island" />
+          <text x={island.x - 14} y={island.y - 20} text-anchor="end" class="route__label">
+            {island.latin}
+          </text>
+        </g>
+      </svg>
+    </figure>
+
+    <!-- Вертикальный список — основной способ читать маршрут на телефоне -->
+    <ol class="route__list">
+      {
+        points.map((p, i) => (
+          <li class="route__item reveal">
+            <button
+              class="route__btn"
+              type="button"
+              aria-expanded="false"
+              aria-controls={`route-panel-${p.id}`}
+              data-route-toggle={p.id}
+            >
+              <span class="route__index">{String(i + 1).padStart(2, '0')}</span>
+              <span class="route__names">
+                <span class="route__name">{p.name}</span>
+                <span class="route__latin">{p.latin}</span>
+              </span>
+              <span class="route__chevron" aria-hidden="true" />
+            </button>
+
+            <div class="route__panel" id={`route-panel-${p.id}`} hidden>
+              <Photo
+                src={p.image}
+                alt={p.note}
+                sizes="(min-width: 60rem) 32vw, 90vw"
+                ratio="3 / 2"
+              />
+              <p>{p.note}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .route__layout {
+    display: grid;
+    gap: 2.5rem;
+    margin-top: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .route__map {
+    display: none;
+    margin: 0;
+  }
+
+  .route__svg {
+    width: 100%;
+    height: auto;
+  }
+
+  .route__country {
+    fill: color-mix(in srgb, var(--paper) 9%, transparent);
+    stroke: color-mix(in srgb, var(--paper) 26%, transparent);
+    stroke-width: 2;
+  }
+
+  .route__line {
+    fill: none;
+    stroke: var(--laterite);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    /* Скролл двигает это значение от 1 к 0, «прорисовывая» дорогу */
+    stroke-dashoffset: 1;
+  }
+
+  .route__dot {
+    fill: var(--paper);
+    stroke: var(--laterite);
+    stroke-width: 4;
+    transition: r 0.2s ease;
+  }
+
+  .route__dot--island {
+    stroke: var(--sea-light);
+    stroke-dasharray: 3 3;
+  }
+
+  .route__label {
+    fill: color-mix(in srgb, var(--paper) 88%, transparent);
+    font-family: var(--font-display);
+    font-size: 26px;
+    letter-spacing: 0.06em;
+  }
+
+  .route__pin.is-active .route__dot {
+    r: 13;
+  }
+
+  /* Список */
+  .route__list {
+    display: grid;
+    gap: 0;
+    counter-reset: route;
+  }
+
+  .route__item {
+    border-top: 1px solid var(--rule);
+  }
+
+  .route__item:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .route__btn {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 1.1rem 0;
+    background: none;
+    border: 0;
+    text-align: left;
+    cursor: pointer;
+    color: inherit;
+  }
+
+  .route__index {
+    font-family: var(--font-display);
+    font-size: var(--step--1);
+    letter-spacing: 0.1em;
+    color: var(--laterite);
+  }
+
+  .route__names {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.2rem 0.75rem;
+  }
+
+  .route__name {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    text-transform: uppercase;
+    line-height: 1.05;
+  }
+
+  .route__latin {
+    font-size: var(--step--1);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, currentColor 55%, transparent);
+  }
+
+  .route__chevron {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    rotate: 45deg;
+    transition: rotate 0.25s ease;
+  }
+
+  .route__btn[aria-expanded='true'] .route__chevron {
+    rotate: 225deg;
+  }
+
+  .route__panel {
+    padding-bottom: 1.5rem;
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  /* Без этого display:grid перебивает атрибут hidden и панель видна всегда */
+  .route__panel[hidden] {
+    display: none;
+  }
+
+  .route__panel p {
+    max-width: 46ch;
+    color: color-mix(in srgb, var(--paper) 80%, transparent);
+  }
+
+  @media (min-width: 60rem) {
+    .route__layout {
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 3.5rem;
+      align-items: start;
+    }
+
+    /* Колонки должны уметь сжиматься, иначе длинный список выдавливает карту */
+    .route__layout > * {
+      min-width: 0;
+    }
+
+    .route__map {
+      display: block;
+      position: sticky;
+      top: 4rem;
+    }
+  }
+</style>
+
+<script>
+  const section = document.querySelector<HTMLElement>('#marshrut');
+  if (section) {
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const line = section.querySelector<SVGPathElement>('.route__line');
+    const pins = section.querySelectorAll<SVGGElement>('.route__pin[data-point]');
+
+    /* Прорисовка линии по мере прохождения секции через экран */
+    if (line) {
+      if (reduceMotion) {
+        line.style.strokeDashoffset = '0';
+      } else {
+        let ticking = false;
+        const update = () => {
+          ticking = false;
+          const rect = section.getBoundingClientRect();
+          const total = rect.height - window.innerHeight * 0.4;
+          const progress = total > 0 ? (window.innerHeight * 0.6 - rect.top) / total : 1;
+          const clamped = Math.min(1, Math.max(0, progress));
+          line.style.strokeDashoffset = String(1 - clamped);
+
+          pins.forEach((pin, i) => {
+            const threshold = i / Math.max(1, pins.length - 1);
+            pin.classList.toggle('is-active', clamped >= threshold - 0.02);
+          });
+        };
+        const onScroll = () => {
+          if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(update);
+          }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        update();
+      }
+    }
+
+    /* Раскрытие точки маршрута */
+    section.querySelectorAll<HTMLButtonElement>('[data-route-toggle]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.routeToggle!;
+        const panel = document.getElementById(`route-panel-${id}`);
+        if (!panel) return;
+        const open = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!open));
+        panel.hidden = open;
+        if (!open) {
+          window.dispatchEvent(
+            new CustomEvent('analytics', { detail: { event: 'route_day_open', id } }),
+          );
+        }
+      });
+    });
+  }
+</script>

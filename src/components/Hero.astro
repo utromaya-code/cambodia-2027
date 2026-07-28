@@ -1,0 +1,211 @@
+---
+import Photo from './Photo.astro';
+import { hero } from '../data/trip';
+import { pricing } from '../data/pricing';
+
+const [moto, road] = pricing.options;
+---
+
+<header class="hero">
+  <div class="hero__media">
+    <Photo
+      src="hero"
+      alt="Красная грунтовая дорога в камбоджийской деревне: мотоциклы и тук-тук поднимают пыль"
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      widths={[640, 1000, 1400, 1900, 2400]}
+    />
+  </div>
+
+  <div class="hero__inner wrap">
+    <p class="hero__kicker">{hero.kicker}</p>
+    <h1 class="hero__title">{hero.title}</h1>
+    <p class="hero__lead">{hero.lead}</p>
+
+    <p class="hero__dates">{hero.dates}</p>
+
+    <ul class="hero__prices">
+      <li>
+        <span class="hero__mode">На байке</span>
+        <b>{moto.priceHuman}</b>
+      </li>
+      <li>
+        <span class="hero__mode">На микроавтобусе</span>
+        <b>{road.priceHuman}</b>
+      </li>
+    </ul>
+
+    <a class="btn hero__cta" href="#zayavka" data-analytics="hero_cta_click">
+      {hero.cta}
+    </a>
+
+    <p class="hero__note">{hero.note}</p>
+  </div>
+
+  <a class="hero__scroll" href="#zachem" aria-label="К описанию путешествия">
+    <span aria-hidden="true"></span>
+  </a>
+</header>
+
+<style>
+  .hero {
+    position: relative;
+    display: grid;
+    align-items: end;
+    min-height: 100svh;
+    padding-block: clamp(5rem, 14vh, 9rem) clamp(3rem, 9vh, 6rem);
+    color: #fff;
+    background: var(--ink);
+    overflow: hidden;
+  }
+
+  .hero__media {
+    position: absolute;
+    inset: 0;
+  }
+
+  .hero__media :global(.photo) {
+    height: 100%;
+  }
+
+  /* Затемнение снизу, чтобы текст читался на любом кадре */
+  .hero__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(12, 9, 7, 0.88) 0%,
+      rgba(12, 9, 7, 0.55) 38%,
+      rgba(12, 9, 7, 0.18) 70%,
+      rgba(12, 9, 7, 0.35) 100%
+    );
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero__kicker {
+    margin: 0 0 0.4rem;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    font-weight: 400;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, #fff 78%, transparent);
+  }
+
+  .hero__title {
+    font-size: var(--step-5);
+    text-transform: uppercase;
+    letter-spacing: -0.015em;
+    line-height: 0.92;
+  }
+
+  .hero__lead {
+    max-width: 34ch;
+    margin-top: 1.3rem;
+    font-size: var(--step-1);
+    line-height: 1.4;
+    color: color-mix(in srgb, #fff 88%, transparent);
+  }
+
+  .hero__dates {
+    margin-top: 1.8rem;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    letter-spacing: 0.14em;
+  }
+
+  .hero__prices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem 2.5rem;
+    margin-top: 1.1rem;
+  }
+
+  .hero__prices li {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .hero__mode {
+    font-size: var(--step--1);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, #fff 68%, transparent);
+  }
+
+  .hero__prices b {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+
+  .hero__cta {
+    margin-top: 1.9rem;
+    width: 100%;
+  }
+
+  .hero__note {
+    max-width: 46ch;
+    margin-top: 1.1rem;
+    font-size: var(--step--1);
+    color: color-mix(in srgb, #fff 72%, transparent);
+  }
+
+  .hero__scroll {
+    position: absolute;
+    left: 50%;
+    bottom: 1.1rem;
+    z-index: 1;
+    display: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    translate: -50% 0;
+  }
+
+  .hero__scroll span {
+    display: block;
+    width: 0.85rem;
+    height: 0.85rem;
+    margin: 0.6rem auto;
+    border-right: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    rotate: 45deg;
+    animation: hero-nudge 2.4s ease-in-out infinite;
+  }
+
+  @keyframes hero-nudge {
+    0%,
+    100% {
+      transform: translateY(-3px);
+      opacity: 0.5;
+    }
+    50% {
+      transform: translateY(3px);
+      opacity: 1;
+    }
+  }
+
+  @media (min-width: 40rem) {
+    .hero__cta {
+      width: auto;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .hero__lead {
+      max-width: 40ch;
+    }
+
+    .hero__scroll {
+      display: block;
+    }
+  }
+</style>

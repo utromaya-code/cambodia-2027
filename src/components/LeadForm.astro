@@ -1,0 +1,313 @@
+---
+import { trip } from '../data/trip';
+---
+
+<section class="lead section section--dark" id="zayavka">
+  <div class="wrap wrap--narrow">
+    <h2 class="section__title reveal">Поехали</h2>
+    <p class="section__lead reveal">
+      Напишите пару слов о себе — мы вернёмся с деталями по маршруту, технике и датам.
+    </p>
+
+    <form class="form reveal" id="lead-form" novalidate>
+      <div class="form__row">
+        <label class="field">
+          <span class="field__label">Имя <abbr title="обязательное поле">*</abbr></span>
+          <input type="text" name="name" autocomplete="name" required />
+          <span class="field__error" data-error-for="name"></span>
+        </label>
+
+        <label class="field">
+          <span class="field__label">
+            Telegram или WhatsApp <abbr title="обязательное поле">*</abbr>
+          </span>
+          <input type="text" name="contact" inputmode="text" required placeholder="@username или +7…" />
+          <span class="field__error" data-error-for="contact"></span>
+        </label>
+      </div>
+
+      <label class="field">
+        <span class="field__label">Email <em>— по желанию</em></span>
+        <input type="email" name="email" autocomplete="email" />
+        <span class="field__error" data-error-for="email"></span>
+      </label>
+
+      <fieldset class="choice">
+        <legend class="field__label">Как хочу ехать</legend>
+        <div class="choice__options">
+          <label><input type="radio" name="mode" value="motorcycle" /><span>На байке</span></label>
+          <label><input type="radio" name="mode" value="road" /><span>На микроавтобусе</span></label>
+          <label><input type="radio" name="mode" value="unsure" checked /><span>Пока не знаю</span></label>
+        </div>
+      </fieldset>
+
+      <fieldset class="choice">
+        <legend class="field__label">Остров 8–15 марта</legend>
+        <div class="choice__options">
+          <label><input type="radio" name="island" value="yes" /><span>Интересен</span></label>
+          <label><input type="radio" name="island" value="no" /><span>Не планирую</span></label>
+          <label><input type="radio" name="island" value="unsure" checked /><span>Пока не знаю</span></label>
+        </div>
+      </fieldset>
+
+      <label class="field">
+        <span class="field__label">Комментарий</span>
+        <textarea name="comment" rows="4" placeholder="Опыт езды, вопросы, пожелания"></textarea>
+      </label>
+
+      <button class="btn btn--wide" type="submit">Оставить заявку</button>
+
+      <p class="form__status" role="status" aria-live="polite" data-form-status></p>
+    </form>
+
+    <p class="lead__alt reveal">
+      Или просто напишите в Telegram:
+      <a href={trip.contacts.telegram} rel="noopener">{trip.contacts.telegramHandle}</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .form {
+    display: grid;
+    gap: 1.4rem;
+    margin-top: clamp(1.8rem, 4vw, 2.6rem);
+  }
+
+  .form__row {
+    display: grid;
+    gap: 1.4rem;
+  }
+
+  .field {
+    display: grid;
+    gap: 0.45rem;
+  }
+
+  .field__label {
+    font-size: var(--step--1);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--paper) 78%, transparent);
+  }
+
+  .field__label em {
+    font-style: normal;
+    text-transform: none;
+    letter-spacing: 0;
+    color: color-mix(in srgb, var(--paper) 55%, transparent);
+  }
+
+  .field__label abbr {
+    text-decoration: none;
+    color: var(--laterite);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: color-mix(in srgb, var(--paper) 8%, transparent);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    color: inherit;
+    /* 16px минимум, иначе Safari на iOS зумит страницу при фокусе */
+    font-size: 1rem;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: color-mix(in srgb, var(--paper) 45%, transparent);
+  }
+
+  input:user-invalid,
+  .field--invalid input {
+    border-color: #e0714a;
+  }
+
+  .field__error {
+    font-size: var(--step--1);
+    color: #f0a68b;
+    min-height: 1.2em;
+  }
+
+  .choice {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .choice__options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.6rem;
+  }
+
+  .choice__options label {
+    position: relative;
+  }
+
+  .choice__options input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .choice__options span {
+    display: inline-block;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    font-size: var(--step--1);
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .choice__options input:checked + span {
+    background: var(--laterite);
+    border-color: var(--laterite);
+    color: #fff;
+  }
+
+  .choice__options input:focus-visible + span {
+    outline: 3px solid var(--laterite);
+    outline-offset: 3px;
+  }
+
+  .form__status {
+    min-height: 1.4em;
+    font-size: var(--step--1);
+  }
+
+  .form__status[data-tone='ok'] {
+    color: #a8dcc0;
+  }
+
+  .form__status[data-tone='error'] {
+    color: #f0a68b;
+  }
+
+  .lead__alt {
+    margin-top: 1.6rem;
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--paper) 70%, transparent);
+  }
+
+  @media (min-width: 44rem) {
+    .form__row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>
+
+<script>
+  import { submitLead, type Lead } from '../scripts/lead';
+  import { track } from '../scripts/analytics';
+
+  const form = document.querySelector<HTMLFormElement>('#lead-form');
+  const status = document.querySelector<HTMLElement>('[data-form-status]');
+
+  if (form && status) {
+    let opened = false;
+    form.addEventListener(
+      'focusin',
+      () => {
+        if (!opened) {
+          opened = true;
+          track('lead_form_open');
+        }
+      },
+      { once: false },
+    );
+
+    /* Кнопки тарифов подставляют выбранный формат участия */
+    document.querySelectorAll<HTMLElement>('[data-prefill]').forEach((el) => {
+      el.addEventListener('click', () => {
+        const value = el.dataset.prefill;
+        const input = form.querySelector<HTMLInputElement>(`input[name="mode"][value="${value}"]`);
+        if (input) input.checked = true;
+      });
+    });
+
+    document.querySelectorAll<HTMLElement>('[data-prefill-island]').forEach((el) => {
+      el.addEventListener('click', () => {
+        const input = form.querySelector<HTMLInputElement>('input[name="island"][value="yes"]');
+        if (input) input.checked = true;
+      });
+    });
+
+    const setError = (name: string, message: string) => {
+      const slot = form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
+      if (slot) slot.textContent = message;
+      form.querySelector(`[name="${name}"]`)?.closest('.field')
+        ?.classList.toggle('field--invalid', Boolean(message));
+    };
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const data = new FormData(form);
+
+      const name = String(data.get('name') ?? '').trim();
+      const contact = String(data.get('contact') ?? '').trim();
+      const email = String(data.get('email') ?? '').trim();
+
+      let valid = true;
+      setError('name', '');
+      setError('contact', '');
+      setError('email', '');
+
+      if (name.length < 2) {
+        setError('name', 'Напишите, как к вам обращаться');
+        valid = false;
+      }
+      if (contact.length < 3) {
+        setError('contact', 'Оставьте telegram или телефон — иначе мы не сможем ответить');
+        valid = false;
+      }
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setError('email', 'Проверьте адрес почты');
+        valid = false;
+      }
+
+      if (!valid) {
+        form.querySelector<HTMLElement>('.field--invalid input')?.focus();
+        return;
+      }
+
+      const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+      button.disabled = true;
+      status.textContent = 'Отправляем…';
+      status.removeAttribute('data-tone');
+
+      const lead: Lead = {
+        name,
+        contact,
+        email: email || undefined,
+        mode: (data.get('mode') as Lead['mode']) ?? 'unsure',
+        island: (data.get('island') as Lead['island']) ?? 'unsure',
+        comment: String(data.get('comment') ?? '').trim() || undefined,
+        page: location.href,
+        referrer: document.referrer,
+      };
+
+      track('lead_form_submit', { mode: lead.mode, island: lead.island });
+      const result = await submitLead(lead);
+
+      if (result.ok) {
+        form.reset();
+        status.dataset.tone = 'ok';
+        status.textContent =
+          'Спасибо. Мы свяжемся с вами и расскажем про маршрут, технику и детали поездки.';
+      } else {
+        status.dataset.tone = 'error';
+        status.textContent =
+          'Не получилось отправить. Напишите нам в Telegram — так точно дойдёт.';
+      }
+      button.disabled = false;
+    });
+  }
+</script>

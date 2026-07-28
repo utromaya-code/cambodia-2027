@@ -1,0 +1,113 @@
+---
+import Photo from './Photo.astro';
+import { leaders, leadersSection } from '../data/leaders';
+import { isReady } from '../data/content';
+---
+
+<section class="leaders section section--stone" id="vedushchie">
+  <div class="wrap">
+    <h2 class="section__title reveal">{leadersSection.title}</h2>
+    <p class="section__lead reveal">{leadersSection.lead}</p>
+
+    <ul class="leaders__grid">
+      {
+        leaders.map((leader) => (
+          <li class="leader reveal" data-analytics-leader={leader.id}>
+            {isReady(leader.portrait) ? (
+              <Photo
+                src={leader.portrait}
+                alt={`${leader.name} — один из ведущих путешествия`}
+                class="leader__photo"
+                sizes="(min-width: 60rem) 24vw, 46vw"
+                ratio="4 / 5"
+              />
+            ) : (
+              /* Фото ещё не предоставлено — не подставляем чужое */
+              <div class="leader__photo leader__photo--pending" aria-hidden="true">
+                <span>{leader.name.charAt(0)}</span>
+              </div>
+            )}
+
+            <div class="leader__text">
+              <h3>{leader.name}</h3>
+              {isReady(leader.role) && <p class="leader__role">{leader.role}</p>}
+              {isReady(leader.shortBio) ? (
+                <p class="leader__bio">{leader.shortBio}</p>
+              ) : (
+                <p class="leader__bio leader__bio--pending">
+                  Расскажем подробнее ближе к старту.
+                </p>
+              )}
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .leaders__grid {
+    display: grid;
+    gap: 2.2rem;
+    margin-top: clamp(2.2rem, 5vw, 3.5rem);
+  }
+
+  .leader {
+    display: grid;
+    /* minmax(0, …) не даёт содержимому раздувать колонку */
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.1rem;
+  }
+
+  .leader__photo--pending {
+    display: grid;
+    place-items: center;
+    /* Ширина задана явно: иначе из aspect-ratio выводится ширина по высоте,
+       и заглушка распирает колонку сетки */
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    background: var(--stone);
+    color: color-mix(in srgb, var(--ink) 35%, transparent);
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+  }
+
+  .leader__text h3 {
+    font-size: var(--step-2);
+    text-transform: uppercase;
+  }
+
+  .leader__role {
+    margin-top: 0.3rem;
+    font-size: var(--step--1);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--laterite);
+  }
+
+  .leader__bio {
+    margin-top: 0.7rem;
+    font-size: var(--step--1);
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  .leader__bio--pending {
+    color: var(--ink-mute);
+    font-style: normal;
+  }
+
+  @media (min-width: 34rem) {
+    .leaders__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem 2rem;
+    }
+  }
+
+  @media (min-width: 68rem) {
+    .leaders__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+</style>

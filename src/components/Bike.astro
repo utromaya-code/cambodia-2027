@@ -1,0 +1,110 @@
+---
+import Photo from './Photo.astro';
+import { bike } from '../data/bike';
+---
+
+<section class="bike section section--stone" id="bayk">
+  <div class="wrap bike__grid">
+    <div class="bike__text">
+      <p class="kicker reveal">{bike.title}</p>
+      <h2 class="bike__model reveal">{bike.model}</h2>
+      <p class="bike__sub reveal">{bike.subtitle}</p>
+
+      <div class="prose bike__prose reveal">
+        {bike.description.map((line) => <p>{line}</p>)}
+      </div>
+
+      <dl class="bike__specs reveal">
+        {
+          bike.specs.map((spec) => (
+            <div>
+              <dt>{spec.label}</dt>
+              <dd>{spec.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <p class="bike__closing reveal">
+        {bike.closing.map((line) => <span>{line}</span>)}
+      </p>
+    </div>
+
+    <Photo
+      src={bike.image}
+      alt={`Мотоцикл ${bike.model} — универсальный адвенчер с двигателем ${bike.engine}`}
+      class="bike__photo reveal"
+      sizes="(min-width: 60rem) 48vw, 100vw"
+      ratio="4 / 3"
+    />
+  </div>
+</section>
+
+<style>
+  .bike__grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .bike__model {
+    font-size: var(--step-3);
+    text-transform: uppercase;
+  }
+
+  .bike__sub {
+    margin-top: 0.7rem;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    color: var(--laterite);
+  }
+
+  .bike__prose {
+    max-width: 48ch;
+    margin-top: 1.5rem;
+    color: var(--ink-soft);
+  }
+
+  .bike__specs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+    gap: 1.2rem;
+    margin: 2rem 0 0;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .bike__specs dt {
+    font-size: var(--step--1);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .bike__specs dd {
+    margin: 0.3rem 0 0;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+
+  .bike__closing {
+    display: grid;
+    gap: 0.15rem;
+    margin-top: 2rem;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 60rem) {
+    .bike__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .bike__photo {
+      order: -1;
+    }
+  }
+</style>

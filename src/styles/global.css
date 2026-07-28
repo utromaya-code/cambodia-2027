@@ -1,0 +1,397 @@
+/* ==========================================================================
+   Камбоджа: Дорога на юг — базовые стили
+
+   Палитра взята из самой страны: латеритная земля, камень Ангкора, джунгли,
+   выгоревшая бумага. Тропическая синь появляется только ближе к финалу
+   страницы, когда маршрут выходит к морю.
+   ========================================================================== */
+
+:root {
+  /* Цвет */
+  --ink: #14100d;
+  --ink-soft: #3a332c;
+  --ink-mute: #6b6157;
+  --paper: #f5f0e7;
+  --paper-warm: #ebe3d6;
+  --stone: #cdbfa5;
+  --stone-deep: #a4947a;
+  --laterite: #b34a24;
+  --laterite-deep: #7e3117;
+  --jungle: #1c3226;
+  --jungle-mid: #2e5140;
+  --sea: #1b6b7a;
+  --sea-light: #3f96a5;
+
+  /* Роли */
+  --bg: var(--paper);
+  --fg: var(--ink);
+  --accent: var(--laterite);
+  --rule: color-mix(in srgb, var(--ink) 14%, transparent);
+
+  /* Шрифт */
+  --font-display: 'Oswald', 'Arial Narrow', sans-serif;
+  --font-body: 'Manrope Variable', 'Manrope', system-ui, sans-serif;
+
+  /* Флуидная шкала: один источник размеров для всей страницы */
+  --step--1: clamp(0.83rem, 0.79rem + 0.2vw, 0.94rem);
+  --step-0: clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+  --step-2: clamp(1.45rem, 1.25rem + 1vw, 2.1rem);
+  --step-3: clamp(1.8rem, 1.4rem + 1.9vw, 3rem);
+  --step-4: clamp(2.2rem, 1.5rem + 3.2vw, 4.4rem);
+  --step-5: clamp(2.8rem, 1.6rem + 5.4vw, 6.5rem);
+
+  /* Ритм */
+  --gutter: clamp(1.1rem, 4vw, 2.5rem);
+  --measure: 62ch;
+  --section-y: clamp(3.5rem, 9vw, 8rem);
+  --radius: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Сброс
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.02;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+img,
+picture,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Видимый фокус — обязателен для навигации с клавиатуры */
+:focus-visible {
+  outline: 3px solid var(--laterite);
+  outline-offset: 3px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  padding: 0.8rem 1.2rem;
+  background: var(--ink);
+  color: var(--paper);
+  transform: translateY(-120%);
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   Раскладка
+   -------------------------------------------------------------------------- */
+
+.wrap {
+  width: min(100% - var(--gutter) * 2, 1240px);
+  margin-inline: auto;
+}
+
+.wrap--narrow {
+  width: min(100% - var(--gutter) * 2, 820px);
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+/* Тёмные секции: джунгли и ночь. Задают ритм страницы. */
+.section--dark {
+  background: var(--jungle);
+  color: var(--paper);
+  --rule: color-mix(in srgb, var(--paper) 20%, transparent);
+}
+
+.section--ink {
+  background: var(--ink);
+  color: var(--paper);
+  --rule: color-mix(in srgb, var(--paper) 18%, transparent);
+}
+
+.section--stone {
+  background: var(--paper-warm);
+}
+
+/* Морская часть страницы — только после выхода к побережью */
+.section--sea {
+  background: var(--sea);
+  color: #f2fbfc;
+  --accent: #ffd9a0;
+  --rule: color-mix(in srgb, #ffffff 26%, transparent);
+}
+
+/* --------------------------------------------------------------------------
+   Типографика
+   -------------------------------------------------------------------------- */
+
+.kicker {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 1rem;
+}
+
+.section__title {
+  font-size: var(--step-3);
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+}
+
+.section__lead {
+  max-width: var(--measure);
+  margin-top: 1.4rem;
+  font-size: var(--step-1);
+  color: var(--ink-soft);
+}
+
+.section--dark .section__lead,
+.section--ink .section__lead,
+.section--sea .section__lead {
+  color: color-mix(in srgb, currentColor 82%, transparent);
+}
+
+/* Крупные повествовательные абзацы — «голос» сайта */
+.prose p + p {
+  margin-top: 1.1em;
+}
+
+.prose--lead p {
+  font-size: var(--step-1);
+  line-height: 1.45;
+}
+
+.rule {
+  height: 1px;
+  border: 0;
+  margin: 0;
+  background: var(--rule);
+}
+
+/* --------------------------------------------------------------------------
+   Кнопки
+   -------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 3.25rem;
+  padding: 0.9rem 1.9rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: var(--laterite);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.btn:hover {
+  background: var(--laterite-deep);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn--ghost {
+  background: transparent;
+  border-color: currentColor;
+  color: inherit;
+}
+
+.btn--ghost:hover {
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.btn--wide {
+  width: 100%;
+}
+
+@media (min-width: 30rem) {
+  .btn--wide {
+    width: auto;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Изображения
+   -------------------------------------------------------------------------- */
+
+.photo {
+  position: relative;
+  overflow: hidden;
+  background: var(--stone);
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Лёгкая плёночная фактура вместо стерильной картинки */
+.photo--grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/*
+ * Элементы грид-раскладок по умолчанию не сжимаются меньше своего содержимого.
+ * Из-за этого фотография с собственными размерами распирает колонку, и на
+ * планшетах появляется горизонтальная прокрутка. Разрешаем колонкам сжиматься.
+ */
+.intro__grid > *,
+.why__card > *,
+.ride__bike > *,
+.bike__grid > *,
+.day > *,
+.leaders__grid > *,
+.pricing__cards > *,
+.practice__grid > *,
+.audience__grid > * {
+  min-width: 0;
+}
+
+figure {
+  margin: 0;
+}
+
+figcaption {
+  margin-top: 0.7rem;
+  font-size: var(--step--1);
+  color: var(--ink-mute);
+}
+
+.section--dark figcaption,
+.section--ink figcaption,
+.section--sea figcaption {
+  color: color-mix(in srgb, currentColor 65%, transparent);
+}
+
+/* --------------------------------------------------------------------------
+   Появление при скролле
+   -------------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

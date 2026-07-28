@@ -1,0 +1,104 @@
+---
+import { pricing } from '../data/pricing';
+
+const [moto, road] = pricing.options;
+---
+
+<div class="sticky" id="sticky-cta" hidden>
+  <p class="sticky__prices">
+    <span class="sticky__label">Байк / бус</span>
+    <span class="sticky__value">{road.priceHuman} — {moto.priceHuman}</span>
+  </p>
+  <a class="btn sticky__btn" href="#zayavka" data-analytics="hero_cta_click">Оставить заявку</a>
+</div>
+
+<style>
+  .sticky {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem var(--gutter);
+    /* Не залезаем под домашнюю полосу iPhone */
+    padding-bottom: calc(0.7rem + env(safe-area-inset-bottom));
+    /* Сплошная подложка, а не размытие: дешевле для мобильных
+       и не зависит от поддержки backdrop-filter */
+    background: var(--ink);
+    color: var(--paper);
+    border-top: 1px solid color-mix(in srgb, var(--paper) 16%, transparent);
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+  }
+
+  .sticky.is-visible {
+    transform: none;
+  }
+
+  .sticky__prices {
+    display: grid;
+    gap: 0.1rem;
+    white-space: nowrap;
+  }
+
+  .sticky__label {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--paper) 60%, transparent);
+  }
+
+  .sticky__value {
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    line-height: 1.1;
+  }
+
+  .sticky__btn {
+    min-height: 2.9rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.95rem;
+  }
+
+  @media (min-width: 60rem) {
+    .sticky {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sticky {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('#sticky-cta');
+  const hero = document.querySelector<HTMLElement>('.hero');
+  const form = document.querySelector<HTMLElement>('#zayavka');
+
+  if (bar && hero) {
+    bar.hidden = false;
+
+    /* Кнопка появляется после первого экрана и прячется у самой формы */
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.target === hero) {
+            bar.classList.toggle('is-visible', !entry.isIntersecting);
+          }
+          if (entry.target === form && entry.isIntersecting) {
+            bar.classList.remove('is-visible');
+          }
+        }
+      },
+      { threshold: 0.05 },
+    );
+
+    observer.observe(hero);
+    if (form) observer.observe(form);
+  }
+</script>

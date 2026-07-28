@@ -1,0 +1,132 @@
+---
+import { pricing } from '../data/pricing';
+---
+
+<section class="pricing section section--ink" id="stoimost">
+  <div class="wrap">
+    <p class="kicker reveal">Стоимость</p>
+    <h2 class="section__title reveal">{pricing.title}</h2>
+    <p class="section__lead reveal">{pricing.lead}</p>
+
+    <ul class="pricing__cards">
+      {
+        pricing.options.map((option) => (
+          <li class="price reveal">
+            <p class="price__eyebrow">{option.eyebrow}</p>
+            <p class="price__amount">{option.priceHuman}</p>
+            <p class="price__summary">{option.summary}</p>
+
+            <ul class="price__bullets">
+              {option.bullets.map((b) => (
+                <li>{b}</li>
+              ))}
+            </ul>
+
+            <p class="price__prepay">{option.prepayment}</p>
+
+            <a
+              class="btn btn--wide price__cta"
+              href="#zayavka"
+              data-analytics={option.analyticsEvent}
+              data-prefill={option.id}
+            >
+              {option.cta}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="pricing__foot reveal">{pricing.footnote}</p>
+    <p class="pricing__foot pricing__foot--note reveal">{pricing.footnoteSecondary}</p>
+  </div>
+</section>
+
+<style>
+  .pricing__cards {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: clamp(2.2rem, 5vw, 3.5rem);
+  }
+
+  .price {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: clamp(1.6rem, 4vw, 2.4rem);
+    border: 1px solid var(--rule);
+    background: color-mix(in srgb, var(--paper) 5%, transparent);
+  }
+
+  .price__eyebrow {
+    font-family: var(--font-display);
+    font-size: var(--step--1);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--laterite);
+  }
+
+  .price__amount {
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+    line-height: 1;
+  }
+
+  .price__summary {
+    color: color-mix(in srgb, var(--paper) 80%, transparent);
+  }
+
+  .price__bullets {
+    display: grid;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--rule);
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--paper) 78%, transparent);
+  }
+
+  .price__bullets li {
+    padding-left: 1.1rem;
+    position: relative;
+  }
+
+  .price__bullets li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--laterite);
+  }
+
+  .price__prepay {
+    margin-top: auto;
+    padding-top: 1.2rem;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    letter-spacing: 0.04em;
+  }
+
+  .price__cta {
+    margin-top: 0.4rem;
+  }
+
+  .pricing__foot {
+    margin-top: 1.5rem;
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--paper) 65%, transparent);
+  }
+
+  .pricing__foot--note {
+    max-width: 60ch;
+    margin-top: 0.6rem;
+    color: color-mix(in srgb, var(--paper) 48%, transparent);
+  }
+
+  /* На узких экранах карточки идут последовательно, а не двумя колонками */
+  @media (min-width: 48rem) {
+    .pricing__cards {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.8rem;
+    }
+  }
+</style>

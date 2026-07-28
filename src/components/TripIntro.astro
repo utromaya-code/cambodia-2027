@@ -1,0 +1,82 @@
+---
+import { intro, trip } from '../data/trip';
+---
+
+<section class="intro section" id="zachem">
+  <div class="wrap intro__grid">
+    <h2 class="intro__title reveal">{intro.title}</h2>
+
+    <div class="intro__body">
+      <div class="prose prose--lead reveal">
+        {intro.lines.map((line) => <p>{line}</p>)}
+      </div>
+
+      <dl class="facts reveal">
+        <div>
+          <dt>Даты</dt>
+          <dd>{trip.dates.human}</dd>
+        </div>
+        <div>
+          <dt>Маршрут</dt>
+          <dd>{trip.start} → {trip.finish}</dd>
+        </div>
+        <div>
+          <dt>Длительность</dt>
+          <dd>{trip.dates.ridingDays} дней + день прилёта</dd>
+        </div>
+        <div>
+          <dt>Как ехать</dt>
+          <dd>Байк или микроавтобус</dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .intro__title {
+    font-size: var(--step-4);
+    text-transform: uppercase;
+    max-width: 16ch;
+  }
+
+  .intro__body {
+    margin-top: 2rem;
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 1.6rem 1.5rem;
+    margin: 2.6rem 0 0;
+    padding-top: 1.8rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .facts dt {
+    font-size: var(--step--1);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .facts dd {
+    margin: 0.35rem 0 0;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: 1.15;
+  }
+
+  @media (min-width: 60rem) {
+    .intro__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem 4rem;
+      align-items: start;
+    }
+
+    .intro__body {
+      margin-top: 0;
+    }
+  }
+</style>

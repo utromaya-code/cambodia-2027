@@ -1,0 +1,94 @@
+---
+import { Image } from 'astro:assets';
+import { getPhoto } from '../data/images';
+
+interface Props {
+  /** Ключ файла в src/assets/photos (имя без расширения). */
+  src: string;
+  alt: string;
+  /** Значение атрибута sizes — нужно, чтобы браузер брал подходящий срез. */
+  sizes?: string;
+  widths?: number[];
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  class?: string;
+  /** Соотношение сторон кадра; без него подставляется исходное. */
+  ratio?: string;
+}
+
+const {
+  src,
+  alt,
+  sizes = '100vw',
+  widths = [480, 800, 1200, 1800, 2400],
+  loading = 'lazy',
+  fetchpriority = 'auto',
+  class: className = '',
+  ratio,
+} = Astro.props;
+
+const image = getPhoto(src);
+const style = ratio ? `aspect-ratio:${ratio}` : undefined;
+---
+
+{
+  image ? (
+    <div class:list={['photo', 'photo--grain', className]} style={style}>
+      <Image
+        src={image}
+        alt={alt}
+        widths={widths.filter((w) => w <= image.width)}
+        sizes={sizes}
+        loading={loading}
+        fetchpriority={fetchpriority}
+        decoding="async"
+      />
+    </div>
+  ) : (
+    /* Снимок ещё не подобран — показываем честную заглушку вместо чужого фото */
+    <div
+      class:list={['photo', 'photo--empty', className]}
+      style={style}
+      role="img"
+      aria-label={alt}
+    >
+      <span>
+        <b>Фотография будет добавлена</b>
+        {alt}
+      </span>
+    </div>
+  )
+}
+
+<style>
+  .photo--empty {
+    display: grid;
+    place-items: center;
+    padding: 1.5rem;
+    background: repeating-linear-gradient(
+      45deg,
+      var(--stone) 0 12px,
+      var(--paper-warm) 12px 24px
+    );
+    color: var(--ink-soft);
+    text-align: center;
+    font-size: var(--step--1);
+    min-height: 12rem;
+  }
+
+  .photo--empty span {
+    display: grid;
+    gap: 0.35rem;
+    max-width: 30ch;
+    padding: 0.8rem 1rem;
+    background: color-mix(in srgb, var(--paper) 90%, transparent);
+  }
+
+  .photo--empty b {
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--laterite);
+  }
+</style>

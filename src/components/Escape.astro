@@ -1,0 +1,58 @@
+---
+import Photo from './Photo.astro';
+import { escape } from '../data/trip';
+---
+
+<section class="escape section section--ink">
+  <div class="escape__media" aria-hidden="true">
+    <!-- Без ratio: снимок тянется на всю высоту секции как фон -->
+    <Photo src="escape" alt="" sizes="100vw" widths={[640, 1000, 1600, 2200]} />
+  </div>
+
+  <div class="wrap wrap--narrow escape__inner">
+    <h2 class="escape__title reveal">{escape.title}</h2>
+    <div class="prose prose--lead escape__text reveal">
+      {escape.lines.map((line) => <p>{line}</p>)}
+    </div>
+    <a class="btn escape__cta reveal" href="#zayavka" data-analytics="route_cta_click">
+      {escape.cta}
+    </a>
+  </div>
+</section>
+
+<style>
+  .escape {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .escape__media {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.32;
+  }
+
+  .escape__media :global(.photo) {
+    height: 100%;
+  }
+
+  .escape__inner {
+    text-align: center;
+  }
+
+  .escape__title {
+    font-size: var(--step-4);
+    text-transform: uppercase;
+  }
+
+  .escape__text {
+    margin-top: 1.8rem;
+    color: color-mix(in srgb, var(--paper) 84%, transparent);
+  }
+
+  .escape__cta {
+    margin-top: 2.2rem;
+  }
+</style>

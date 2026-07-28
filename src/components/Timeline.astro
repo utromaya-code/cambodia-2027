@@ -1,0 +1,159 @@
+---
+import Photo from './Photo.astro';
+import { days, type DayIcon } from '../data/days';
+import { isReady } from '../data/content';
+
+/** Подписи иконок — они же тексты для программ чтения с экрана. */
+const iconLabels: Record<DayIcon, string> = {
+  road: 'переезд',
+  nature: 'природа',
+  culture: 'история и люди',
+  ride: 'ходовой день',
+  water: 'вода',
+  rest: 'спокойный день',
+};
+
+const iconGlyphs: Record<DayIcon, string> = {
+  road: '⎯',
+  nature: '▲',
+  culture: '❖',
+  ride: '◈',
+  water: '≈',
+  rest: '○',
+};
+---
+
+<section class="days section" id="programma">
+  <div class="wrap">
+    <p class="kicker reveal">Программа</p>
+    <h2 class="section__title reveal">Одиннадцать дней подряд</h2>
+    <p class="section__lead reveal">
+      26 февраля — день прилёта. Маршрут идёт с 27 февраля по 8 марта.
+    </p>
+  </div>
+
+  <div class="wrap days__list">
+    {
+      days.map((day) => (
+        <article class="day reveal" id={`den-${day.n}`}>
+          <div class="day__head">
+            <p class="day__date">{day.dateHuman}</p>
+            <h3 class="day__title">{day.title}</h3>
+            {day.leg && <p class="day__leg">{day.leg}</p>}
+          </div>
+
+          <div class="day__media">
+            <Photo
+              src={day.image}
+              alt={day.text[0]}
+              sizes="(min-width: 60rem) 42vw, 100vw"
+              ratio="3 / 2"
+            />
+          </div>
+
+          <div class="day__body">
+            <div class="prose day__text">
+              {day.text.map((line) => (
+                <p>{line}</p>
+              ))}
+            </div>
+
+            <ul class="day__icons">
+              {day.icons.map((icon) => (
+                <li>
+                  <span aria-hidden="true">{iconGlyphs[icon]}</span>
+                  {iconLabels[icon]}
+                </li>
+              ))}
+              {/* Километраж показываем только после подтверждения */}
+              {isReady(day.km) && <li class="day__km">{day.km} км</li>}
+            </ul>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .days__list {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 4.5rem);
+    margin-top: clamp(2.2rem, 5vw, 3.5rem);
+  }
+
+  .day {
+    display: grid;
+    gap: 1.3rem;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .day__date {
+    font-family: var(--font-display);
+    font-size: var(--step--1);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--laterite);
+  }
+
+  .day__title {
+    margin-top: 0.4rem;
+    font-size: var(--step-3);
+    text-transform: uppercase;
+  }
+
+  .day__leg {
+    margin-top: 0.5rem;
+    font-size: var(--step--1);
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+  }
+
+  .day__text {
+    max-width: 52ch;
+    color: var(--ink-soft);
+  }
+
+  .day__icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.3rem;
+    margin-top: 1.4rem;
+    font-size: var(--step--1);
+    letter-spacing: 0.05em;
+    color: var(--ink-mute);
+  }
+
+  .day__icons li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .day__icons span {
+    color: var(--laterite);
+  }
+
+  .day__km {
+    font-family: var(--font-display);
+    letter-spacing: 0.1em;
+  }
+
+  @media (min-width: 60rem) {
+    .day {
+      grid-template-columns: 1fr 1fr;
+      gap: 1.6rem 3rem;
+      align-items: start;
+    }
+
+    .day__head {
+      grid-column: 1 / -1;
+    }
+
+    /* Каждый второй день переворачиваем — монтаж, а не таблица */
+    .day:nth-child(even) .day__media {
+      order: 2;
+    }
+  }
+</style>

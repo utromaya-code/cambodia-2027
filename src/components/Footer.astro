@@ -1,0 +1,164 @@
+---
+import { trip } from '../data/trip';
+import { usedCredits } from '../data/images';
+
+interface Props {
+  /** Ключи всех показанных на странице снимков — для указания авторства. */
+  photoKeys: readonly string[];
+}
+
+const { photoKeys } = Astro.props;
+const credits = usedCredits(photoKeys);
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="wrap footer__grid">
+    <div>
+      <p class="footer__title">Камбоджа · Дорога на юг</p>
+      <p class="footer__dates">{trip.dates.human}</p>
+    </div>
+
+    <nav class="footer__nav" aria-label="Разделы страницы">
+      <a href="#marshrut">Маршрут</a>
+      <a href="#programma">Программа</a>
+      <a href="#stoimost">Стоимость</a>
+      <a href="#ostrov">Остров</a>
+      <a href="#voprosy">Вопросы</a>
+    </nav>
+
+    <p class="footer__contact">
+      <a href={trip.contacts.telegram} rel="noopener">{trip.contacts.telegramHandle}</a>
+    </p>
+  </div>
+
+  {
+    credits.length > 0 && (
+      <div class="wrap footer__credits">
+        <details>
+          <summary>Источники фотографий</summary>
+          <ul>
+            {credits.map((c) => (
+              <li>
+                <a href={c.originalUrl} rel="noopener nofollow">
+                  {c.title ?? c.key}
+                </a>
+                {' — '}
+                {c.author}, {c.license}
+                {c.licenseUrl && (
+                  <>
+                    {' ('}
+                    <a href={c.licenseUrl} rel="noopener nofollow license">
+                      лицензия
+                    </a>
+                    {')'}
+                  </>
+                )}
+                {`, ${c.source}`}
+              </li>
+            ))}
+          </ul>
+        </details>
+      </div>
+    )
+  }
+
+  <div class="wrap footer__legal">
+    <p>© {year} · Путешествие организуют частные лица, а не туроператор.</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-block: clamp(2.5rem, 6vw, 4rem) calc(clamp(2.5rem, 6vw, 4rem) + 4.5rem);
+    background: var(--ink);
+    color: var(--paper);
+    --rule: color-mix(in srgb, var(--paper) 18%, transparent);
+  }
+
+  .footer__grid {
+    display: grid;
+    gap: 1.6rem;
+  }
+
+  .footer__title {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    text-transform: uppercase;
+  }
+
+  .footer__dates {
+    margin-top: 0.3rem;
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--paper) 65%, transparent);
+  }
+
+  .footer__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.4rem;
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .footer__nav a {
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+
+  .footer__nav a:hover {
+    border-bottom-color: var(--laterite);
+  }
+
+  .footer__contact a {
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+  }
+
+  .footer__credits {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--paper) 60%, transparent);
+  }
+
+  .footer__credits summary {
+    cursor: pointer;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .footer__credits ul {
+    display: grid;
+    gap: 0.45rem;
+    margin-top: 0.9rem;
+  }
+
+  .footer__legal {
+    margin-top: 1.5rem;
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--paper) 45%, transparent);
+  }
+
+  @media (min-width: 48rem) {
+    .footer__grid {
+      grid-template-columns: 1fr auto;
+      align-items: start;
+      gap: 2rem 3rem;
+    }
+
+    .footer__contact {
+      grid-column: 2;
+      text-align: right;
+    }
+  }
+
+  /* Место под липкую кнопку нужно только там, где она есть */
+  @media (min-width: 60rem) {
+    .footer {
+      padding-bottom: clamp(2.5rem, 6vw, 4rem);
+    }
+  }
+</style>

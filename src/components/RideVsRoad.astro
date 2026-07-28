@@ -1,0 +1,83 @@
+---
+import Photo from './Photo.astro';
+import { whyBike, rideVsRoad } from '../data/pricing';
+---
+
+<section class="ride section" id="kak-ehat">
+  <div class="wrap ride__bike">
+    <div class="ride__text reveal">
+      <p class="kicker">Одна экспедиция. Два способа пройти дорогу.</p>
+      <h2 class="section__title">{whyBike.title}</h2>
+      <div class="prose ride__prose">
+        {whyBike.lines.map((line) => <p>{line}</p>)}
+      </div>
+    </div>
+
+    <Photo
+      src="why-bike"
+      alt="Мотоциклист на просёлочной дороге среди пальм в камбоджийской деревне"
+      class="ride__photo reveal"
+      sizes="(min-width: 60rem) 45vw, 100vw"
+      ratio="4 / 5"
+    />
+  </div>
+</section>
+
+<section class="section section--dark road">
+  <div class="wrap wrap--narrow">
+    <h2 class="section__title reveal">{rideVsRoad.title}</h2>
+    <div class="prose prose--lead road__prose reveal">
+      {rideVsRoad.lines.map((line) => <p>{line}</p>)}
+    </div>
+    <p class="road__price reveal">{rideVsRoad.price}</p>
+    <a class="btn road__cta reveal" href="#zayavka" data-analytics="van_price_cta">
+      {rideVsRoad.cta}
+    </a>
+  </div>
+</section>
+
+<style>
+  .ride__bike {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .ride__prose {
+    margin-top: 1.6rem;
+    max-width: 48ch;
+    color: var(--ink-soft);
+  }
+
+  .ride__prose p:last-child {
+    margin-top: 1.4em;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    line-height: 1.1;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .road__prose {
+    margin-top: 1.6rem;
+    color: color-mix(in srgb, var(--paper) 84%, transparent);
+  }
+
+  .road__price {
+    margin-top: 1.8rem;
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+    line-height: 1;
+  }
+
+  .road__cta {
+    margin-top: 1.5rem;
+  }
+
+  @media (min-width: 60rem) {
+    .ride__bike {
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 4rem;
+      align-items: center;
+    }
+  }
+</style>

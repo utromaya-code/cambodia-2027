@@ -1,0 +1,81 @@
+---
+import '@fontsource/oswald/cyrillic-400.css';
+import '@fontsource/oswald/cyrillic-500.css';
+import '@fontsource/oswald/latin-400.css';
+import '@fontsource/oswald/latin-500.css';
+// У переменного Manrope нет отдельных файлов по алфавитам: подключаем целиком,
+// браузер по unicode-range сам скачает только нужные подмножества.
+import '@fontsource-variable/manrope';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Изображение для соцсетей: абсолютный путь внутри сайта. */
+  ogImage?: string;
+  /** Готовые блоки schema.org. */
+  structuredData?: unknown[];
+}
+
+const { title, description, ogImage, structuredData = [] } = Astro.props;
+
+const canonical = Astro.site
+  ? new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site).href
+  : Astro.url.href;
+
+const ogImageUrl =
+  ogImage && Astro.site ? new URL(ogImage, Astro.site).href : ogImage;
+
+/** Дорога и две точки — та же метафора, что и на карте маршрута. */
+const faviconSvg =
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">' +
+  '<rect width="32" height="32" rx="4" fill="#14100d"/>' +
+  '<path d="M5 23 Q13 21 15 14 T27 9" stroke="#b34a24" stroke-width="3.4" fill="none" stroke-linecap="round"/>' +
+  '<circle cx="5" cy="23" r="3" fill="#f5f0e7"/>' +
+  '<circle cx="27" cy="9" r="3" fill="#f5f0e7"/></svg>';
+const faviconHref = `data:image/svg+xml,${encodeURIComponent(faviconSvg)}`;
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:site_name" content="Камбоджа: Дорога на юг" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    {ogImageUrl && <meta property="og:image:width" content="1200" />}
+    {ogImageUrl && <meta property="og:image:height" content="630" />}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+
+    <meta name="theme-color" content="#14100d" />
+
+    <link rel="icon" type="image/svg+xml" href={faviconHref} />
+
+    {
+      structuredData.map((block) => (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(block)}
+        />
+      ))
+    }
+  </head>
+  <body>
+    <a class="skip-link" href="#main">К основному содержанию</a>
+    <slot />
+  </body>
+</html>

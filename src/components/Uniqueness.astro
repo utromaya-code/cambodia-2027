@@ -1,0 +1,70 @@
+---
+import { uniqueness } from '../data/sections';
+---
+
+<section class="uniq section">
+  <div class="wrap">
+    <h2 class="section__title reveal">{uniqueness.title}</h2>
+
+    <ul class="uniq__list">
+      {
+        uniqueness.items.map((item, i) => (
+          <li class="uniq__item reveal">
+            <span class="uniq__num" aria-hidden="true">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .uniq__list {
+    display: grid;
+    gap: 2.2rem;
+    margin-top: clamp(2.2rem, 5vw, 3.5rem);
+  }
+
+  .uniq__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.4rem 1.1rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .uniq__num {
+    grid-row: span 2;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: 1;
+    color: var(--laterite);
+  }
+
+  .uniq__item h3 {
+    font-size: var(--step-2);
+    text-transform: uppercase;
+  }
+
+  .uniq__item p {
+    max-width: 44ch;
+    color: var(--ink-soft);
+  }
+
+  @media (min-width: 48rem) {
+    .uniq__list {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.4rem 3rem;
+    }
+  }
+
+  @media (min-width: 72rem) {
+    .uniq__list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
