@@ -32,6 +32,10 @@ jobs:
 
       - name: Установить зависимости
         run: npm ci
+        env:
+          # Playwright нужен только для локальных проверок скриншотами.
+          # В сборке браузеры качать незачем — это ~150 МБ и лишние минуты.
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
       - name: Проверить типы
         run: npm run typecheck
