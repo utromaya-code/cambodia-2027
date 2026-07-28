@@ -43,12 +43,15 @@ for (const vp of VIEWPORTS) {
 
   // Раскрываем всё, что можно раскрыть, и прокручиваем до низа,
   // чтобы отложенные изображения и анимации успели отработать.
+  // behavior: 'instant' обязателен: на сайте включён scroll-behavior: smooth,
+  // и обычный scrollTo превращает проход по странице в медленную анимацию,
+  // которая не успевает дойти до низа.
   await page.evaluate(async () => {
-    for (let y = 0; y < document.body.scrollHeight; y += 600) {
-      window.scrollTo(0, y);
+    for (let y = 0; y < document.documentElement.scrollHeight; y += 600) {
+      window.scrollTo({ top: y, behavior: 'instant' });
       await new Promise((r) => setTimeout(r, 60));
     }
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, behavior: 'instant' });
   });
   await page.waitForTimeout(900);
 
@@ -75,6 +78,13 @@ for (const vp of VIEWPORTS) {
     });
     problems.push(`${vp.name}: горизонтальный скролл ${overflow}px → ${culprits.join(' ; ')}`);
   }
+
+  // После прохода по всей странице ни один блок не должен остаться скрытым:
+  // иначе при быстрой прокрутке пользователь увидит пустое место.
+  const hidden = await page.evaluate(
+    () => document.querySelectorAll('.reveal:not(.is-visible)').length,
+  );
+  if (hidden) problems.push(`${vp.name}: ${hidden} блоков не проявились после прокрутки`);
 
   await page.screenshot({ path: `${OUT}/${vp.name}.png`, fullPage: true });
   await page.screenshot({ path: `${OUT}/${vp.name}-fold.png`, fullPage: false });

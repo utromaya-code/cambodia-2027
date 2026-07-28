@@ -122,27 +122,8 @@ const structuredData = [
 
 <script>
   import { bindAnalytics } from '../scripts/analytics';
+  import { initReveal } from '../scripts/reveal';
 
   bindAnalytics();
-
-  /* Плавное появление блоков при прокрутке */
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const items = document.querySelectorAll<HTMLElement>('.reveal');
-
-  if (reduceMotion) {
-    items.forEach((el) => el.classList.add('is-visible'));
-  } else {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
-          }
-        }
-      },
-      { rootMargin: '0px 0px -8% 0px', threshold: 0.05 },
-    );
-    items.forEach((el) => observer.observe(el));
-  }
+  initReveal();
 </script>

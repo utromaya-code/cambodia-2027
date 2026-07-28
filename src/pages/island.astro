@@ -1,0 +1,433 @@
+---
+import Base from '../layouts/Base.astro';
+import IslandHero from '../components/IslandHero.astro';
+import Photo from './../components/Photo.astro';
+import Faq from '../components/Faq.astro';
+import LeadForm from '../components/LeadForm.astro';
+import Footer from '../components/Footer.astro';
+
+import { island, islandFaq } from '../data/island';
+import { trip } from '../data/trip';
+
+const { page } = island;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const photoKeys = [
+  'island-hero',
+  ...page.place.images,
+  ...page.practice.images,
+  page.stay.image,
+];
+
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: `${page.title} — ${island.placeLatin}`,
+    description: page.seoDescription,
+    startDate: island.datesIso.start,
+    endDate: island.datesIso.end,
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    location: {
+      '@type': 'Place',
+      name: `${island.place} (${island.placeLatin})`,
+      address: {
+        '@type': 'PostalAddress',
+        addressCountry: 'KH',
+      },
+    },
+    organizer: {
+      '@type': 'Organization',
+      name: 'Vsemaya',
+      url: trip.contacts.telegram,
+    },
+    offers: {
+      '@type': 'Offer',
+      price: '1000',
+      priceCurrency: 'EUR',
+      availability: 'https://schema.org/LimitedAvailability',
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: islandFaq.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  },
+];
+---
+
+<Base
+  title={page.seoTitle}
+  description={page.seoDescription}
+  ogImage="og-island.jpg"
+  structuredData={structuredData}
+>
+  <IslandHero />
+
+  <main id="main">
+    <!-- Зачем оставаться -->
+    <section class="section">
+      <div class="wrap wrap--narrow">
+        <h2 class="section__title reveal">{page.why.title}</h2>
+        <div class="prose prose--lead why__text reveal">
+          {page.why.lines.map((line) => <p>{line}</p>)}
+        </div>
+      </div>
+    </section>
+
+    <!-- Что за остров -->
+    <section class="section section--stone">
+      <div class="wrap place">
+        <div class="place__text reveal">
+          <h2 class="section__title">{page.place.title}</h2>
+          <div class="prose place__prose">
+            {page.place.lines.map((line) => <p>{line}</p>)}
+          </div>
+        </div>
+
+        <div class="place__photos">
+          {
+            page.place.images.map((key, i) => (
+              <Photo
+                src={key}
+                alt={
+                  i === 0
+                    ? 'Хижина под деревом на песчаном берегу Ко Ронга'
+                    : 'Огни прибрежных кафе, отражённые в воде вечером'
+                }
+                class="reveal"
+                sizes="(min-width: 60rem) 42vw, 100vw"
+                ratio={i === 0 ? '4 / 3' : '3 / 2'}
+              />
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Как устроен день -->
+    <section class="section section--dark">
+      <div class="wrap">
+        <h2 class="section__title reveal">{page.rhythm.title}</h2>
+
+        <ol class="rhythm">
+          {
+            page.rhythm.items.map((item) => (
+              <li class="rhythm__item reveal">
+                <p class="rhythm__time">{item.time}</p>
+                <p class="rhythm__text">{item.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+
+        <p class="rhythm__note reveal">{page.rhythm.note}</p>
+      </div>
+    </section>
+
+    <!-- Практика -->
+    <section class="section">
+      <div class="wrap practice">
+        <Photo
+          src={page.practice.images[0]}
+          alt="Силуэт человека в медитации на закате под пальмами"
+          class="practice__photo reveal"
+          sizes="(min-width: 60rem) 42vw, 100vw"
+          ratio="4 / 5"
+        />
+
+        <div class="practice__text reveal">
+          <h2 class="section__title">{page.practice.title}</h2>
+          <div class="prose practice__prose">
+            {page.practice.lines.map((line) => <p>{line}</p>)}
+          </div>
+          <Photo
+            src={page.practice.images[1]}
+            alt="Групповая практика на открытом воздухе у воды"
+            class="practice__inline"
+            sizes="(min-width: 60rem) 40vw, 100vw"
+            ratio="3 / 2"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Что входит -->
+    <section class="section section--sea includes">
+      <div class="wrap wrap--narrow">
+        <h2 class="section__title reveal">Что будет на острове</h2>
+        <ul class="includes__list reveal">
+          {island.includes.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <!-- Где живём -->
+    <section class="section section--stone">
+      <div class="wrap stay">
+        <div class="stay__text reveal">
+          <h2 class="section__title">{page.stay.title}</h2>
+          <div class="prose stay__prose">
+            {page.stay.lines.map((line) => <p>{line}</p>)}
+          </div>
+        </div>
+
+        <Photo
+          src={page.stay.image}
+          alt="Домики на сваях над водой у берега острова"
+          class="reveal"
+          sizes="(min-width: 60rem) 48vw, 100vw"
+          ratio="3 / 2"
+        />
+      </div>
+    </section>
+
+    <!-- Честно: что ещё уточняем -->
+    <section class="section">
+      <div class="wrap wrap--narrow">
+        <h2 class="section__title reveal">{page.pending.title}</h2>
+        <p class="section__lead reveal">{page.pending.lead}</p>
+        <ul class="pending__list reveal">
+          {page.pending.items.map((item) => <li>{item}</li>)}
+        </ul>
+        <p class="pending__note reveal">{page.pending.note}</p>
+      </div>
+    </section>
+
+    <Faq items={islandFaq} title="Вопросы про остров" />
+
+    <LeadForm
+      title="Поехали на остров"
+      lead="Напишите пару слов о себе — расскажем про программу, дорогу до Ко Ронга и детали, как только они станут окончательными."
+      islandDefault="yes"
+    />
+
+    <!-- Возврат к основному путешествию -->
+    <section class="section back">
+      <div class="wrap wrap--narrow back__inner">
+        <p class="back__eyebrow reveal">{page.backLink.text}</p>
+        <h2 class="back__title reveal">{page.backLink.title}</h2>
+        <p class="back__dates reveal">{page.backLink.dates}</p>
+        <a class="btn btn--ghost back__cta reveal" href={`${base}/`}>
+          {page.backLink.cta}
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <Footer photoKeys={photoKeys} />
+</Base>
+
+<style>
+  .why__text {
+    margin-top: 1.6rem;
+    color: var(--ink-soft);
+  }
+
+  /* Что за остров */
+  .place {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .place > * {
+    min-width: 0;
+  }
+
+  .place__prose {
+    max-width: 46ch;
+    margin-top: 1.4rem;
+    color: var(--ink-soft);
+  }
+
+  .place__photos {
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  /* Ритм дня */
+  .rhythm {
+    display: grid;
+    gap: 0;
+    margin-top: clamp(2rem, 5vw, 3rem);
+  }
+
+  .rhythm__item {
+    display: grid;
+    gap: 0.4rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .rhythm__item:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .rhythm__time {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    text-transform: uppercase;
+    color: var(--paper);
+  }
+
+  .rhythm__text {
+    max-width: 52ch;
+    color: color-mix(in srgb, var(--paper) 78%, transparent);
+  }
+
+  .rhythm__note {
+    margin-top: 1.4rem;
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--paper) 55%, transparent);
+  }
+
+  /* Практика */
+  .practice {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .practice > * {
+    min-width: 0;
+  }
+
+  .practice__prose {
+    max-width: 46ch;
+    margin-top: 1.4rem;
+    color: var(--ink-soft);
+  }
+
+  .practice__inline {
+    margin-top: 2rem;
+  }
+
+  /* Что будет */
+  .includes__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 2rem;
+  }
+
+  .includes__list li {
+    padding: 0.6rem 1.2rem;
+    border: 1px solid color-mix(in srgb, #ffffff 45%, transparent);
+    border-radius: 999px;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    letter-spacing: 0.02em;
+  }
+
+  /* Где живём */
+  .stay {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .stay > * {
+    min-width: 0;
+  }
+
+  .stay__prose {
+    max-width: 46ch;
+    margin-top: 1.4rem;
+    color: var(--ink-soft);
+  }
+
+  /* Что уточняем */
+  .pending__list {
+    display: grid;
+    gap: 0.8rem;
+    max-width: 52ch;
+    margin-top: 1.8rem;
+  }
+
+  .pending__list li {
+    position: relative;
+    padding-left: 1.4rem;
+    color: var(--ink-soft);
+  }
+
+  .pending__list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--laterite);
+  }
+
+  .pending__note {
+    max-width: 52ch;
+    margin-top: 1.6rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--rule);
+    font-size: var(--step--1);
+    color: var(--ink-mute);
+  }
+
+  /* Возврат к путешествию */
+  .back {
+    background: var(--paper-warm);
+  }
+
+  .back__inner {
+    text-align: center;
+  }
+
+  .back__eyebrow {
+    font-size: var(--step--1);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .back__title {
+    margin-top: 0.7rem;
+    font-size: var(--step-3);
+    text-transform: uppercase;
+  }
+
+  .back__dates {
+    margin-top: 0.5rem;
+    color: var(--ink-soft);
+  }
+
+  .back__cta {
+    margin-top: 1.6rem;
+  }
+
+  @media (min-width: 60rem) {
+    .place,
+    .stay {
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5rem;
+      align-items: center;
+    }
+
+    .practice {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 3.5rem;
+      align-items: start;
+    }
+
+    .rhythm {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0 2.5rem;
+    }
+
+    .rhythm__item {
+      border-bottom: 1px solid var(--rule);
+    }
+  }
+</style>
+
+<script>
+  import { bindAnalytics } from '../scripts/analytics';
+  import { initReveal } from '../scripts/reveal';
+
+  bindAnalytics();
+  initReveal();
+</script>

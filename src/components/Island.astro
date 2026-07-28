@@ -3,10 +3,10 @@ import Photo from './Photo.astro';
 import { island } from '../data/island';
 
 /**
- * Секция дополнительной программы. Весь текст приходит из src/data/island.ts,
- * поэтому позже её можно отрендерить как отдельную страницу /island,
- * не переписывая контент.
+ * Секция дополнительной программы. Весь текст приходит из src/data/island.ts —
+ * оттуда же собирается и отдельная страница /island, на которую ведёт кнопка.
  */
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <section class="island section section--sea" id="ostrov">
@@ -37,9 +37,13 @@ import { island } from '../data/island';
     <p class="island__price reveal">{island.price}</p>
     <p class="island__note reveal">{island.priceNote}</p>
 
-    <a class="btn island__cta reveal" href="#zayavka" data-analytics="retreat_cta" data-prefill-island>
+    <a class="btn island__cta reveal" href={`${base}/island`} data-analytics="retreat_cta">
       {island.cta}
     </a>
+
+    <p class="island__alt reveal">
+      Или отметьте остров в <a href="#zayavka" data-prefill-island>общей заявке</a>.
+    </p>
   </div>
 </section>
 
@@ -115,6 +119,12 @@ import { island } from '../data/island';
     margin-top: 1.6rem;
     background: #ffffff;
     color: var(--sea);
+  }
+
+  .island__alt {
+    margin-top: 1rem;
+    font-size: var(--step--1);
+    color: color-mix(in srgb, #ffffff 78%, transparent);
   }
 
   .island__cta:hover {

@@ -61,6 +61,13 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  /*
+   * Именно clip и именно на html. overflow-x: hidden на body делает его
+   * отдельным контейнером прокрутки: ломается position: sticky, плавный
+   * переход по якорям и анимации, завязанные на скролл окна.
+   * clip подрезает лишнее по горизонтали, не создавая контейнера.
+   */
+  overflow-x: clip;
 }
 
 body {
@@ -73,7 +80,6 @@ body {
   font-synthesis-weight: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
 }
 
 h1,

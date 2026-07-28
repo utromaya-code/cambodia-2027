@@ -1,13 +1,24 @@
 ---
 import { trip } from '../data/trip';
+
+interface Props {
+  title?: string;
+  lead?: string;
+  /** На странице острова разумно сразу отметить интерес к нему. */
+  islandDefault?: 'yes' | 'no' | 'unsure';
+}
+
+const {
+  title = 'Поехали',
+  lead = 'Напишите пару слов о себе — мы вернёмся с деталями по маршруту, технике и датам.',
+  islandDefault = 'unsure',
+} = Astro.props;
 ---
 
 <section class="lead section section--dark" id="zayavka">
   <div class="wrap wrap--narrow">
-    <h2 class="section__title reveal">Поехали</h2>
-    <p class="section__lead reveal">
-      Напишите пару слов о себе — мы вернёмся с деталями по маршруту, технике и датам.
-    </p>
+    <h2 class="section__title reveal">{title}</h2>
+    <p class="section__lead reveal">{lead}</p>
 
     <form class="form reveal" id="lead-form" novalidate>
       <div class="form__row">
@@ -44,9 +55,18 @@ import { trip } from '../data/trip';
       <fieldset class="choice">
         <legend class="field__label">Остров 8–15 марта</legend>
         <div class="choice__options">
-          <label><input type="radio" name="island" value="yes" /><span>Интересен</span></label>
-          <label><input type="radio" name="island" value="no" /><span>Не планирую</span></label>
-          <label><input type="radio" name="island" value="unsure" checked /><span>Пока не знаю</span></label>
+          <label>
+            <input type="radio" name="island" value="yes" checked={islandDefault === 'yes'} />
+            <span>Интересен</span>
+          </label>
+          <label>
+            <input type="radio" name="island" value="no" checked={islandDefault === 'no'} />
+            <span>Не планирую</span>
+          </label>
+          <label>
+            <input type="radio" name="island" value="unsure" checked={islandDefault === 'unsure'} />
+            <span>Пока не знаю</span>
+          </label>
         </div>
       </fieldset>
 
