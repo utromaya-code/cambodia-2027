@@ -44,7 +44,11 @@ jobs:
           BASE_PATH: ${{ vars.BASE_PATH }}
           PUBLIC_LEAD_WEBHOOK_URL: ${{ secrets.PUBLIC_LEAD_WEBHOOK_URL }}
 
+      # enablement: true включает GitHub Pages сам, если он ещё не включён,
+      # — чтобы не требовать ручного переключения в настройках репозитория.
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
