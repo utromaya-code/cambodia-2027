@@ -120,8 +120,15 @@ if (faqBtn) {
 }
 
 // Изображения без alt
+// Декоративные снимки помечены role="presentation" или лежат в aria-hidden —
+// им alt не нужен, всем остальным обязателен.
 const noAlt = await page.$$eval('img', (els) =>
-  els.filter((e) => !e.getAttribute('alt') && e.getAttribute('alt') !== '').length,
+  els.filter(
+    (e) =>
+      e.getAttribute('alt') === null &&
+      e.getAttribute('role') !== 'presentation' &&
+      !e.closest('[aria-hidden="true"]'),
+  ).length,
 );
 if (noAlt) problems.push(`${noAlt} изображений без alt`);
 

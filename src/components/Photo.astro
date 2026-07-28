@@ -29,6 +29,13 @@ const {
 
 const image = getPhoto(src);
 const style = ratio ? `aspect-ratio:${ratio}` : undefined;
+
+/**
+ * Пустой alt означает декоративный снимок (фон под текстом). Astro вырезает
+ * пустой атрибут из разметки, поэтому дополнительно ставим role="presentation" —
+ * так программы чтения с экрана точно пропустят изображение.
+ */
+const decorative = alt.trim() === '';
 ---
 
 {
@@ -42,6 +49,7 @@ const style = ratio ? `aspect-ratio:${ratio}` : undefined;
         loading={loading}
         fetchpriority={fetchpriority}
         decoding="async"
+        role={decorative ? 'presentation' : undefined}
       />
     </div>
   ) : (
