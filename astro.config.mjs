@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import tailwindcss from '@tailwindcss/vite';
 
 /**
  * Адрес сайта и базовый путь берутся из переменных окружения, чтобы один и тот же
@@ -28,6 +29,9 @@ export default defineConfig({
     responsiveStyles: true,
   },
   vite: {
+    // Tailwind v4 подключается плагином Vite, без tailwind.config.js —
+    // токены темы задаются в CSS через @theme (src/styles/global.css).
+    plugins: [tailwindcss()],
     build: {
       cssMinify: 'lightningcss',
     },

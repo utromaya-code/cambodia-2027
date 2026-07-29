@@ -6,6 +6,21 @@
 
 Astro + TypeScript, статическая сборка, деплой на GitHub Pages.
 
+Стек стилей и анимации гибридный, сознательно:
+- **CSS custom properties** (`src/styles/global.css`, `:root`) — исходная
+  система дизайна, на ней держится большинство существующих секций;
+- **Tailwind CSS v4** (`@tailwindcss/vite`, без `tailwind.config.js` — токены
+  темы заданы в CSS через `@theme`) — новые и переписываемые секции;
+- **GSAP** — кинематографичные анимации (появление героя и т.п.), обычный
+  `IntersectionObserver` в `src/scripts/reveal.ts` остаётся для простого
+  scroll-reveal там, где GSAP избыточен.
+
+Оба цветовых слоя указывают на одни и те же hex-значения (терракотовый
+`#E05636` и остальная палитра) — старые и новые компоненты не расходятся
+по цвету. Название токенов Tailwind: `terracotta`, `terracotta-deep`, `sand`,
+`jungle`, `jungle-mid`, `graphite`, `graphite-soft`, `paper`, `sea` — см.
+`@theme` в начале `global.css`.
+
 Две страницы:
 
 | Адрес | Что это |

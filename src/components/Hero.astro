@@ -1,13 +1,35 @@
 ---
+import { getImage } from 'astro:assets';
 import Photo from './Photo.astro';
+import { getPhoto } from '../data/images';
 import { hero } from '../data/trip';
 import { pricing } from '../data/pricing';
 
 const [moto, road] = pricing.options;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+/**
+ * Видео-фон — заглушка. Файла ещё нет, поэтому <source> закономерно вернёт 404,
+ * а <video> без кадра просто ничего не покажет: под ним неподвижным слоем лежит
+ * тот же кадр как <Photo>, так что макет не ломается ни при отсутствии видео,
+ * ни при отключённом JS. Как только видео появится — положить его сюда,
+ * ничего в разметке менять не придётся. Список требований к файлу и мотив
+ * (что именно снимать) — в CONTENT_NEEDED.md.
+ */
+const heroVideoSrc = `${base}/video/hero.mp4`;
+
+// poster для <video> — тот же кадр, что и статичный фон, оптимизированный под ширину экрана.
+const heroSource = getPhoto('hero');
+const heroPoster = heroSource
+  ? await getImage({ src: heroSource, width: 1600, format: 'webp' })
+  : null;
 ---
 
-<header class="hero">
-  <div class="hero__media">
+<header
+  data-hero
+  class="relative isolate grid min-h-[100svh] items-end overflow-hidden bg-graphite pt-24 pb-12 text-white sm:pt-28 lg:pt-32"
+>
+  <div class="absolute inset-0 -z-10">
     <Photo
       src="hero"
       alt="Красная грунтовая дорога в камбоджийской деревне: мотоциклы и тук-тук поднимают пыль"
@@ -15,197 +37,163 @@ const [moto, road] = pricing.options;
       loading="eager"
       fetchpriority="high"
       widths={[640, 1000, 1400, 1900, 2400]}
+      class="h-full"
     />
+
+    <!--
+      autoplay+muted+playsinline — обязательная связка, без неё мобильные браузеры
+      блокируют автовоспроизведение. motion-reduce:hidden — respect prefers-reduced-motion:
+      кто просил не показывать анимацию, тот и без движущегося фона.
+    -->
+    <video
+      class="absolute inset-0 h-full w-full object-cover motion-reduce:hidden"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="none"
+      poster={heroPoster?.src}
+      aria-hidden="true"
+    >
+      <source src={heroVideoSrc} type="video/mp4" />
+    </video>
+
+    <!-- Затемнение снизу, чтобы текст читался на любом кадре; четыре стопа —
+         Tailwind-утилиты градиента дают только три, поэтому произвольное значение. -->
+    <div
+      class="absolute inset-0 bg-[linear-gradient(to_top,rgb(12_9_7/0.88)_0%,rgb(12_9_7/0.5)_40%,rgb(12_9_7/0.15)_72%,rgb(12_9_7/0.32)_100%)]"
+    >
+    </div>
   </div>
 
-  <div class="hero__inner wrap">
-    <p class="hero__kicker">{hero.kicker}</p>
-    <h1 class="hero__title">{hero.title}</h1>
-    <p class="hero__lead">{hero.lead}</p>
+  <div class="wrap relative z-10">
+    <p
+      data-hero-anim
+      class="mb-2 font-display text-[length:var(--step-1)] font-normal tracking-[0.42em] text-white/75 uppercase"
+    >
+      {hero.kicker}
+    </p>
 
-    <p class="hero__dates">{hero.dates}</p>
+    <h1
+      data-hero-anim
+      class="font-display text-[length:var(--step-5)] leading-[0.92] tracking-[-0.015em] uppercase"
+    >
+      {hero.title}
+    </h1>
 
-    <ul class="hero__prices">
-      <li>
-        <span class="hero__mode">На байке</span>
-        <b>{moto.priceHuman}</b>
+    <p
+      data-hero-anim
+      class="mt-5 max-w-[34ch] text-[length:var(--step-1)] leading-[1.4] text-white/90 lg:max-w-[40ch]"
+    >
+      {hero.lead}
+    </p>
+
+    <p
+      data-hero-anim
+      class="mt-7 font-display text-[length:var(--step-1)] tracking-[0.14em]"
+    >
+      {hero.dates}
+    </p>
+
+    <ul data-hero-anim class="mt-4 flex flex-wrap gap-x-10 gap-y-3">
+      <li class="grid gap-1">
+        <span class="text-[length:var(--step--1)] tracking-[0.14em] text-white/65 uppercase">
+          На байке
+        </span>
+        <b class="font-display text-[length:var(--step-2)] leading-none font-medium">
+          {moto.priceHuman}
+        </b>
       </li>
-      <li>
-        <span class="hero__mode">На микроавтобусе</span>
-        <b>{road.priceHuman}</b>
+      <li class="grid gap-1">
+        <span class="text-[length:var(--step--1)] tracking-[0.14em] text-white/65 uppercase">
+          На микроавтобусе
+        </span>
+        <b class="font-display text-[length:var(--step-2)] leading-none font-medium">
+          {road.priceHuman}
+        </b>
       </li>
     </ul>
 
-    <a class="btn hero__cta" href="#zayavka" data-analytics="hero_cta_click">
-      {hero.cta}
+    <a
+      data-hero-anim
+      data-analytics="hero_cta_click"
+      href="#zayavka"
+      class="group relative mt-8 inline-flex w-full items-center justify-center overflow-hidden bg-terracotta px-8 py-4 font-display text-base font-medium tracking-[0.1em] text-white uppercase sm:w-auto"
+    >
+      <!-- Заливка при наведении: тёмный слой выезжает слева направо, а не просто меняет bg -->
+      <span
+        class="absolute inset-0 origin-left scale-x-0 bg-terracotta-deep transition-transform duration-300 ease-out group-hover:scale-x-100"
+        aria-hidden="true"
+      ></span>
+      <span class="relative">{hero.cta}</span>
     </a>
 
-    <p class="hero__note">{hero.note}</p>
+    <p
+      data-hero-anim
+      class="mt-4 max-w-[46ch] text-[length:var(--step--1)] text-white/70"
+    >
+      {hero.note}
+    </p>
   </div>
 
-  <a class="hero__scroll" href="#zachem" aria-label="К описанию путешествия">
-    <span aria-hidden="true"></span>
+  <a
+    href="#zachem"
+    aria-label="К описанию путешествия"
+    class="absolute bottom-5 left-1/2 z-10 hidden w-10 -translate-x-1/2 lg:block"
+  >
+    <span
+      class="mx-auto block h-3.5 w-3.5 animate-bounce border-r-2 border-b-2 border-white/80"
+      style="rotate: 45deg"
+    ></span>
   </a>
 </header>
 
 <style>
-  .hero {
-    position: relative;
-    display: grid;
-    align-items: end;
-    min-height: 100svh;
-    padding-block: clamp(5rem, 14vh, 9rem) clamp(3rem, 9vh, 6rem);
-    color: #fff;
-    background: var(--ink);
-    overflow: hidden;
+  /*
+   * Начальное «скрытое» состояние задаём в CSS, а не в JS: если задать его
+   * скриптом, между отрисовкой и запуском GSAP будет видна вспышка полностью
+   * проявленного текста. При prefers-reduced-motion контент виден сразу —
+   * анимации не будет, прятать нечего.
+   */
+  [data-hero-anim] {
+    opacity: 0;
   }
 
-  .hero__media {
-    position: absolute;
-    inset: 0;
-  }
-
-  .hero__media :global(.photo) {
-    height: 100%;
-  }
-
-  /* Затемнение снизу, чтобы текст читался на любом кадре */
-  .hero__media::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to top,
-      rgba(12, 9, 7, 0.88) 0%,
-      rgba(12, 9, 7, 0.55) 38%,
-      rgba(12, 9, 7, 0.18) 70%,
-      rgba(12, 9, 7, 0.35) 100%
-    );
-  }
-
-  .hero__inner {
-    position: relative;
-    z-index: 1;
-  }
-
-  .hero__kicker {
-    margin: 0 0 0.4rem;
-    font-family: var(--font-display);
-    font-size: var(--step-1);
-    font-weight: 400;
-    letter-spacing: 0.42em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, #fff 78%, transparent);
-  }
-
-  .hero__title {
-    font-size: var(--step-5);
-    text-transform: uppercase;
-    letter-spacing: -0.015em;
-    line-height: 0.92;
-  }
-
-  .hero__lead {
-    max-width: 34ch;
-    margin-top: 1.3rem;
-    font-size: var(--step-1);
-    line-height: 1.4;
-    color: color-mix(in srgb, #fff 88%, transparent);
-  }
-
-  .hero__dates {
-    margin-top: 1.8rem;
-    font-family: var(--font-display);
-    font-size: var(--step-1);
-    letter-spacing: 0.14em;
-  }
-
-  .hero__prices {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.9rem 2.5rem;
-    margin-top: 1.1rem;
-  }
-
-  .hero__prices li {
-    display: grid;
-    gap: 0.15rem;
-  }
-
-  .hero__mode {
-    font-size: var(--step--1);
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: color-mix(in srgb, #fff 68%, transparent);
-  }
-
-  .hero__prices b {
-    font-family: var(--font-display);
-    font-size: var(--step-2);
-    font-weight: 500;
-    letter-spacing: 0.02em;
-    line-height: 1;
-  }
-
-  .hero__cta {
-    margin-top: 1.9rem;
-    width: 100%;
-  }
-
-  .hero__note {
-    max-width: 46ch;
-    margin-top: 1.1rem;
-    font-size: var(--step--1);
-    color: color-mix(in srgb, #fff 72%, transparent);
-  }
-
-  .hero__scroll {
-    position: absolute;
-    left: 50%;
-    bottom: 1.1rem;
-    z-index: 1;
-    display: none;
-    width: 2.5rem;
-    height: 2.5rem;
-    translate: -50% 0;
-  }
-
-  .hero__scroll span {
-    display: block;
-    width: 0.85rem;
-    height: 0.85rem;
-    margin: 0.6rem auto;
-    border-right: 2px solid #fff;
-    border-bottom: 2px solid #fff;
-    rotate: 45deg;
-    animation: hero-nudge 2.4s ease-in-out infinite;
-  }
-
-  @keyframes hero-nudge {
-    0%,
-    100% {
-      transform: translateY(-3px);
-      opacity: 0.5;
-    }
-    50% {
-      transform: translateY(3px);
+  @media (prefers-reduced-motion: reduce) {
+    [data-hero-anim] {
       opacity: 1;
     }
   }
-
-  @media (min-width: 40rem) {
-    .hero__cta {
-      width: auto;
-    }
-  }
-
-  @media (min-width: 64rem) {
-    .hero__lead {
-      max-width: 40ch;
-    }
-
-    .hero__scroll {
-      display: block;
-    }
-  }
 </style>
+
+<noscript>
+  <style>
+    /* Без JS GSAP не запустится и не покажет контент — герой не должен зависеть от этого. */
+    [data-hero-anim] {
+      opacity: 1 !important;
+    }
+  </style>
+</noscript>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const root = document.querySelector<HTMLElement>('[data-hero]');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (root && !reduceMotion) {
+    const targets = root.querySelectorAll<HTMLElement>('[data-hero-anim]');
+    gsap.fromTo(
+      targets,
+      { opacity: 0, y: 28 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 0.9,
+        ease: 'power3.out',
+        stagger: 0.09,
+        delay: 0.15,
+      },
+    );
+  }
+</script>

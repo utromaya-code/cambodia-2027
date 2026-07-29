@@ -4,10 +4,38 @@
    Палитра взята из самой страны: латеритная земля, камень Ангкора, джунгли,
    выгоревшая бумага. Тропическая синь появляется только ближе к финалу
    страницы, когда маршрут выходит к морю.
+
+   Два слоя стилей сосуществуют осознанно, а не по недосмотру:
+   — CSS custom properties в :root — основа существующей системы, на неё
+     завязаны все компоненты, написанные до перехода на Tailwind;
+   — @theme ниже отдаёт те же значения в виде Tailwind-токенов
+     (bg-terracotta, text-jungle, font-display…) для новых секций.
+   Оба слоя указывают на одни и те же hex-значения, поэтому старые
+   и новые компоненты не разъезжаются по цвету. Постепенно, по мере
+   миграции секций на Tailwind, слой custom properties можно будет убрать.
    ========================================================================== */
 
+@import 'tailwindcss';
+
+@theme {
+  --color-terracotta: #e05636;
+  --color-terracotta-deep: #a83c22;
+  --color-sand: #ebe0c9;
+  --color-sand-deep: #cdbfa5;
+  --color-jungle: #1c3226;
+  --color-jungle-mid: #2e5140;
+  --color-graphite: #14100d;
+  --color-graphite-soft: #3a332c;
+  --color-paper: #f5f0e7;
+  --color-sea: #1b6b7a;
+
+  --font-display: 'Oswald', 'Arial Narrow', sans-serif;
+  --font-body: 'Manrope Variable', 'Manrope', system-ui, sans-serif;
+}
+
 :root {
-  /* Цвет */
+  /* Цвет. --laterite приведён к терракотовому #E05636 — цвету грунтовых
+     дорог Камбоджи, зафиксированному как акцент бренда. */
   --ink: #14100d;
   --ink-soft: #3a332c;
   --ink-mute: #6b6157;
@@ -15,8 +43,8 @@
   --paper-warm: #ebe3d6;
   --stone: #cdbfa5;
   --stone-deep: #a4947a;
-  --laterite: #b34a24;
-  --laterite-deep: #7e3117;
+  --laterite: #e05636;
+  --laterite-deep: #a83c22;
   --jungle: #1c3226;
   --jungle-mid: #2e5140;
   --sea: #1b6b7a;
