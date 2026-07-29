@@ -74,38 +74,51 @@ const labelFor = (id: string) => labelOffsets[id] ?? { side: 'start' as const, d
     </figure>
 
     <!-- Вертикальный список — основной способ читать маршрут на телефоне -->
-    <ol class="route__list">
-      {
-        points.map((p, i) => (
-          <li class="route__item reveal">
-            <button
-              class="route__btn"
-              type="button"
-              aria-expanded="false"
-              aria-controls={`route-panel-${p.id}`}
-              data-route-toggle={p.id}
-            >
-              <span class="route__index">{String(i + 1).padStart(2, '0')}</span>
-              <span class="route__names">
-                <span class="route__name">{p.name}</span>
-                <span class="route__latin">{p.latin}</span>
-              </span>
-              <span class="route__chevron" aria-hidden="true" />
-            </button>
+    <div class="route__list-wrap" data-route-progress>
+      <div class="route__rail" aria-hidden="true">
+        <div class="route__rail-fill" data-rail-fill></div>
+      </div>
 
-            <div class="route__panel" id={`route-panel-${p.id}`} hidden>
-              <Photo
-                src={p.image}
-                alt={p.note}
-                sizes="(min-width: 60rem) 32vw, 90vw"
-                ratio="3 / 2"
-              />
-              <p>{p.note}</p>
-            </div>
-          </li>
-        ))
-      }
-    </ol>
+      <ol class="route__list">
+        {
+          points.map((p, i) => {
+            const galleryKeys = [p.image, ...(p.gallery ?? [])];
+            return (
+              <li class="route__item reveal">
+                <button
+                  class="route__btn"
+                  type="button"
+                  aria-expanded="false"
+                  aria-controls={`route-panel-${p.id}`}
+                  data-route-toggle={p.id}
+                >
+                  <span class="route__index">{String(i + 1).padStart(2, '0')}</span>
+                  <span class="route__names">
+                    <span class="route__name">{p.name}</span>
+                    <span class="route__latin">{p.latin}</span>
+                  </span>
+                  <span class="route__chevron" aria-hidden="true" />
+                </button>
+
+                <div class="route__panel" id={`route-panel-${p.id}`} hidden>
+                  <div class="route__gallery" data-count={galleryKeys.length}>
+                    {galleryKeys.map((key, gi) => (
+                      <Photo
+                        src={key}
+                        alt={gi === 0 ? p.note : `${p.name}: ещё один кадр этого места`}
+                        sizes="(min-width: 60rem) 16vw, 44vw"
+                        ratio="4 / 3"
+                      />
+                    ))}
+                  </div>
+                  <p>{p.note}</p>
+                </div>
+              </li>
+            );
+          })
+        }
+      </ol>
+    </div>
   </div>
 </section>
 
@@ -166,10 +179,32 @@ const labelFor = (id: string) => labelOffsets[id] ?? { side: 'start' as const, d
     r: 13;
   }
 
-  /* Список */
+  /* Список + вертикальная рейка прогресса слева от номеров */
+  .route__list-wrap {
+    position: relative;
+  }
+
+  .route__rail {
+    position: absolute;
+    top: 0.3em;
+    bottom: 0.3em;
+    left: 0.55em;
+    width: 2px;
+    background: var(--rule);
+  }
+
+  .route__rail-fill {
+    position: absolute;
+    inset: 0;
+    transform: scaleY(0);
+    transform-origin: top;
+    background: var(--laterite);
+  }
+
   .route__list {
     display: grid;
     gap: 0;
+    padding-left: 1.7rem;
     counter-reset: route;
   }
 
@@ -252,6 +287,19 @@ const labelFor = (id: string) => labelOffsets[id] ?? { side: 'start' as const, d
     color: color-mix(in srgb, var(--paper) 80%, transparent);
   }
 
+  .route__gallery {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+    max-width: 32rem;
+  }
+
+  /* Один снимок — во всю ширину панели, а не растянут в узкую колонку */
+  .route__gallery[data-count='1'] {
+    grid-template-columns: 1fr;
+    max-width: 18rem;
+  }
+
   @media (min-width: 60rem) {
     .route__layout {
       grid-template-columns: 1.05fr 0.95fr;
@@ -273,11 +321,36 @@ const labelFor = (id: string) => labelOffsets[id] ?? { side: 'start' as const, d
 </style>
 
 <script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
   const section = document.querySelector<HTMLElement>('#marshrut');
   if (section) {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const line = section.querySelector<SVGPathElement>('.route__line');
     const pins = section.querySelectorAll<SVGGElement>('.route__pin[data-point]');
+
+    /* Рейка слева от списка — заполняется по мере прохождения списка через экран */
+    const railFill = section.querySelector<HTMLElement>('[data-rail-fill]');
+    const listWrap = section.querySelector<HTMLElement>('[data-route-progress]');
+    if (railFill && listWrap) {
+      if (reduceMotion) {
+        railFill.style.transform = 'scaleY(1)';
+      } else {
+        gsap.to(railFill, {
+          scaleY: 1,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: listWrap,
+            start: 'top 75%',
+            end: 'bottom 55%',
+            scrub: true,
+          },
+        });
+      }
+    }
 
     /* Прорисовка линии по мере прохождения секции через экран */
     if (line) {
@@ -319,6 +392,11 @@ const labelFor = (id: string) => labelOffsets[id] ?? { side: 'start' as const, d
         const open = btn.getAttribute('aria-expanded') === 'true';
         btn.setAttribute('aria-expanded', String(!open));
         panel.hidden = open;
+
+        // Раскрытая панель меняет высоту списка, а границы ScrollTrigger для
+        // рейки посчитаны один раз при загрузке — без пересчёта они «уедут».
+        ScrollTrigger.refresh();
+
         if (!open) {
           window.dispatchEvent(
             new CustomEvent('analytics', { detail: { event: 'route_day_open', id } }),

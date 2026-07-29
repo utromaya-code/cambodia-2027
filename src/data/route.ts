@@ -10,6 +10,14 @@ export interface RoutePoint {
   note: string;
   /** Ключ изображения из src/data/images.ts. */
   image: string;
+  /**
+   * Дополнительные кадры для мини-галереи в раскрытой карточке точки —
+   * необязательные, показываются вместе с основным `image`. Километраж
+   * и % покрытия по дням сюда намеренно не добавлены: этих данных нет
+   * ни по точкам, ни по дням (см. days.ts и CONTENT_NEEDED.md), а показывать
+   * готовы только то, что подтверждено.
+   */
+  gallery?: readonly string[];
   /** Дни программы, к которым относится точка. */
   days: number[];
 }
@@ -27,6 +35,7 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 103.8598,
     note: 'Отсюда всё начинается: знакомство, техника, первый общий ужин.',
     image: 'siem-reap',
+    gallery: ['siem-reap-2'],
     days: [1],
   },
   {
@@ -37,6 +46,7 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 103.867,
     note: 'Рассвет над Ангкор-Ватом, корни Та-Прома и лица Байона до того, как приедут автобусы.',
     image: 'angkor-wat-sunrise',
+    gallery: ['angkor-wat-sunrise-2'],
     days: [2],
   },
   {
@@ -47,6 +57,7 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 104.0464,
     note: 'Священная гора, вода в лесу и Бенг Мелеа — храм, который джунгли забирают обратно.',
     image: 'phnom-kulen',
+    gallery: ['phnom-kulen-2'],
     days: [3],
   },
   {
@@ -57,6 +68,7 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 103.2022,
     note: 'Первый большой переход, рисовые поля и летучие мыши, вылетающие из горы на закате.',
     image: 'battambang',
+    gallery: ['battambang-2'],
     days: [4],
   },
   {
@@ -67,6 +79,7 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 104.6667,
     note: 'Гончарные деревни и жизнь на воде Тонлесапа — лодки, сети, дома на сваях.',
     image: 'tonle-sap',
+    gallery: ['tonle-sap-2'],
     days: [5],
   },
   {
@@ -77,6 +90,7 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 104.0333,
     note: 'Равнина заканчивается: сосны, горы и первая прохлада за всю дорогу.',
     image: 'kirirom',
+    gallery: ['kirirom-2'],
     days: [6],
   },
   {
@@ -87,6 +101,7 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 104.181,
     note: 'Река, колониальные кварталы, перец и длинные вечера без спешки.',
     image: 'kampot',
+    gallery: ['kampot-2'],
     days: [7, 9],
   },
   {
@@ -97,6 +112,7 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 104.0206,
     note: 'Серпантин в облако: туман, тропический лес и панорама всего побережья.',
     image: 'bokor',
+    gallery: ['bokor-2'],
     days: [8],
   },
   {
@@ -107,6 +123,7 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 103.8333,
     note: 'Последний ходовой день: локальные дороги, лес и мангры на выходе к морю.',
     image: 'ream',
+    gallery: ['ream-2'],
     days: [10],
   },
   {
@@ -117,6 +134,7 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 103.5296,
     note: 'Финал дороги. Море, последний закат путешествия и общий ужин.',
     image: 'sihanoukville',
+    gallery: ['sihanoukville-2'],
     days: [10, 11],
   },
 ];
