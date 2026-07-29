@@ -46,6 +46,15 @@ QUERIES = {
     "monks": ["Cambodian monks", "Cambodia monk temple"],
     "angkor-thom": ["Angkor Thom gate", "Angkor causeway"],
     "kep": ["Kep Cambodia", "Kep crab market"],
+    # Добавлено для visual-редизайна: люди/группа/движение — то, чего
+    # не хватало в первом заходе (сплошь пейзаж и архитектура).
+    "riders-group": ["motorcycle riders group Asia", "adventure motorcycle group Southeast Asia"],
+    "helmet-gear": ["motorcycle helmet rider gear", "motorbike rider hands handlebar"],
+    "angkor-motorbike": ["motorbike Angkor temple", "motorcycle Cambodia temple road"],
+    "bokor-road-bike": ["Bokor mountain road motorcycle", "Preah Monivong Bokor road serpentine"],
+    "kampot-night": ["Kampot night market", "Kampot evening street lights"],
+    "cambodia-portrait": ["Cambodia rural portrait", "Cambodia countryside person road"],
+    "dust-motion": ["dirt road dust motorcycle motion", "Cambodia dust road riding"],
 }
 
 
