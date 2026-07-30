@@ -1,6 +1,7 @@
 ---
 import { getImage } from 'astro:assets';
 import Photo from './Photo.astro';
+import Marker from './Marker.astro';
 import { getPhoto } from '../data/images';
 import { hero } from '../data/trip';
 import { pricing } from '../data/pricing';
@@ -12,158 +13,129 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 /**
  * Видео-фон — заглушка. Файла ещё нет, поэтому <source> закономерно вернёт 404,
  * а <video> без кадра просто ничего не покажет: под ним неподвижным слоем лежит
- * тот же кадр как <Photo>, так что макет не ломается ни при отсутствии видео,
- * ни при отключённом JS. Как только видео появится — положить его сюда,
- * ничего в разметке менять не придётся. Список требований к файлу и мотив
- * (что именно снимать) — в CONTENT_NEEDED.md.
+ * тот же кадр как <Photo>. Требования к файлу — в CONTENT_NEEDED.md.
  */
 const heroVideoSrc = `${base}/video/hero.mp4`;
 
-// poster для <video> — тот же кадр, что и статичный фон, оптимизированный под ширину экрана.
 const heroSource = getPhoto('hero');
 const heroPoster = heroSource
   ? await getImage({ src: heroSource, width: 1600, format: 'webp' })
   : null;
 ---
 
-<header
-  data-hero
-  class="relative isolate grid min-h-[100svh] items-end overflow-hidden bg-graphite pt-24 pb-10 text-white sm:pt-28 lg:pt-32"
->
-  <div class="absolute inset-0 -z-10">
-    <Photo
-      src="hero"
-      alt="Красная грунтовая дорога в камбоджийской деревне: мотоциклы и тук-тук поднимают пыль"
-      sizes="100vw"
-      loading="eager"
-      fetchpriority="high"
-      widths={[640, 1000, 1400, 1900, 2400]}
-      class="h-full"
-    />
+<!--
+  Светлый первый экран: текстовый блок на почти белом фоне, фотография —
+  отдельным ярким полем справа (на десктопе) / снизу (на мобильном).
+  Фото больше не подложка под текстом, поэтому его не нужно гасить
+  затемнением — оно остаётся насыщенным, как в референсной презентации.
+-->
+<header data-hero class="relative isolate bg-paper text-graphite">
+  <div class="mx-auto grid min-h-[100svh] w-full max-w-[120rem] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
+    <!-- Текстовая половина -->
+    <div class="order-2 flex flex-col justify-center px-[var(--gutter)] py-12 lg:order-1 lg:py-20">
+      <p
+        data-hero-anim
+        class="font-body text-xs font-semibold tracking-[0.22em] text-terracotta uppercase"
+      >
+        {hero.poster.dates} · {hero.poster.duration}
+      </p>
 
-    <!--
-      autoplay+muted+playsinline — обязательная связка, без неё мобильные браузеры
-      блокируют автовоспроизведение. motion-reduce:hidden — respect prefers-reduced-motion:
-      кто просил не показывать анимацию, тот и без движущегося фона.
-    -->
-    <video
-      class="absolute inset-0 h-full w-full object-cover motion-reduce:hidden"
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="none"
-      poster={heroPoster?.src}
-      aria-hidden="true"
-    >
-      <source src={heroVideoSrc} type="video/mp4" />
-    </video>
+      <h1 data-hero-anim class="mt-5 font-display leading-[0.9] uppercase">
+        <span class="block text-[clamp(3.4rem,1.9rem+9.5vw,8.5rem)] tracking-[-0.02em]">
+          {hero.kicker}
+        </span>
+        <Marker tilt={-0.6} class="mt-2 text-[clamp(1.5rem,0.85rem+3.2vw,3.4rem)]">
+          {hero.title}
+        </Marker>
+      </h1>
 
-    <!--
-      Два ЛОКАЛЬНЫХ затемнения вместо одного сплошного градиента через весь кадр:
-      тёмный «пул» под текстом внизу слева и лёгкий — под poster-facts вверху
-      справа. Середина кадра (дорога, пальмы, мотоциклист) остаётся почти
-      нетронутой — фото продолжает «жить», а не гаснет целиком под one black gradient.
-    -->
-    <div
-      class="absolute inset-0 bg-[image:radial-gradient(ellipse_58%_42%_at_90%_10%,rgb(12_9_7/0.55)_0%,transparent_70%),radial-gradient(ellipse_95%_78%_at_10%_100%,rgb(12_9_7/0.94)_0%,rgb(12_9_7/0.55)_38%,transparent_68%)]"
-    >
+      <p
+        data-hero-anim
+        class="mt-7 max-w-[38ch] text-[length:var(--step-0)] leading-[1.5] text-graphite-soft"
+      >
+        {hero.lead}
+      </p>
+
+      <p
+        data-hero-anim
+        class="mt-6 font-body text-xs font-semibold tracking-[0.18em] text-graphite-soft/70 uppercase"
+      >
+        {hero.poster.route} · {bike.model}
+      </p>
+
+      <!-- Цена — крупные строки, без карточек и рамок -->
+      <div data-hero-anim class="mt-6 flex flex-wrap items-baseline gap-x-8 gap-y-2">
+        <span class="inline-flex flex-wrap items-baseline gap-x-3">
+          <span class="font-display text-[length:var(--step-3)] leading-none">
+            {moto.priceHuman}
+          </span>
+          <span class="text-[length:var(--step--1)] tracking-[0.1em] text-graphite-soft/70 uppercase">
+            на байке
+          </span>
+        </span>
+        <span class="inline-flex flex-wrap items-baseline gap-x-3">
+          <span class="font-display text-[length:var(--step-3)] leading-none">
+            {road.priceHuman}
+          </span>
+          <span class="text-[length:var(--step--1)] tracking-[0.1em] text-graphite-soft/70 uppercase">
+            на микроавтобусе
+          </span>
+        </span>
+      </div>
+
+      <div data-hero-anim class="mt-8">
+        <a
+          data-analytics="hero_cta_click"
+          href="#zayavka"
+          class="group relative inline-flex w-full items-center justify-center overflow-hidden bg-graphite px-8 py-4 font-display text-base tracking-[0.1em] text-paper uppercase sm:w-auto"
+        >
+          <!-- Заливка при наведении: жёлтый выезжает слева направо, текст становится чёрным -->
+          <span
+            class="absolute inset-0 origin-left scale-x-0 bg-marker transition-transform duration-300 ease-out group-hover:scale-x-100"
+            aria-hidden="true"></span>
+          <span class="relative transition-colors duration-300 group-hover:text-graphite">
+            {hero.cta}
+          </span>
+        </a>
+      </div>
+
+      <p data-hero-anim class="mt-4 max-w-[46ch] text-[length:var(--step--1)] text-graphite-soft/75">
+        {hero.note}
+      </p>
+    </div>
+
+    <!-- Фотография: полноцветная, без гасящего оверлея -->
+    <div class="relative order-1 min-h-[42svh] lg:order-2 lg:min-h-0">
+      <Photo
+        src="hero"
+        alt="Красная грунтовая дорога в камбоджийской деревне: мотоциклы и тук-тук поднимают пыль"
+        sizes="(min-width: 64rem) 52vw, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        widths={[640, 1000, 1400, 1900, 2400]}
+        class="absolute inset-0 h-full"
+      />
+
+      <video
+        class="absolute inset-0 h-full w-full object-cover motion-reduce:hidden"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="none"
+        poster={heroPoster?.src}
+        aria-hidden="true"
+      >
+        <source src={heroVideoSrc} type="video/mp4" />
+      </video>
     </div>
   </div>
-
-  <!-- Poster-facts: только от lg и выше — на мобильном это лишний шум (см. п.30 брифа) -->
-  <div
-    data-hero-anim
-    class="absolute top-24 right-[var(--gutter)] z-10 hidden text-right font-display text-xs tracking-[0.16em] text-white/70 uppercase lg:block"
-  >
-    <p>{hero.poster.dates}</p>
-    <p class="mt-1">{hero.poster.route}</p>
-    <p class="mt-1">{hero.poster.duration}</p>
-    <p class="mt-1">{bike.model}</p>
-  </div>
-
-  <div class="wrap relative z-10">
-    <!-- Гигантский wordmark — главный графический элемент экрана, не подпись -->
-    <h1
-      data-hero-anim
-      class="font-display text-[clamp(4rem,2.27rem+11vw,13rem)] leading-[0.86] tracking-[-0.02em] uppercase"
-    >
-      {hero.kicker}
-    </h1>
-
-    <p
-      data-hero-anim
-      class="-mt-1 font-display text-[length:var(--step-3)] leading-[0.95] tracking-[-0.01em] text-white/95 uppercase sm:mt-0"
-    >
-      {hero.title}
-    </p>
-
-    <p
-      data-hero-anim
-      class="mt-5 max-w-[34ch] text-[length:var(--step-0)] leading-[1.4] text-white/85 lg:max-w-[38ch]"
-    >
-      {hero.lead}
-    </p>
-
-    <!-- Цена — строки travel poster, без карточек и рамок. Каждая пара
-         цена+подпись сгруппирована, чтобы перенос строки не разрывал их. -->
-    <p data-hero-anim class="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-1">
-      <span class="inline-flex flex-wrap items-baseline gap-x-3">
-        <span class="font-display text-[length:var(--step-2)] font-medium leading-none">
-          {moto.priceHuman}
-        </span>
-        <span class="text-[length:var(--step--1)] tracking-[0.1em] text-white/60 uppercase">
-          на байке
-        </span>
-      </span>
-      <span class="hidden text-white/30 sm:inline">/</span>
-      <span class="inline-flex flex-wrap items-baseline gap-x-3">
-        <span class="font-display text-[length:var(--step-2)] font-medium leading-none">
-          {road.priceHuman}
-        </span>
-        <span class="text-[length:var(--step--1)] tracking-[0.1em] text-white/60 uppercase">
-          на микроавтобусе
-        </span>
-      </span>
-    </p>
-
-    <a
-      data-hero-anim
-      data-analytics="hero_cta_click"
-      href="#zayavka"
-      class="group relative mt-7 inline-flex w-full items-center justify-center overflow-hidden bg-terracotta px-8 py-4 font-display text-base font-medium tracking-[0.1em] text-white uppercase sm:w-auto"
-    >
-      <!-- Заливка при наведении: тёмный слой выезжает слева направо, а не просто меняет bg -->
-      <span
-        class="absolute inset-0 origin-left scale-x-0 bg-terracotta-deep transition-transform duration-300 ease-out group-hover:scale-x-100"
-        aria-hidden="true"
-      ></span>
-      <span class="relative">{hero.cta}</span>
-    </a>
-
-    <p data-hero-anim class="mt-4 max-w-[46ch] text-[length:var(--step--1)] text-white/65">
-      {hero.note}
-    </p>
-  </div>
-
-  <a
-    href="#zachem"
-    aria-label="К описанию путешествия"
-    class="absolute bottom-5 left-1/2 z-10 hidden w-10 -translate-x-1/2 lg:block"
-  >
-    <span
-      class="mx-auto block h-3.5 w-3.5 animate-bounce border-r-2 border-b-2 border-white/80"
-      style="rotate: 45deg"
-    ></span>
-  </a>
 </header>
 
 <style>
   /*
-   * Начальное «скрытое» состояние задаём в CSS, а не в JS: если задать его
-   * скриптом, между отрисовкой и запуском GSAP будет видна вспышка полностью
-   * проявленного текста. При prefers-reduced-motion контент виден сразу —
-   * анимации не будет, прятать нечего.
+   * Начальное «скрытое» состояние задаём в CSS, а не в JS: иначе между
+   * отрисовкой и запуском GSAP видна вспышка полностью проявленного текста.
    */
   [data-hero-anim] {
     opacity: 0;
@@ -178,7 +150,6 @@ const heroPoster = heroSource
 
 <noscript>
   <style>
-    /* Без JS GSAP не запустится и не покажет контент — герой не должен зависеть от этого. */
     [data-hero-anim] {
       opacity: 1 !important;
     }
@@ -195,15 +166,8 @@ const heroPoster = heroSource
     const targets = root.querySelectorAll<HTMLElement>('[data-hero-anim]');
     gsap.fromTo(
       targets,
-      { opacity: 0, y: 28 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 0.9,
-        ease: 'power3.out',
-        stagger: 0.09,
-        delay: 0.15,
-      },
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 0.85, ease: 'power3.out', stagger: 0.08, delay: 0.12 },
     );
   }
 </script>

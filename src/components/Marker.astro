@@ -1,0 +1,72 @@
+---
+/**
+ * Жёлтый маркерный мазок под заголовком — главный акцент яркой палитры,
+ * взят из презентации организаторов «Путь души».
+ *
+ * Рисуется SVG-путём с намеренно неровными краями: скруглённый прямоугольник
+ * читался бы как plashka из UI-кита, а нужен след маркера. preserveAspectRatio
+ * отключён, чтобы мазок растягивался под любую длину строки.
+ *
+ * Цвет положен ПОД текст (z-index), поэтому контраст считается по чёрному
+ * тексту на жёлтом — это ~11:1, с запасом проходит WCAG AA.
+ */
+interface Props {
+  /** Небольшой поворот для живости: мазки не должны быть одинаковыми. */
+  tilt?: number;
+  class?: string;
+}
+
+const { tilt = 0, class: className = '' } = Astro.props;
+
+/**
+ * Верхний и нижний края «гуляют» — это и создаёт ощущение мазка.
+ * Левый край подрезан под углом, правый заканчивается неровно.
+ */
+const strokePath = [
+  'M4,22',
+  'C46,12 96,19 148,13',
+  'C198,7 252,17 306,11',
+  'C344,7 372,16 397,10',
+  'L399,86',
+  'C356,95 306,84 252,91',
+  'C198,98 148,86 98,92',
+  'C62,96 28,88 2,95',
+  'Z',
+].join(' ');
+---
+
+<span class:list={['marker', className]}>
+  <svg
+    class="marker__stroke"
+    viewBox="0 0 400 100"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+    style={tilt ? `rotate:${tilt}deg` : undefined}
+  >
+    <path d={strokePath} />
+  </svg>
+  <span class="marker__text"><slot /></span>
+</span>
+
+<style>
+  .marker {
+    position: relative;
+    display: inline-block;
+    padding-inline: 0.5em;
+    padding-block: 0.06em 0.12em;
+  }
+
+  .marker__stroke {
+    position: absolute;
+    /* Мазок шире текста — маркер никогда не попадает ровно по границам букв */
+    inset: -0.12em -0.18em -0.16em -0.2em;
+    width: auto;
+    height: auto;
+    z-index: -1;
+    fill: var(--marker);
+  }
+
+  .marker__text {
+    position: relative;
+  }
+</style>

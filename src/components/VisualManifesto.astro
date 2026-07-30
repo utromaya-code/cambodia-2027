@@ -1,0 +1,180 @@
+---
+import Photo from './Photo.astro';
+import { manifesto } from '../data/trip';
+
+/**
+ * Графический блок-мост между героем и объяснением (TripIntro) — раздел 03
+ * брифа: гигантская типографика, числа, дорога, фрагменты фото, а не обычная
+ * text-секция. «Зачёркивание» негативных формулировок анимируется через уже
+ * существующий механизм .reveal/is-visible (src/scripts/reveal.ts) — отдельный
+ * скрипт не нужен, prefers-reduced-motion уже уважается глобально.
+ */
+---
+
+<section class="manifesto section section--stone" aria-label="Что это за путешествие">
+  <div class="wrap manifesto__inner">
+    <p class="manifesto__negations">
+      {
+        manifesto.negations.map((line, i) => (
+          <span
+            class="manifesto__negation reveal"
+            style={`transition-delay:${i * 120}ms`}
+          >
+            <span class="manifesto__negation-text">{line}</span>
+            <span class="manifesto__negation-strike" aria-hidden="true" />
+          </span>
+        ))
+      }
+    </p>
+
+    <div class="manifesto__statement reveal">
+      <span class="manifesto__number">{manifesto.statementNumber}</span>
+      <div class="manifesto__statement-lines">
+        {manifesto.statementLines.map((line) => <p>{line}</p>)}
+      </div>
+    </div>
+
+    <div class="manifesto__poetic reveal">
+      {manifesto.poetic.map((line) => <p>{line}</p>)}
+    </div>
+  </div>
+
+  <!-- Фрагменты фото — акцент, не иллюстрация. rural-road повторно появится
+       крупно в WhyCambodia ниже — это осознанный editorial-приём (мотив дороги
+       возвращается на разных масштабах), а не случайное дублирование. -->
+  <Photo
+    src="rural-road"
+    alt="Красная грунтовая дорога"
+    class="manifesto__fragment manifesto__fragment--road reveal"
+    ratio="3 / 4"
+    sizes="180px"
+    widths={[240, 360]}
+  />
+  <Photo
+    src="market-night"
+    alt="Ночной рынок с шашлыками"
+    class="manifesto__fragment manifesto__fragment--bike reveal"
+    ratio="4 / 5"
+    sizes="200px"
+    widths={[280, 400]}
+  />
+</section>
+
+<style>
+  .manifesto {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-block: clamp(4rem, 10vh, 7rem);
+    overflow: clip;
+  }
+
+  .manifesto__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Негации: средний размер, приглушённый цвет — контраст с гигантским statement ниже */
+  .manifesto__negations {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em 1.2em;
+  }
+
+  .manifesto__negation {
+    position: relative;
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .manifesto__negation-strike {
+    position: absolute;
+    left: 0;
+    top: 52%;
+    height: 2px;
+    width: 100%;
+    background: var(--laterite);
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.7s ease 0.35s;
+  }
+
+  /* Реиспользуем сайтовый .is-visible — свою анимацию не заводим */
+  .manifesto__negation.is-visible .manifesto__negation-strike {
+    transform: scaleX(1);
+  }
+
+  .manifesto__statement {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 0.3em 0.6em;
+    margin-top: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .manifesto__number {
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 3rem + 14vw, 15rem);
+    line-height: 0.85;
+    color: var(--laterite);
+  }
+
+  .manifesto__statement-lines {
+    display: grid;
+    padding-bottom: 0.15em;
+  }
+
+  .manifesto__statement-lines p {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    line-height: 1.05;
+    text-transform: uppercase;
+  }
+
+  .manifesto__poetic {
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+    max-width: 34ch;
+  }
+
+  .manifesto__poetic p {
+    font-size: var(--step-1);
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
+  .manifesto__poetic p + p {
+    margin-top: 0.2em;
+  }
+
+  /* Фрагменты фото — акцентные обломки кадра, не иллюстрации к тексту */
+  .manifesto__fragment {
+    display: none;
+    position: absolute;
+    width: 8rem;
+    box-shadow: 0 1.5rem 3rem -1rem rgb(0 0 0 / 0.35);
+  }
+
+  .manifesto__fragment--road {
+    top: 8%;
+    right: 8%;
+    rotate: 4deg;
+  }
+
+  .manifesto__fragment--bike {
+    bottom: 6%;
+    right: 16%;
+    width: 7rem;
+    rotate: -3deg;
+  }
+
+  @media (min-width: 60rem) {
+    .manifesto__fragment {
+      display: block;
+    }
+  }
+</style>
