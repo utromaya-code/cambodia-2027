@@ -1,0 +1,1 @@
+import{t as e}from"./gsap.Bi_c5vh2.js";var t=document.querySelector(`[data-hero]`),n=window.matchMedia(`(prefers-reduced-motion: reduce)`).matches;if(t&&!n){let n=t.querySelectorAll(`[data-hero-anim]`);e.fromTo(n,{opacity:0,y:24},{opacity:1,y:0,duration:.85,ease:`power3.out`,stagger:.08,delay:.12})}
