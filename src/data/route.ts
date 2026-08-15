@@ -34,7 +34,7 @@ export const routePoints: readonly RoutePoint[] = [
     lat: 13.3618,
     lon: 103.8598,
     note: 'Отсюда всё начинается: знакомство, техника, первый общий ужин.',
-    image: 'market-night',
+    image: 'lanterns',
     gallery: ['monks-temple', 'macaque-stone'],
     days: [1],
   },
@@ -102,7 +102,6 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 104.181,
     note: 'Река, колониальные кварталы, перец и длинные вечера без спешки.',
     image: 'paddy-sunset',
-    gallery: ['kampot'],
     days: [7, 9],
   },
   {
@@ -133,8 +132,7 @@ export const routePoints: readonly RoutePoint[] = [
     lat: 10.6093,
     lon: 103.5296,
     note: 'Финал дороги. Море, последний закат путешествия и общий ужин.',
-    image: 'sihanoukville',
-    gallery: ['sea-treehouse'],
+    image: 'sea-treehouse',
     days: [10, 11],
   },
 ];

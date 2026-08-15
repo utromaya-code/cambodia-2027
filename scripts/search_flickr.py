@@ -67,6 +67,23 @@ QUERIES = {
         "banteay srei carving",
         "preah vihear temple",
     ],
+    # Седьмой заход: заказчик отверг sihanoukville (пасмурный пляж с лодками),
+    # kampot (обычная уличная сцена) и market-night (поднос с шашлыками).
+    "kampot-river": [
+        "kampot river sunset boat",
+        "kampot riverside cambodia",
+        "kep cambodia sea",
+    ],
+    "coast-bright": [
+        "otres beach sihanoukville",
+        "cambodia beach sunset sea",
+        "cambodia coast palm beach",
+    ],
+    "siem-reap-life": [
+        "siem reap night market lights",
+        "cambodia lanterns evening",
+        "siem reap pub street",
+    ],
 }
 
 
