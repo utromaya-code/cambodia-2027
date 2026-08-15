@@ -35,7 +35,7 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 103.8598,
     note: 'Отсюда всё начинается: знакомство, техника, первый общий ужин.',
     image: 'market-night',
-    gallery: ['monks-temple'],
+    gallery: ['monks-temple', 'macaque-stone'],
     days: [1],
   },
   {
@@ -46,7 +46,7 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 103.867,
     note: 'Рассвет над Ангкор-Ватом, корни Та-Прома и лица Байона до того, как приедут автобусы.',
     image: 'angkor-dawn-pink',
-    gallery: ['bayon-reflection', 'angkor-mist'],
+    gallery: ['bayon-face', 'taprohm-root', 'angkor-gate-face'],
     days: [2],
   },
   {

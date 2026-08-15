@@ -1,5 +1,6 @@
 ---
 import Photo from './Photo.astro';
+import { getGalleryAlt } from '../data/images';
 import { routePoints, islandPoint } from '../data/route';
 import { cambodiaPath, mapViewBox, projectPoint } from '../data/cambodia-shape';
 
@@ -105,7 +106,7 @@ const labelFor = (id: string) => labelOffsets[id] ?? { side: 'start' as const, d
                     {galleryKeys.map((key, gi) => (
                       <Photo
                         src={key}
-                        alt={gi === 0 ? p.note : `${p.name}: ещё один кадр этого места`}
+                        alt={gi === 0 ? p.note : getGalleryAlt(key, p.name)}
                         sizes="(min-width: 60rem) 16vw, 44vw"
                         ratio="4 / 3"
                       />

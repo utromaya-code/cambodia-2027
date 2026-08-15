@@ -25,7 +25,7 @@ const PICKS = {
   'hero': ['angkor-dawn', 28],
   'angkor-dawn-pink': ['angkor-dawn', 29],
   'angkor-dawn-violet': ['angkor-dawn', 21],
-  'angkor-gold': ['angkor-dawn', 9],
+  // 'angkor-gold' отбракован: в кадре подпись-водяной знак автора.
   'angkor-mist': ['angkor-dawn', 22],
 
   'waterfall-kulen': ['waterfall', 8],
@@ -50,6 +50,15 @@ const PICKS = {
   // поэтому нет и вопроса о праве на изображение конкретного человека.
   'monk-path': ['monk-robes', 9],
   'monks-temple': ['monk-robes', 15],
+
+  // Четвёртый заход — по референсам заказчика. Присланные им файлы были
+  // стоковыми превью с водяными знаками и перезаливами с тревел-блогов;
+  // здесь те же сюжеты со свободной лицензией.
+  'taprohm-doorway': ['temple-roots', 1],
+  'taprohm-root': ['temple-roots', 4],
+  'jungle-valley': ['jungle-valley', 8],
+  'angkor-gate-face': ['gate-mist', 9],
+  'macaque-stone': ['macaque', 5],
 };
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));

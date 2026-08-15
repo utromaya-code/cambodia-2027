@@ -446,5 +446,45 @@
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
     "source": "Wikimedia Commons",
     "originalUrl": "https://commons.wikimedia.org/wiki/File:Monks_in_Ta_Prohm_(Cambodia).jpg"
+  },
+  "taprohm-doorway": {
+    "title": "File:Angkor Wat Ta Prohm Temple doorway overgrown with tree roots.jpg",
+    "author": "GayleKaren",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Angkor_Wat_Ta_Prohm_Temple_doorway_overgrown_with_tree_roots.jpg"
+  },
+  "taprohm-root": {
+    "title": "File:Ta Prohm Angkor giant root.jpg",
+    "author": "Phillip Maiwald (Nikopol)",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Ta_Prohm_Angkor_giant_root.jpg"
+  },
+  "jungle-valley": {
+    "title": "File:Sihanoukville Province - jungle.jpg",
+    "author": "Dmitry Makeev",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Sihanoukville_Province_-_jungle.jpg"
+  },
+  "angkor-gate-face": {
+    "title": "File:South gate (bis) in Angkor Thom Temple (5).jpg",
+    "author": "© Pierre André",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:South_gate_(bis)_in_Angkor_Thom_Temple_(5).jpg"
+  },
+  "macaque-stone": {
+    "title": "File:Puerta Sur, Angkor Thom, Camboya, 2013-08-16, DD 06.JPG",
+    "author": "Diego Delso",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Puerta_Sur,_Angkor_Thom,_Camboya,_2013-08-16,_DD_06.JPG"
   }
 }

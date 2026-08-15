@@ -82,6 +82,36 @@ QUERIES = {
         "Kep Cambodia",
         "Cambodia coast",
     ],
+    # Четвёртый заход: заказчик прислал референсы — корни на храме, красная
+    # дорога в зелени, туманная долина, ворота в тумане, макаки на камне.
+    # Сами присланные файлы поставить нельзя: часть со стоковыми водяными
+    # знаками, часть — перезаливы с тревел-блогов без автора. Ищем то же
+    # самое со свободной лицензией.
+    "temple-roots": [
+        "Ta Prohm tree roots temple",
+        "Ta Prohm",
+        "Beng Mealea jungle temple",
+    ],
+    "jungle-valley": [
+        "Cambodia forest hills mist",
+        "Cambodia jungle valley",
+        "Cambodia mountains forest",
+    ],
+    "red-road": [
+        "Cambodia red dirt road forest",
+        "laterite road Angkor forest",
+        "Cambodia road jungle trees",
+    ],
+    "gate-mist": [
+        "Angkor gate morning",
+        "Cambodia temple gate",
+        "Angkor Thom gate",
+    ],
+    "macaque": [
+        "Angkor macaque monkey",
+        "long-tailed macaque Cambodia",
+        "monkey Angkor temple",
+    ],
 }
 
 
