@@ -48,7 +48,7 @@ const {
         <div class="choice__options">
           <label><input type="radio" name="mode" value="motorcycle" /><span>На байке</span></label>
           <label><input type="radio" name="mode" value="road" /><span>На микроавтобусе</span></label>
-          <label><input type="radio" name="mode" value="unsure" checked /><span>Пока не знаю</span></label>
+          <label><input type="radio" name="mode" value="unsure" checked /><span>Ещё выбираю</span></label>
         </div>
       </fieldset>
 
@@ -61,11 +61,11 @@ const {
           </label>
           <label>
             <input type="radio" name="island" value="no" checked={islandDefault === 'no'} />
-            <span>Не планирую</span>
+            <span>Только маршрут</span>
           </label>
           <label>
             <input type="radio" name="island" value="unsure" checked={islandDefault === 'unsure'} />
-            <span>Пока не знаю</span>
+            <span>Ещё думаю</span>
           </label>
         </div>
       </fieldset>

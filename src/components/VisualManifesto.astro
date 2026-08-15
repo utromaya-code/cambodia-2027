@@ -13,15 +13,14 @@ import { manifesto } from '../data/trip';
 
 <section class="manifesto section section--stone" aria-label="Что это за путешествие">
   <div class="wrap manifesto__inner">
-    <p class="manifesto__negations">
+    <p class="manifesto__opening">
       {
-        manifesto.negations.map((line, i) => (
+        manifesto.opening.map((line, i) => (
           <span
-            class="manifesto__negation reveal"
+            class="manifesto__word reveal"
             style={`transition-delay:${i * 120}ms`}
           >
-            <span class="manifesto__negation-text">{line}</span>
-            <span class="manifesto__negation-strike" aria-hidden="true" />
+            {line}
           </span>
         ))
       }
@@ -75,38 +74,23 @@ import { manifesto } from '../data/trip';
     z-index: 1;
   }
 
-  /* Негации: средний размер, приглушённый цвет — контраст с гигантским statement ниже */
-  .manifesto__negations {
+  /* Три слова маршрута: средний размер — контраст с гигантским statement ниже.
+     Зачёркивание, которое было здесь раньше, ушло вместе с отрицаниями:
+     перечёркнутое «Храмы. Дорога. Море.» означало бы ровно обратное тому,
+     что говорит секция. Проявление осталось на сайтовом .reveal. */
+  .manifesto__opening {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5em 1.2em;
   }
 
-  .manifesto__negation {
-    position: relative;
+  .manifesto__word {
     display: inline-block;
     font-family: var(--font-display);
     font-size: var(--step-2);
     letter-spacing: 0.01em;
     text-transform: uppercase;
-    color: var(--ink-mute);
-  }
-
-  .manifesto__negation-strike {
-    position: absolute;
-    left: 0;
-    top: 52%;
-    height: 2px;
-    width: 100%;
-    background: var(--laterite);
-    transform-origin: left;
-    transform: scaleX(0);
-    transition: transform 0.7s ease 0.35s;
-  }
-
-  /* Реиспользуем сайтовый .is-visible — свою анимацию не заводим */
-  .manifesto__negation.is-visible .manifesto__negation-strike {
-    transform: scaleX(1);
+    color: var(--laterite-ink);
   }
 
   .manifesto__statement {
