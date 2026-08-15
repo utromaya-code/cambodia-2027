@@ -23,42 +23,67 @@
 
 @theme {
   /* Главный акцент яркой палитры — маркерный жёлтый */
-  --color-marker: #ffe94d;
-  --color-marker-deep: #f2d21f;
+  --color-marker: #ffdd2e;
+  --color-marker-deep: #f0c400;
 
-  --color-terracotta: #e05636;
-  --color-terracotta-deep: #a83c22;
-  --color-sand: #f2ece0;
-  --color-sand-deep: #ded3bf;
-  --color-jungle: #1c3226;
-  --color-jungle-mid: #2e5140;
-  --color-graphite: #14100d;
+  /* Терракота — латерит камбоджийских дорог и камень храмов.
+     --terracotta-ink — затемнённый вариант для мелкого текста: сама
+     терракота на светлом фоне даёт около 4:1 и для кеглей меньше 18 px
+     не проходит по контрасту. */
+  --color-terracotta: #e04e28;
+  --color-terracotta-deep: #a83318;
+  --color-terracotta-ink: #b53a17;
+
+  /* Золото и розовый рассвета над Ангкором: небо идёт от индиго
+     через розовый к золоту — отсюда вся тёплая часть палитры. */
+  --color-gold: #f7a51c;
+  --color-gold-soft: #ffd166;
+  --color-dawn: #f2668b;
+
+  --color-sand: #fdf2e0;
+  --color-sand-deep: #f3e7d3;
+
+  /* Зелень тропиков, а не болотная тень: прежний #1c3226 был почти
+     чёрным и превращал «тёмные» секции в тяжёлые пятна. */
+  --color-jungle: #0f4a35;
+  --color-jungle-mid: #1c7a56;
+  --color-leaf: #5fb043;
+
+  --color-graphite: #171310;
   --color-graphite-soft: #3a332c;
-  --color-paper: #fdfcfa;
-  --color-sea: #1b6b7a;
+  --color-paper: #fffdf7;
+
+  /* Бирюза южного побережья — настоящая, а не приглушённый сине-серый */
+  --color-sea: #0c93a4;
+  --color-sea-light: #3fbfcf;
 
   --font-display: 'Oswald', 'Arial Narrow', sans-serif;
   --font-body: 'Manrope Variable', 'Manrope', system-ui, sans-serif;
 }
 
 :root {
-  /* Цвет. --laterite — терракотовый #E05636, цвет грунтовых дорог Камбоджи.
-     --marker — жёлтый маркер, главный акцент яркой палитры. */
-  --ink: #14100d;
+  /* Те же значения, что в @theme выше, — для компонентов, написанных
+     до перехода на Tailwind. Держать синхронно. */
+  --ink: #171310;
   --ink-soft: #3a332c;
   --ink-mute: #6b6157;
-  --paper: #fdfcfa;
-  --paper-warm: #f2ece0;
-  --stone: #ded3bf;
-  --stone-deep: #a4947a;
-  --marker: #ffe94d;
-  --marker-deep: #f2d21f;
-  --laterite: #e05636;
-  --laterite-deep: #a83c22;
-  --jungle: #1c3226;
-  --jungle-mid: #2e5140;
-  --sea: #1b6b7a;
-  --sea-light: #3f96a5;
+  --paper: #fffdf7;
+  --paper-warm: #fdf2e0;
+  --stone: #f3e7d3;
+  --stone-deep: #d8c4a4;
+  --marker: #ffdd2e;
+  --marker-deep: #f0c400;
+  --laterite: #e04e28;
+  --laterite-deep: #a83318;
+  --laterite-ink: #b53a17;
+  --gold: #f7a51c;
+  --gold-soft: #ffd166;
+  --dawn: #f2668b;
+  --jungle: #0f4a35;
+  --jungle-mid: #1c7a56;
+  --leaf: #5fb043;
+  --sea: #0c93a4;
+  --sea-light: #3fbfcf;
 
   /* Роли */
   --bg: var(--paper);
@@ -176,6 +201,20 @@ ol {
 
 } /* конец @layer base */
 
+/* --------------------------------------------------------------------------
+   Компонентные стили
+
+   Тоже обязаны лежать в @layer — по той же причине, что и сброс выше.
+   Нелейерные правила побеждают ЛЮБЫЕ layer-правила независимо от
+   специфичности, поэтому `.photo { position: relative }` отсюда перебивал
+   Tailwind-утилиту `.absolute` из @layer utilities: фотография первого
+   экрана оставалась в потоке, растягивала герой вдвое и уводила текст
+   под сгиб. В @layer components порядок нормальный — utilities идут
+   после components и перекрывают их, как и задумано в Tailwind v4.
+   -------------------------------------------------------------------------- */
+
+@layer components {
+
 /* Видимый фокус — обязателен для навигации с клавиатуры */
 :focus-visible {
   outline: 3px solid var(--laterite);
@@ -225,16 +264,19 @@ ol {
   padding-block: var(--section-y);
 }
 
-/* Тёмные секции: джунгли и ночь. Задают ритм страницы. */
+/* Тёмные секции задают ритм страницы. Акцент внутри них — золото
+   рассвета: терракота на зелени и на чёрном почти не читается. */
 .section--dark {
   background: var(--jungle);
   color: var(--paper);
+  --accent: var(--gold-soft);
   --rule: color-mix(in srgb, var(--paper) 20%, transparent);
 }
 
 .section--ink {
   background: var(--ink);
   color: var(--paper);
+  --accent: var(--gold);
   --rule: color-mix(in srgb, var(--paper) 18%, transparent);
 }
 
@@ -245,9 +287,9 @@ ol {
 /* Морская часть страницы — только после выхода к побережью */
 .section--sea {
   background: var(--sea);
-  color: #f2fbfc;
-  --accent: #ffd9a0;
-  --rule: color-mix(in srgb, #ffffff 26%, transparent);
+  color: #f4fdfe;
+  --accent: var(--gold-soft);
+  --rule: color-mix(in srgb, #ffffff 30%, transparent);
 }
 
 /* --------------------------------------------------------------------------
@@ -362,7 +404,11 @@ ol {
 .photo {
   position: relative;
   overflow: hidden;
-  background: var(--stone);
+  /* Подложка видна, пока кадр не догрузился. Раньше здесь стоял плотный
+     бежевый --stone, и незагруженные фотографии читались как мёртвые
+     серые прямоугольники — на длинной странице их видно сразу несколько.
+     Тёплый светлый тон такого впечатления не оставляет. */
+  background: color-mix(in srgb, var(--gold) 10%, var(--paper));
 }
 
 .photo img {
@@ -432,6 +478,10 @@ figcaption {
   transform: none;
 }
 
+} /* конец @layer components */
+
+/* Уважение к prefers-reduced-motion намеренно оставлено вне слоёв:
+   это глушилка анимаций, она должна побеждать всё, включая утилиты. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

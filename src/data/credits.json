@@ -1,11 +1,11 @@
 {
   "hero": {
-    "title": "File:Compacted laterite road Cambodia.jpg",
-    "author": "Cmoffroad",
-    "license": "CC0",
-    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+    "title": "File:Siem Reap Reflections (CAMBODIA-REFLECTION-ANGKOR WAT) III (1071292582).jpg",
+    "author": "Chi King",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
     "source": "Wikimedia Commons",
-    "originalUrl": "https://commons.wikimedia.org/wiki/File:Compacted_laterite_road_Cambodia.jpg"
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Siem_Reap_Reflections_(CAMBODIA-REFLECTION-ANGKOR_WAT)_III_(1071292582).jpg"
   },
   "escape": {
     "title": "File:Cambodia Rice Fields (9728044881).jpg",
@@ -302,5 +302,149 @@
     "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
     "source": "Wikimedia Commons",
     "originalUrl": "https://commons.wikimedia.org/wiki/File:Cambodian_skewers_(23687297234).jpg"
+  },
+  "angkor-dawn-pink": {
+    "title": "File:Siem Reap Reflections (CAMBODIA-REFLECTION-ANGKOR WAT) VII (1070424645).jpg",
+    "author": "Chi King",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Siem_Reap_Reflections_(CAMBODIA-REFLECTION-ANGKOR_WAT)_VII_(1070424645).jpg"
+  },
+  "angkor-dawn-violet": {
+    "title": "File:Dawn at the temple Ankor Wat at sunrise, Siem Reap, Cambodia.jpg",
+    "author": "David Sim",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Dawn_at_the_temple_Ankor_Wat_at_sunrise,_Siem_Reap,_Cambodia.jpg"
+  },
+  "angkor-mist": {
+    "title": "File:Angkor Wat at Dawn (7409409436).jpg",
+    "author": "Donald Macauley from Carshalton, Surrey, UK",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Angkor_Wat_at_Dawn_(7409409436).jpg"
+  },
+  "waterfall-kulen": {
+    "title": "File:Waterfall, Kulen Mountain National Park (40362032012).jpg",
+    "author": "Mig Gilbert from Brighton",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Waterfall,_Kulen_Mountain_National_Park_(40362032012).jpg"
+  },
+  "waterfall-wide": {
+    "title": "File:Waterfall, River carvings, Kulen Mountain National Park (26535799758).jpg",
+    "author": "Mig Gilbert from Brighton",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Waterfall,_River_carvings,_Kulen_Mountain_National_Park_(26535799758).jpg"
+  },
+  "waterfall-jungle": {
+    "title": "File:Phnom Kulen, Cambodia (2211417201).jpg",
+    "author": "yeowatzup",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Phnom_Kulen,_Cambodia_(2211417201).jpg"
+  },
+  "waterfall-kohrong": {
+    "title": "File:Waterfall on Koh Rong Island, Cambodia, near Sok San Village, August 2012.jpg",
+    "author": "Wikirictor",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Waterfall_on_Koh_Rong_Island,_Cambodia,_near_Sok_San_Village,_August_2012.jpg"
+  },
+  "sea-turquoise": {
+    "title": "File:Koh Rong Cambodia.jpg",
+    "author": "MoonsMoon",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Koh_Rong_Cambodia.jpg"
+  },
+  "sea-paradise": {
+    "title": "File:Cambodia island paradise koh rong sanloem.jpg",
+    "author": "Wikirictor",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Cambodia_island_paradise_koh_rong_sanloem.jpg"
+  },
+  "sea-white-sand": {
+    "title": "File:Koh Rong - Plage de sable fin.jpg",
+    "author": "Peazapata",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Koh_Rong_-_Plage_de_sable_fin.jpg"
+  },
+  "bayon-face": {
+    "title": "File:20171127 Bayon Temple Angkor Thom 4772 DxO.jpg",
+    "author": "Jakub Hałun",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:20171127_Bayon_Temple_Angkor_Thom_4772_DxO.jpg"
+  },
+  "bayon-reflection": {
+    "title": "File:Bayon temple at Angkor Thom 01.jpg",
+    "author": "Satdeep Gill",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Bayon_temple_at_Angkor_Thom_01.jpg"
+  },
+  "sunset-mekong": {
+    "title": "File:Sunset over the Mekong.jpg",
+    "author": "Matt Wakeman",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Sunset_over_the_Mekong.jpg"
+  },
+  "sunset-kampot": {
+    "title": "File:Sunset in Kampot 2.jpg",
+    "author": "Christophe95",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Sunset_in_Kampot_2.jpg"
+  },
+  "palms-field": {
+    "title": "File:Sunset Colouring A Field (152157269).jpeg",
+    "author": "Max Kramer",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Sunset_Colouring_A_Field_(152157269).jpeg"
+  },
+  "jungle-river": {
+    "title": "File:Cardamom Mountains Cambodia.jpg",
+    "author": "Andyb3947",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Cardamom_Mountains_Cambodia.jpg"
+  },
+  "monk-path": {
+    "title": "File:Buddhist Monk 003.jpg",
+    "author": "Dieglop",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Buddhist_Monk_003.jpg"
+  },
+  "monks-temple": {
+    "title": "File:Monks in Ta Prohm (Cambodia).jpg",
+    "author": "Daniel Lautenbacher",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Monks_in_Ta_Prohm_(Cambodia).jpg"
   }
 }

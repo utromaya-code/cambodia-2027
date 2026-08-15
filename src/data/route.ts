@@ -34,8 +34,8 @@ export const routePoints: readonly RoutePoint[] = [
     lat: 13.3618,
     lon: 103.8598,
     note: 'Отсюда всё начинается: знакомство, техника, первый общий ужин.',
-    image: 'siem-reap',
-    gallery: ['siem-reap-2'],
+    image: 'market-night',
+    gallery: ['monks-temple'],
     days: [1],
   },
   {
@@ -45,8 +45,8 @@ export const routePoints: readonly RoutePoint[] = [
     lat: 13.4125,
     lon: 103.867,
     note: 'Рассвет над Ангкор-Ватом, корни Та-Прома и лица Байона до того, как приедут автобусы.',
-    image: 'angkor-wat-sunrise',
-    gallery: ['angkor-wat-sunrise-2'],
+    image: 'angkor-dawn-pink',
+    gallery: ['bayon-reflection', 'angkor-mist'],
     days: [2],
   },
   {
@@ -56,8 +56,8 @@ export const routePoints: readonly RoutePoint[] = [
     lat: 13.5772,
     lon: 104.0464,
     note: 'Священная гора, вода в лесу и Бенг Мелеа — храм, который джунгли забирают обратно.',
-    image: 'phnom-kulen',
-    gallery: ['phnom-kulen-2'],
+    image: 'waterfall-kulen',
+    gallery: ['waterfall-jungle'],
     days: [3],
   },
   {
@@ -134,7 +134,7 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 103.5296,
     note: 'Финал дороги. Море, последний закат путешествия и общий ужин.',
     image: 'sihanoukville',
-    gallery: ['sihanoukville-2'],
+    gallery: ['waterfall-kohrong'],
     days: [10, 11],
   },
 ];

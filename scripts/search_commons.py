@@ -55,6 +55,48 @@ QUERIES = {
     "kampot-night": ["Kampot night market", "Kampot evening street lights"],
     "cambodia-portrait": ["Cambodia rural portrait", "Cambodia countryside person road"],
     "dust-motion": ["dirt road dust motorcycle motion", "Cambodia dust road riding"],
+    # Третий заход: первая выборка отвергнута заказчиком как блёклая и
+    # «пыльная». Здесь ищем осознанно насыщенные кадры — рассвет, вода,
+    # тропическая зелень, тёплый свет на камне. Это то, ради чего едут.
+    "angkor-dawn": [
+        "Angkor Wat sunrise reflection pond",
+        "Angkor Wat dawn sky",
+        "Angkor Wat lotus pond morning",
+    ],
+    "waterfall": [
+        "Cambodia waterfall jungle",
+        "Phnom Kulen waterfall Cambodia",
+        "Cambodia cascade tropical forest",
+    ],
+    "turquoise-sea": [
+        "Koh Rong turquoise water",
+        "Koh Rong Sanloem beach clear water",
+        "Cambodia tropical beach turquoise",
+    ],
+    "jungle-lush": [
+        "Cambodia tropical rainforest canopy",
+        "Cardamom Mountains forest Cambodia",
+        "Cambodia jungle green foliage",
+    ],
+    "temple-warm-light": [
+        "Bayon temple golden light",
+        "Angkor temple warm sunset light",
+        "Ta Prohm sunlight jungle temple",
+    ],
+    "rice-green": [
+        "Cambodia rice paddy green landscape",
+        "Cambodia paddy field sugar palm",
+    ],
+    "palm-sunset": [
+        "Cambodia sugar palm sunset",
+        "Cambodia sunset rice field palm silhouette",
+    ],
+    "lotus": ["Cambodia lotus flower pond", "lotus pond Angkor Cambodia"],
+    "monk-robes": [
+        "Cambodian monk orange robe temple",
+        "Buddhist monks Angkor Cambodia",
+    ],
+    "kep-coast": ["Kep Cambodia coast", "Cambodia coastline sunset sea"],
 }
 
 

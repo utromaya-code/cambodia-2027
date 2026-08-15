@@ -6,7 +6,7 @@ import { escape } from '../data/trip';
 <section class="escape section section--ink">
   <div class="escape__media" aria-hidden="true">
     <!-- Без ratio: снимок тянется на всю высоту секции как фон -->
-    <Photo src="escape" alt="" sizes="100vw" widths={[640, 1000, 1600, 2200]} />
+    <Photo src="sunset-mekong" alt="" sizes="100vw" widths={[640, 1000, 1600, 2200]} />
   </div>
 
   <div class="wrap wrap--narrow escape__inner">
@@ -27,11 +27,24 @@ import { escape } from '../data/trip';
     overflow: hidden;
   }
 
+  /*
+   * Кадр показывается в полную силу. Раньше здесь стояла opacity: 0.32
+   * поверх почти чёрного фона секции — от снимка оставалась мутная
+   * серо-коричневая заливка, и это был самый унылый экран страницы.
+   * Читаемость текста обеспечивает затемняющий слой ниже, а не убитая
+   * прозрачность самой фотографии.
+   */
   .escape__media {
     position: absolute;
     inset: 0;
     z-index: -1;
-    opacity: 0.32;
+  }
+
+  .escape__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, #000 58%, transparent);
   }
 
   .escape__media :global(.photo) {

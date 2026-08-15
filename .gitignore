@@ -11,4 +11,5 @@ npm-debug.log*
 # Промежуточные файлы подбора фотографий
 commons.json
 candidates.json
+bright.json
 __pycache__/

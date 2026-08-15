@@ -24,111 +24,120 @@ const heroPoster = heroSource
 ---
 
 <!--
-  Светлый первый экран: текстовый блок на почти белом фоне, фотография —
-  отдельным ярким полем справа (на десктопе) / снизу (на мобильном).
-  Фото больше не подложка под текстом, поэтому его не нужно гасить
-  затемнением — оно остаётся насыщенным, как в референсной презентации.
+  Первый экран — кадр рассвета над Ангкором во всю ширину.
+
+  Прошлая версия делила экран пополам: текст на белом слева, фотография
+  справа. На кадре с утрамбованной грунтовкой это работало, но с рассветом
+  над Ангкором — нет: снимок держится на масштабе неба и отражении, и в
+  половине экрана он просто перестаёт читаться. Поэтому фотография
+  разворачивается на весь экран, а текст ложится поверх.
+
+  Затемнение снизу здесь не «атмосферный градиент», а обеспечение
+  читаемости: в нижней трети кадра силуэт храма и отражение, и без
+  подложки белый текст на них рассыпается. Небо сверху не трогаем —
+  ради него всё и затевалось.
 -->
-<header data-hero class="relative isolate bg-paper text-graphite">
-  <div class="mx-auto grid min-h-[100svh] w-full max-w-[120rem] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
-    <!-- Текстовая половина -->
-    <div class="order-2 flex flex-col justify-center px-[var(--gutter)] py-12 lg:order-1 lg:py-20">
-      <p
-        data-hero-anim
-        class="font-body text-xs font-semibold tracking-[0.22em] text-terracotta uppercase"
-      >
-        {hero.poster.dates} · {hero.poster.duration}
-      </p>
+<header data-hero class="relative isolate min-h-[100svh] overflow-hidden bg-graphite text-paper">
+  <Photo
+    src="hero"
+    alt="Рассвет над Ангкор-Ватом: оранжевое небо и силуэты башен, отражённые в воде пруда"
+    sizes="100vw"
+    loading="eager"
+    fetchpriority="high"
+    widths={[640, 1000, 1400, 1900, 2400]}
+    class="absolute inset-0 h-full w-full"
+  />
 
-      <h1 data-hero-anim class="mt-5 font-display leading-[0.9] uppercase">
-        <span class="block text-[clamp(3.4rem,1.9rem+9.5vw,8.5rem)] tracking-[-0.02em]">
-          {hero.kicker}
+  <video
+    class="absolute inset-0 h-full w-full object-cover motion-reduce:hidden"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="none"
+    poster={heroPoster?.src}
+    aria-hidden="true"
+  >
+    <source src={heroVideoSrc} type="video/mp4" />
+  </video>
+
+  <div
+    class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent"
+    aria-hidden="true">
+  </div>
+
+  <div
+    class="relative mx-auto flex min-h-[100svh] w-full max-w-[100rem] flex-col justify-end px-[var(--gutter)] pt-24 pb-12 lg:pb-20"
+  >
+    <p
+      data-hero-anim
+      class="font-body text-xs font-semibold tracking-[0.22em] text-gold-soft uppercase"
+    >
+      {hero.poster.dates} · {hero.poster.duration}
+    </p>
+
+    <h1 data-hero-anim class="mt-4 font-display leading-[0.88] uppercase">
+      <span class="block text-[clamp(3.2rem,1.8rem+9vw,8.5rem)] tracking-[-0.02em]">
+        {hero.kicker}
+      </span>
+      <Marker tilt={-0.6} class="mt-3 text-[clamp(1.5rem,0.85rem+3.2vw,3.4rem)] text-graphite">
+        {hero.title}
+      </Marker>
+    </h1>
+
+    <p
+      data-hero-anim
+      class="mt-7 max-w-[44ch] text-[length:var(--step-0)] leading-[1.5] text-paper/90"
+    >
+      {hero.lead}
+    </p>
+
+    <p
+      data-hero-anim
+      class="mt-5 font-body text-xs font-semibold tracking-[0.18em] text-paper/70 uppercase"
+    >
+      {hero.poster.route} · {bike.model}
+    </p>
+
+    <!-- Цена — крупные строки, без карточек и рамок -->
+    <div data-hero-anim class="mt-6 flex flex-wrap items-baseline gap-x-8 gap-y-2">
+      <span class="inline-flex flex-wrap items-baseline gap-x-3">
+        <span class="font-display text-[length:var(--step-3)] leading-none text-marker">
+          {moto.priceHuman}
         </span>
-        <Marker tilt={-0.6} class="mt-2 text-[clamp(1.5rem,0.85rem+3.2vw,3.4rem)]">
-          {hero.title}
-        </Marker>
-      </h1>
-
-      <p
-        data-hero-anim
-        class="mt-7 max-w-[38ch] text-[length:var(--step-0)] leading-[1.5] text-graphite-soft"
-      >
-        {hero.lead}
-      </p>
-
-      <p
-        data-hero-anim
-        class="mt-6 font-body text-xs font-semibold tracking-[0.18em] text-graphite-soft/70 uppercase"
-      >
-        {hero.poster.route} · {bike.model}
-      </p>
-
-      <!-- Цена — крупные строки, без карточек и рамок -->
-      <div data-hero-anim class="mt-6 flex flex-wrap items-baseline gap-x-8 gap-y-2">
-        <span class="inline-flex flex-wrap items-baseline gap-x-3">
-          <span class="font-display text-[length:var(--step-3)] leading-none">
-            {moto.priceHuman}
-          </span>
-          <span class="text-[length:var(--step--1)] tracking-[0.1em] text-graphite-soft/70 uppercase">
-            на байке
-          </span>
+        <span class="text-[length:var(--step--1)] tracking-[0.1em] text-paper/75 uppercase">
+          на байке
         </span>
-        <span class="inline-flex flex-wrap items-baseline gap-x-3">
-          <span class="font-display text-[length:var(--step-3)] leading-none">
-            {road.priceHuman}
-          </span>
-          <span class="text-[length:var(--step--1)] tracking-[0.1em] text-graphite-soft/70 uppercase">
-            на микроавтобусе
-          </span>
+      </span>
+      <span class="inline-flex flex-wrap items-baseline gap-x-3">
+        <span class="font-display text-[length:var(--step-3)] leading-none text-marker">
+          {road.priceHuman}
         </span>
-      </div>
-
-      <div data-hero-anim class="mt-8">
-        <a
-          data-analytics="hero_cta_click"
-          href="#zayavka"
-          class="group relative inline-flex w-full items-center justify-center overflow-hidden bg-graphite px-8 py-4 font-display text-base tracking-[0.1em] text-paper uppercase sm:w-auto"
-        >
-          <!-- Заливка при наведении: жёлтый выезжает слева направо, текст становится чёрным -->
-          <span
-            class="absolute inset-0 origin-left scale-x-0 bg-marker transition-transform duration-300 ease-out group-hover:scale-x-100"
-            aria-hidden="true"></span>
-          <span class="relative transition-colors duration-300 group-hover:text-graphite">
-            {hero.cta}
-          </span>
-        </a>
-      </div>
-
-      <p data-hero-anim class="mt-4 max-w-[46ch] text-[length:var(--step--1)] text-graphite-soft/75">
-        {hero.note}
-      </p>
+        <span class="text-[length:var(--step--1)] tracking-[0.1em] text-paper/75 uppercase">
+          на микроавтобусе
+        </span>
+      </span>
     </div>
 
-    <!-- Фотография: полноцветная, без гасящего оверлея -->
-    <div class="relative order-1 min-h-[42svh] lg:order-2 lg:min-h-0">
-      <Photo
-        src="hero"
-        alt="Красная грунтовая дорога в камбоджийской деревне: мотоциклы и тук-тук поднимают пыль"
-        sizes="(min-width: 64rem) 52vw, 100vw"
-        loading="eager"
-        fetchpriority="high"
-        widths={[640, 1000, 1400, 1900, 2400]}
-        class="absolute inset-0 h-full"
-      />
-
-      <video
-        class="absolute inset-0 h-full w-full object-cover motion-reduce:hidden"
-        autoplay
-        muted
-        loop
-        playsinline
-        preload="none"
-        poster={heroPoster?.src}
-        aria-hidden="true"
+    <div data-hero-anim class="mt-8">
+      <a
+        data-analytics="hero_cta_click"
+        href="#zayavka"
+        class="group relative inline-flex w-full items-center justify-center overflow-hidden bg-terracotta px-8 py-4 font-display text-base tracking-[0.1em] text-paper uppercase sm:w-auto"
       >
-        <source src={heroVideoSrc} type="video/mp4" />
-      </video>
+        <!-- Заливка при наведении: жёлтый выезжает слева направо, текст становится чёрным -->
+        <span
+          class="absolute inset-0 origin-left scale-x-0 bg-marker transition-transform duration-300 ease-out group-hover:scale-x-100"
+          aria-hidden="true"></span>
+        <span class="relative transition-colors duration-300 group-hover:text-graphite">
+          {hero.cta}
+        </span>
+      </a>
     </div>
+
+    <p data-hero-anim class="mt-4 max-w-[46ch] text-[length:var(--step--1)] text-paper/70">
+      {hero.note}
+    </p>
   </div>
 </header>
 
