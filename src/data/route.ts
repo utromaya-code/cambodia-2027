@@ -46,7 +46,9 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 103.867,
     note: 'Рассвет над Ангкор-Ватом, корни Та-Прома и лица Байона до того, как приедут автобусы.',
     image: 'angkor-dawn-pink',
-    gallery: ['bayon-face', 'taprohm-root', 'angkor-gate-face'],
+    // Ангкор — главная точка маршрута, поэтому галерея здесь шире
+    // остальных: шесть кадров ложатся ровной сеткой 2x3.
+    gallery: ['bayon-face', 'taprohm-doorway', 'taprohm-root', 'taprohm-sky', 'angkor-gate-face'],
     days: [2],
   },
   {
@@ -67,8 +69,8 @@ export const routePoints: readonly RoutePoint[] = [
     lat: 13.0957,
     lon: 103.2022,
     note: 'Первый большой переход, рисовые поля и летучие мыши, вылетающие из горы на закате.',
-    image: 'battambang',
-    gallery: ['battambang-2'],
+    image: 'rice-palms',
+    gallery: ['escape'],
     days: [4],
   },
   {
@@ -79,7 +81,6 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 104.6667,
     note: 'Гончарные деревни и жизнь на воде Тонлесапа — лодки, сети, дома на сваях.',
     image: 'tonle-sap',
-    gallery: ['tonle-sap-2'],
     days: [5],
   },
   {
@@ -100,8 +101,8 @@ export const routePoints: readonly RoutePoint[] = [
     lat: 10.6104,
     lon: 104.181,
     note: 'Река, колониальные кварталы, перец и длинные вечера без спешки.',
-    image: 'kampot',
-    gallery: ['kampot-2'],
+    image: 'sunset-kampot',
+    gallery: ['paddy-sunset'],
     days: [7, 9],
   },
   {
@@ -111,8 +112,7 @@ export const routePoints: readonly RoutePoint[] = [
     lat: 10.6478,
     lon: 104.0206,
     note: 'Серпантин в облако: туман, тропический лес и панорама всего побережья.',
-    image: 'bokor',
-    gallery: ['bokor-2'],
+    image: 'jungle-valley',
     days: [8],
   },
   {
@@ -122,8 +122,8 @@ export const routePoints: readonly RoutePoint[] = [
     lat: 10.5,
     lon: 103.8333,
     note: 'Последний ходовой день: локальные дороги, лес и мангры на выходе к морю.',
-    image: 'ream',
-    gallery: ['ream-2'],
+    image: 'sea-white-sand',
+    gallery: ['waterfall-kohrong'],
     days: [10],
   },
   {
@@ -134,7 +134,7 @@ export const routePoints: readonly RoutePoint[] = [
     lon: 103.5296,
     note: 'Финал дороги. Море, последний закат путешествия и общий ужин.',
     image: 'sihanoukville',
-    gallery: ['waterfall-kohrong'],
+    gallery: ['sea-treehouse'],
     days: [10, 11],
   },
 ];
