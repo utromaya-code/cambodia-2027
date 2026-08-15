@@ -50,6 +50,23 @@ QUERIES = {
     "red-road": ["cambodia red dirt road", "cambodia laterite road jungle"],
     "market": ["cambodia market colorful", "cambodia street food night"],
     "floating-village": ["tonle sap floating village", "cambodia floating village sunset"],
+    # Шестой заход: заказчик отверг sea-turquoise (бледный песок с мусором)
+    # и sunset-kampot (закат над крышей дома, а не пейзаж).
+    "beach-vivid": [
+        "koh rong sanloem beach paradise",
+        "cambodia island white sand palm",
+        "sihanoukville beach sunset palm",
+    ],
+    "sunset-wide": [
+        "angkor sunset silhouette temple",
+        "cambodia sunset lake reflection",
+        "tonle sap sunset boat",
+    ],
+    "temple-bright": [
+        "angkor wat blue sky",
+        "banteay srei carving",
+        "preah vihear temple",
+    ],
 }
 
 

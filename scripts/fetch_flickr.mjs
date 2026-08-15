@@ -20,6 +20,8 @@ const PICKS = {
   'rice-storm': ['rice-green', 0],
   'rice-palms': ['rice-green', 10],
   'paddy-sunset': ['rice-green', 16],
+  'sunset-temple': ['sunset-wide', 8],
+  'sea-jetty': ['sea', 5],
 };
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));

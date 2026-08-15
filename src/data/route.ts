@@ -101,8 +101,8 @@ export const routePoints: readonly RoutePoint[] = [
     lat: 10.6104,
     lon: 104.181,
     note: 'Река, колониальные кварталы, перец и длинные вечера без спешки.',
-    image: 'sunset-kampot',
-    gallery: ['paddy-sunset'],
+    image: 'paddy-sunset',
+    gallery: ['kampot'],
     days: [7, 9],
   },
   {

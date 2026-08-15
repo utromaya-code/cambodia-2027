@@ -40,23 +40,32 @@ import { manifesto } from '../data/trip';
 
   <!-- Фрагменты фото — акцент, не иллюстрация: два маленьких кадра задают
        полюса маршрута, между которыми проходит поездка, — лес наверху
-       и вода внизу. -->
-  <Photo
-    src="jungle-river"
-    alt="Извилистая река в сплошной зелени тропического леса, вид сверху"
-    class="manifesto__fragment manifesto__fragment--road reveal"
-    ratio="3 / 4"
-    sizes="180px"
-    widths={[240, 360]}
-  />
-  <Photo
-    src="waterfall-jungle"
-    alt="Водопад среди зелёных зарослей"
-    class="manifesto__fragment manifesto__fragment--bike reveal"
-    ratio="4 / 5"
-    sizes="200px"
-    widths={[280, 400]}
-  />
+       и вода внизу.
+
+       Обёртка здесь обязательна. Классы компоновки нельзя вешать прямо на
+       <Photo>: scoped-стили Astro метят только элементы собственного
+       шаблона, а корневой div дочернего компонента получает его же скоуп,
+       а не родительский. Правила .manifesto__fragment компилировались с
+       чужим хешем и не применялись вовсе — оба кадра просто лежали в
+       потоке справа от текста и на мобильном налезали на заголовок. -->
+  <div class="manifesto__fragment manifesto__fragment--road reveal">
+    <Photo
+      src="jungle-river"
+      alt="Извилистая река в сплошной зелени тропического леса, вид сверху"
+      ratio="3 / 4"
+      sizes="180px"
+      widths={[240, 360]}
+    />
+  </div>
+  <div class="manifesto__fragment manifesto__fragment--bike reveal">
+    <Photo
+      src="waterfall-jungle"
+      alt="Водопад среди зелёных зарослей"
+      ratio="4 / 5"
+      sizes="200px"
+      widths={[280, 400]}
+    />
+  </div>
 </section>
 
 <style>

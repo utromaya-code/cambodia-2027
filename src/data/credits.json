@@ -15,14 +15,6 @@
     "source": "Wikimedia Commons",
     "originalUrl": "https://commons.wikimedia.org/wiki/File:Cambodia_Rice_Fields_(9728044881).jpg"
   },
-  "rice-fields": {
-    "title": "File:Cambodia Rice Fields (9731277314).jpg",
-    "author": "Gary Todd from Xinzheng, China",
-    "license": "CC0",
-    "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
-    "source": "Wikimedia Commons",
-    "originalUrl": "https://commons.wikimedia.org/wiki/File:Cambodia_Rice_Fields_(9731277314).jpg"
-  },
   "siem-reap": {
     "title": "File:06-Kep Crab Market Cambodia-nX-13.jpg",
     "author": "PsamatheM",
@@ -207,14 +199,6 @@
     "source": "Wikimedia Commons",
     "originalUrl": "https://commons.wikimedia.org/wiki/File:Waterfall_on_Koh_Rong_Island,_Cambodia,_near_Sok_San_Village,_August_2012.jpg"
   },
-  "sea-turquoise": {
-    "title": "File:Koh Rong Cambodia.jpg",
-    "author": "MoonsMoon",
-    "license": "CC BY 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
-    "source": "Wikimedia Commons",
-    "originalUrl": "https://commons.wikimedia.org/wiki/File:Koh_Rong_Cambodia.jpg"
-  },
   "sea-paradise": {
     "title": "File:Cambodia island paradise koh rong sanloem.jpg",
     "author": "Wikirictor",
@@ -254,14 +238,6 @@
     "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
     "source": "Wikimedia Commons",
     "originalUrl": "https://commons.wikimedia.org/wiki/File:Sunset_over_the_Mekong.jpg"
-  },
-  "sunset-kampot": {
-    "title": "File:Sunset in Kampot 2.jpg",
-    "author": "Christophe95",
-    "license": "CC BY-SA 4.0",
-    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
-    "source": "Wikimedia Commons",
-    "originalUrl": "https://commons.wikimedia.org/wiki/File:Sunset_in_Kampot_2.jpg"
   },
   "palms-field": {
     "title": "File:Sunset Colouring A Field (152157269).jpeg",
@@ -382,5 +358,21 @@
     "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
     "source": "Flickr (через Openverse)",
     "originalUrl": "https://www.flickr.com/photos/96142817@N03/24404622615"
+  },
+  "sunset-temple": {
+    "title": "Phnom Bakheng",
+    "author": "Robert Nyman",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+    "source": "Flickr (через Openverse)",
+    "originalUrl": "https://www.flickr.com/photos/39641067@N00/189678325"
+  },
+  "sea-jetty": {
+    "title": "arrival jetty, koh rong",
+    "author": "unkle_sam",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+    "source": "Flickr (через Openverse)",
+    "originalUrl": "https://www.flickr.com/photos/39994175@N00/5410204382"
   }
 }

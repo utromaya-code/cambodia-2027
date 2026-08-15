@@ -30,13 +30,18 @@ import { bike } from '../data/bike';
       </p>
     </div>
 
-    <Photo
-      src={bike.image}
-      alt={`Мотоцикл ${bike.model} — универсальный адвенчер с двигателем ${bike.engine}`}
-      class="bike__photo reveal"
-      sizes="(min-width: 60rem) 48vw, 100vw"
-      ratio="4 / 3"
-    />
+    <!-- Обёртка нужна ради .bike__photo { order: -1 }: scoped-стиль Astro
+         не достаёт до корневого элемента дочернего компонента, поэтому на
+         самом <Photo> правило молча не работало и снимок на десктопе
+         оставался справа вместо левой колонки. -->
+    <div class="bike__photo reveal">
+      <Photo
+        src={bike.image}
+        alt={`Мотоцикл ${bike.model} — универсальный адвенчер с двигателем ${bike.engine}`}
+        sizes="(min-width: 60rem) 48vw, 100vw"
+        ratio="4 / 3"
+      />
+    </div>
   </div>
 </section>
 
