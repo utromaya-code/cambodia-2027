@@ -1,6 +1,6 @@
 ---
 import Photo from './Photo.astro';
-import { bike } from '../data/bike';
+import { bike, bikeUpgrade } from '../data/bike';
 ---
 
 <section class="bike section section--stone" id="bayk">
@@ -37,10 +37,35 @@ import { bike } from '../data/bike';
     <div class="bike__photo reveal">
       <Photo
         src={bike.image}
-        alt={`Мотоцикл ${bike.model} — универсальный адвенчер с двигателем ${bike.engine}`}
+        alt={`Мотоцикл ${bike.model} — лёгкий универсальный байк с двигателем ${bike.engine}`}
         sizes="(min-width: 60rem) 48vw, 100vw"
         ratio="4 / 3"
       />
+    </div>
+  </div>
+
+  <!-- Апгрейд за доплату. Отдельным блоком под основным байком, а не рядом
+       с ним: базовая модель одна, и она не должна конкурировать за внимание
+       с опцией, наличие которой ещё подтверждается. -->
+  <div class="wrap upgrade reveal">
+    <div class="upgrade__text">
+      <p class="kicker">{bikeUpgrade.title}</p>
+      <h3 class="upgrade__model">
+        {bikeUpgrade.model}
+        <span class="upgrade__price">{bikeUpgrade.surchargeHuman}</span>
+      </h3>
+      <div class="prose">
+        {bikeUpgrade.lines.map((line) => <p>{line}</p>)}
+      </div>
+      <p class="upgrade__note">{bikeUpgrade.note}</p>
+    </div>
+
+    <div class="upgrade__photos">
+      {
+        bikeUpgrade.photos.map((p) => (
+          <Photo src={p.image} alt={p.alt} sizes="(min-width: 60rem) 24vw, 45vw" ratio="4 / 3" />
+        ))
+      }
     </div>
   </div>
 </section>
@@ -110,6 +135,53 @@ import { bike } from '../data/bike';
 
     .bike__photo {
       order: -1;
+    }
+  }
+
+  /* --- Апгрейд на Himalayan --- */
+  .upgrade {
+    margin-top: clamp(2.5rem, 6vw, 4.5rem);
+    padding-top: clamp(2rem, 5vw, 3rem);
+    border-top: 1px solid var(--rule);
+    display: grid;
+    gap: 2rem;
+  }
+
+  .upgrade__model {
+    font-size: var(--step-2);
+    text-transform: uppercase;
+    margin-block: 0.4rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.7em;
+  }
+
+  .upgrade__price {
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    font-weight: 700;
+    color: var(--laterite-ink);
+    text-transform: none;
+  }
+
+  .upgrade__note {
+    margin-top: 1rem;
+    font-size: var(--step--1);
+    color: var(--ink-mute);
+  }
+
+  .upgrade__photos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.7rem;
+  }
+
+  @media (min-width: 60rem) {
+    .upgrade {
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5rem;
+      align-items: center;
     }
   }
 </style>

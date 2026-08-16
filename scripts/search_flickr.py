@@ -84,6 +84,16 @@ QUERIES = {
         "cambodia lanterns evening",
         "siem reap pub street",
     ],
+    # Восьмой заход: базовый байк сменился на Honda FTR 230.
+    "honda-ftr": [
+        "Honda FTR 223",
+        "Honda FTR 230 motorcycle",
+        "Honda FTR",
+    ],
+    "himalayan": [
+        "Royal Enfield Himalayan",
+        "Royal Enfield Himalayan 450",
+    ],
 }
 
 

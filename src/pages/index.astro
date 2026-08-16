@@ -26,7 +26,7 @@ import { routePoints } from '../data/route';
 import { days } from '../data/days';
 import { whyCambodia, practice, accommodation, pastTrips } from '../data/sections';
 import { island } from '../data/island';
-import { bike } from '../data/bike';
+import { bike, bikeUpgrade } from '../data/bike';
 import { faq } from '../data/faq';
 
 const title = 'Камбоджа на байках 2027 — авторское путешествие от Ангкора до моря';
@@ -43,6 +43,7 @@ const photoKeys = [
   'jungle-river',
   'waterfall-jungle',
   bike.image,
+  ...bikeUpgrade.photos.map((p) => p.image),
   practice.image,
   accommodation.image,
   island.image,
