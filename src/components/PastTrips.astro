@@ -1,0 +1,69 @@
+---
+import Photo from './Photo.astro';
+import { pastTrips } from '../data/sections';
+
+/**
+ * Блок про опыт команды. Стоит рядом с ведущими, потому что решает ту же
+ * задачу — доверие: за €2 200 человек хочет видеть, что эти люди уже водили
+ * такие поездки.
+ *
+ * Кадры бутанские, и это сказано в лиде прямым текстом. Подпись под блоком
+ * отдельно проговаривает, что Камбоджа будет другой: иначе широкий кадр
+ * с горным хребтом читался бы как обещание гор на этом маршруте.
+ */
+---
+
+<section class="past section">
+  <div class="wrap">
+    <h2 class="section__title reveal">{pastTrips.title}</h2>
+    <p class="section__lead reveal">{pastTrips.lead}</p>
+
+    <div class="past__grid">
+      {
+        pastTrips.photos.map((p) => (
+          <figure class:list={['past__item', p.wide && 'past__item--wide', 'reveal']}>
+            <Photo
+              src={p.image}
+              alt={p.alt}
+              sizes={p.wide ? '(min-width: 60rem) 90vw, 100vw' : '(min-width: 60rem) 30vw, 100vw'}
+              ratio={p.wide ? '20 / 9' : '4 / 3'}
+            />
+          </figure>
+        ))
+      }
+    </div>
+
+    <p class="past__note reveal">{pastTrips.note}</p>
+  </div>
+</section>
+
+<style>
+  .past__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    margin-top: 2.5rem;
+  }
+
+  .past__item {
+    margin: 0;
+  }
+
+  @media (min-width: 60rem) {
+    .past__grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* Широкий кадр с хребтом — на всю ширину: он держит весь блок */
+    .past__item--wide {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .past__note {
+    margin-top: 1.6rem;
+    max-width: 52ch;
+    color: var(--ink-mute);
+    font-size: var(--step--1);
+  }
+</style>

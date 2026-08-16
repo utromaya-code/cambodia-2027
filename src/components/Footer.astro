@@ -47,9 +47,15 @@ const nav = [
           <ul>
             {credits.map((c) => (
               <li>
-                <a href={c.originalUrl} rel="noopener nofollow">
-                  {c.title ?? c.key}
-                </a>
+                {/* У снимков из архива организаторов внешней страницы нет —
+                    ссылка с пустым href вела бы в никуда. */}
+                {c.originalUrl ? (
+                  <a href={c.originalUrl} rel="noopener nofollow">
+                    {c.title ?? c.key}
+                  </a>
+                ) : (
+                  <span>{c.title ?? c.key}</span>
+                )}
                 {' — '}
                 {c.author}, {c.license}
                 {c.licenseUrl && (

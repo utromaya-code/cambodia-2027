@@ -11,6 +11,7 @@ import RouteMap from '../components/RouteMap.astro';
 import Timeline from '../components/Timeline.astro';
 import Uniqueness from '../components/Uniqueness.astro';
 import Leaders from '../components/Leaders.astro';
+import PastTrips from '../components/PastTrips.astro';
 import Practice from '../components/Practice.astro';
 import Pricing from '../components/Pricing.astro';
 import Island from '../components/Island.astro';
@@ -23,7 +24,7 @@ import { trip } from '../data/trip';
 import { pricing } from '../data/pricing';
 import { routePoints } from '../data/route';
 import { days } from '../data/days';
-import { whyCambodia, practice, accommodation } from '../data/sections';
+import { whyCambodia, practice, accommodation, pastTrips } from '../data/sections';
 import { island } from '../data/island';
 import { bike } from '../data/bike';
 import { faq } from '../data/faq';
@@ -35,6 +36,7 @@ const description =
 /** Все ключи снимков страницы — по ним подвал собирает список авторов. */
 const photoKeys = [
   'hero',
+  ...pastTrips.photos.map((p) => p.image),
   'escape',
   'sunset-mekong',
   'palms-field',
@@ -114,6 +116,7 @@ const structuredData = [
     <Timeline />
     <Uniqueness />
     <Leaders />
+    <PastTrips />
     <Practice />
     <Pricing />
     <Island />
