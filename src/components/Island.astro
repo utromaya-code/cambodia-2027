@@ -54,15 +54,48 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     overflow: hidden;
   }
 
+  /*
+   * Снимок показываем как есть. Раньше здесь стояло opacity: 0.3 поверх
+   * сплошной морской заливки — от острова оставалось ровное цветное пятно,
+   * то самое «фото под плотным фильтром», которое бриф просит убрать.
+   * Теперь фотография идёт в полную силу, а читаемость обеспечивает
+   * локальная подложка под колонкой текста, а не тонировка всего кадра.
+   */
   .island__media {
     position: absolute;
     inset: 0;
     z-index: -1;
-    opacity: 0.3;
   }
 
   .island__media :global(.photo) {
     height: 100%;
+  }
+
+  .island__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* На узком экране текст лежит поверх всей ширины — затемняем снизу вверх */
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--sea) 94%, transparent) 30%,
+      color-mix(in srgb, var(--sea) 72%, transparent) 65%,
+      color-mix(in srgb, var(--sea) 35%, transparent) 100%
+    );
+  }
+
+  @media (min-width: 60rem) {
+    /* На широком экране текст занимает левую половину — освобождаем правую,
+       чтобы у моря и берега осталось место, ради которого кадр и взят. */
+    .island__media::after {
+      background: linear-gradient(
+        to right,
+        color-mix(in srgb, var(--sea) 94%, transparent) 0%,
+        color-mix(in srgb, var(--sea) 88%, transparent) 42%,
+        color-mix(in srgb, var(--sea) 30%, transparent) 78%,
+        color-mix(in srgb, var(--sea) 12%, transparent) 100%
+      );
+    }
   }
 
   .island__title {

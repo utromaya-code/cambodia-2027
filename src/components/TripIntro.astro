@@ -1,5 +1,15 @@
 ---
-import { intro, trip } from '../data/trip';
+import { intro } from '../data/trip';
+
+/**
+ * Короткая мысль под первым экраном.
+ *
+ * Здесь же раньше стояла табличка «Даты / Маршрут / Длительность / Как
+ * ехать». Её забрал KeyFacts — блок ключевых фактов из пункта 4.4 ТЗ, —
+ * и две одинаковые таблички шли подряд через один экран. Оставлена одна,
+ * та, что полнее: она добавляет модель байка, апгрейд и латинские названия
+ * городов, а недостающие факты умеет скрывать.
+ */
 ---
 
 <section class="intro section" id="zachem">
@@ -10,25 +20,6 @@ import { intro, trip } from '../data/trip';
       <div class="prose prose--lead reveal">
         {intro.lines.map((line) => <p>{line}</p>)}
       </div>
-
-      <dl class="facts reveal">
-        <div>
-          <dt>Даты</dt>
-          <dd>{trip.dates.human}</dd>
-        </div>
-        <div>
-          <dt>Маршрут</dt>
-          <dd>{trip.start} → {trip.finish}</dd>
-        </div>
-        <div>
-          <dt>Длительность</dt>
-          <dd>{trip.dates.ridingDays} дней + день прилёта</dd>
-        </div>
-        <div>
-          <dt>Как ехать</dt>
-          <dd>Байк или микроавтобус</dd>
-        </div>
-      </dl>
     </div>
   </div>
 </section>
@@ -42,29 +33,6 @@ import { intro, trip } from '../data/trip';
 
   .intro__body {
     margin-top: 2rem;
-  }
-
-  .facts {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-    gap: 1.6rem 1.5rem;
-    margin: 2.6rem 0 0;
-    padding-top: 1.8rem;
-    border-top: 1px solid var(--rule);
-  }
-
-  .facts dt {
-    font-size: var(--step--1);
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-  }
-
-  .facts dd {
-    margin: 0.35rem 0 0;
-    font-family: var(--font-display);
-    font-size: var(--step-1);
-    line-height: 1.15;
   }
 
   @media (min-width: 60rem) {

@@ -53,9 +53,13 @@
   --color-graphite-soft: #3a332c;
   --color-paper: #fffdf7;
 
-  /* Бирюза южного побережья — настоящая, а не приглушённый сине-серый */
-  --color-sea: #0c93a4;
-  --color-sea-light: #3fbfcf;
+  /* Глубокий морской зелёный побережья.
+     Раньше тут стояла бирюза #0c93a4, и островной блок из-за неё читался
+     как отдельный рекламный баннер турагентства, а не как продолжение той
+     же дороги. Зелёный держит остров в одной семье с --jungle и при этом
+     остаётся морским. Светлый вариант — для акцентов на тёмном фоне. */
+  --color-sea: #0b7a6e;
+  --color-sea-light: #46c3ac;
 
   --font-display: 'Oswald', 'Arial Narrow', sans-serif;
   --font-body: 'Manrope Variable', 'Manrope', system-ui, sans-serif;
@@ -82,8 +86,8 @@
   --jungle: #0f4a35;
   --jungle-mid: #1c7a56;
   --leaf: #5fb043;
-  --sea: #0c93a4;
-  --sea-light: #3fbfcf;
+  --sea: #0b7a6e;
+  --sea-light: #46c3ac;
 
   /* Роли */
   --bg: var(--paper);
@@ -287,7 +291,9 @@ ol {
 /* Морская часть страницы — только после выхода к побережью */
 .section--sea {
   background: var(--sea);
-  color: #f4fdfe;
+  /* Тёплый белый вместо прежнего голубоватого #f4fdfe: на зелёном фоне
+     холодный белый тянул секцию обратно в бирюзу. */
+  color: #f4fbf6;
   --accent: var(--gold-soft);
   --rule: color-mix(in srgb, #ffffff 30%, transparent);
 }

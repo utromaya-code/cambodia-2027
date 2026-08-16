@@ -1,0 +1,103 @@
+---
+import { trip } from '../data/trip';
+import { bike, bikeUpgrade } from '../data/bike';
+import { isReady, type Pending } from '../data/content';
+
+/**
+ * Ключевые факты поездки — пункт 4.4 ТЗ.
+ *
+ * Блок собирает в одном месте то, что человек ищет глазами перед тем, как
+ * читать лонгрид: когда, откуда, докуда, на чём и сколько это длится.
+ * Значения не дублируются в разметке — все приходят из trip.ts и bike.ts.
+ *
+ * Четыре строки из списка ТЗ (километраж, число участников, требуемый опыт,
+ * доли асфальта и грунта) организатором не подтверждены. Они перечислены
+ * здесь наравне с остальными, но приходят как TODO_CONTENT и отсекаются
+ * фильтром ниже: бриф прямо запрещает показывать вместо них заглушки.
+ */
+
+interface Fact {
+  label: string;
+  value: Pending<string>;
+}
+
+const roadMix = trip.route.roadMix;
+const roadMixValue: Pending<string> =
+  isReady(roadMix.asphalt) && isReady(roadMix.gravel)
+    ? `${roadMix.asphalt}% асфальта · ${roadMix.gravel}% грунта`
+    : (roadMix.asphalt as Pending<string>);
+
+const allFacts: readonly Fact[] = [
+  { label: 'Даты', value: trip.dates.human },
+  {
+    label: 'Длительность',
+    value: `${trip.dates.totalDays} дней в стране, ${trip.dates.ridingDays} дней маршрута`,
+  },
+  { label: 'Старт', value: `${trip.start} · ${trip.startLatin}` },
+  { label: 'Финиш', value: `${trip.finish} · ${trip.finishLatin}` },
+  { label: 'Байк', value: bike.model },
+  { label: 'Апгрейд', value: `${bikeUpgrade.model}, ${bikeUpgrade.surchargeHuman}` },
+  { label: 'Формат', value: 'На байке или на микроавтобусе' },
+  {
+    label: 'Километраж',
+    value: isReady(trip.route.totalDistanceKm)
+      ? `около ${trip.route.totalDistanceKm} км`
+      : (trip.route.totalDistanceKm as Pending<string>),
+  },
+  {
+    label: 'Участников',
+    value: isReady(trip.groupSize)
+      ? `до ${trip.groupSize} человек`
+      : (trip.groupSize as Pending<string>),
+  },
+  { label: 'Требуемый опыт', value: trip.riding.minimumExperience },
+  { label: 'Дороги', value: roadMixValue },
+];
+
+const facts = allFacts.filter((f): f is { label: string; value: string } => isReady(f.value));
+---
+
+<section class="facts section section--dark" aria-label="Ключевые факты поездки">
+  <div class="wrap">
+    <dl class="facts__grid">
+      {
+        facts.map((fact) => (
+          <div class="facts__item reveal">
+            <dt class="facts__label">{fact.label}</dt>
+            <dd class="facts__value">{fact.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .facts__grid {
+    display: grid;
+    /* 15rem держит самую длинную подтверждённую строку («11 дней в стране,
+       10 дней маршрута») в две строки, а не в четыре */
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1.8rem 2.5rem;
+    margin: 0;
+  }
+
+  .facts__item {
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .facts__label {
+    font-size: var(--step--1);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .facts__value {
+    margin: 0.4rem 0 0;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: 1.2;
+  }
+</style>

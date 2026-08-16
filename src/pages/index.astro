@@ -1,8 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
+import TrustStrip from '../components/TrustStrip.astro';
 import VisualManifesto from '../components/VisualManifesto.astro';
 import TripIntro from '../components/TripIntro.astro';
+import KeyFacts from '../components/KeyFacts.astro';
 import WhyCambodia from '../components/WhyCambodia.astro';
 import Escape from '../components/Escape.astro';
 import RideVsRoad from '../components/RideVsRoad.astro';
@@ -107,8 +109,12 @@ const structuredData = [
   <Hero />
 
   <main id="main">
+    <!-- Полоса доверия внутри main, а не между <header> и <main>: skip-link
+         ведёт на #main, и снаружи её пропустил бы каждый, кто идёт с клавиатуры. -->
+    <TrustStrip />
     <VisualManifesto />
     <TripIntro />
+    <KeyFacts />
     <WhyCambodia />
     <Escape />
     <RouteMap />

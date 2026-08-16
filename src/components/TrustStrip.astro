@@ -1,0 +1,84 @@
+---
+import { trustStrip } from '../data/trip';
+import { onlyReady } from '../data/content';
+
+/**
+ * Полоса доверия под первым экраном — пункт 4.2 ТЗ.
+ *
+ * Без карточек, рамок и иконок: это одна строка коротких фактов, разделённых
+ * чертой. Карточки превратили бы четыре фразы в четыре «фичи» и добавили бы
+ * странице тот самый шаблонный вид туроператора, которого бриф просит избегать.
+ *
+ * Скрытие блока при недоборе фактов — сознательное. Список в trip.ts наполовину
+ * состоит из TODO_CONTENT, и если организатор подтвердит не всё, полоса из
+ * одного-двух пунктов будет работать против доверия, а не на него.
+ */
+const facts = onlyReady(trustStrip);
+const MIN_FACTS = 3;
+---
+
+{
+  facts.length >= MIN_FACTS && (
+    <aside class="trust" aria-label="Как устроена поездка">
+      <ul class="wrap trust__list">
+        {facts.map((fact) => (
+          <li class="trust__item">{fact}</li>
+        ))}
+      </ul>
+    </aside>
+  )
+}
+
+<style>
+  .trust {
+    background: var(--ink);
+    color: var(--paper);
+    padding-block: 1.1rem;
+  }
+
+  .trust__list {
+    display: flex;
+    flex-wrap: wrap;
+    /* column-gap несёт разделитель: 1.6rem слева и справа от черты */
+    gap: 0.6rem 1.6rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--step--1);
+    line-height: 1.35;
+    color: color-mix(in srgb, var(--paper) 88%, transparent);
+  }
+
+  .trust__item {
+    position: relative;
+  }
+
+  /*
+   * Разделитель рисуем перед пунктом, а не после: при переносе строки
+   * висящая черта оказывается в начале новой строки, где её видно и легко
+   * убрать, — в отличие от псевдоэлемента ::after, который повис бы
+   * в конце строки над пустотой.
+   */
+  .trust__item + .trust__item::before {
+    content: '';
+    position: absolute;
+    top: 0.15em;
+    bottom: 0.15em;
+    left: -0.8rem;
+    width: 1px;
+    background: color-mix(in srgb, var(--paper) 30%, transparent);
+  }
+
+  /* На узком экране пункты идут колонкой, и вертикальная черта между ними
+     теряет смысл — она разделяла бы строки, а не соседей. */
+  @media (max-width: 34rem) {
+    .trust__list {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .trust__item + .trust__item::before {
+      display: none;
+    }
+  }
+</style>

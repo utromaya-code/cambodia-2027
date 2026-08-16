@@ -1,26 +1,12 @@
 ---
-import { getImage } from 'astro:assets';
 import Photo from './Photo.astro';
 import Marker from './Marker.astro';
-import { getPhoto } from '../data/images';
 import { hero } from '../data/trip';
 import { pricing } from '../data/pricing';
 import { bike } from '../data/bike';
 
 const [moto, road] = pricing.options;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-
-/**
- * Видео-фон — заглушка. Файла ещё нет, поэтому <source> закономерно вернёт 404,
- * а <video> без кадра просто ничего не покажет: под ним неподвижным слоем лежит
- * тот же кадр как <Photo>. Требования к файлу — в CONTENT_NEEDED.md.
- */
-const heroVideoSrc = `${base}/video/hero.mp4`;
-
-const heroSource = getPhoto('hero');
-const heroPoster = heroSource
-  ? await getImage({ src: heroSource, width: 1600, format: 'webp' })
-  : null;
 ---
 
 <!--
@@ -48,18 +34,12 @@ const heroPoster = heroSource
     class="absolute inset-0 h-full w-full"
   />
 
-  <video
-    class="absolute inset-0 h-full w-full object-cover motion-reduce:hidden"
-    autoplay
-    muted
-    loop
-    playsinline
-    preload="none"
-    poster={heroPoster?.src}
-    aria-hidden="true"
-  >
-    <source src={heroVideoSrc} type="video/mp4" />
-  </video>
+  <!--
+    Здесь стоял <video> с /video/hero.mp4, которого нет в проекте. Браузер
+    честно ходил за ним при каждой загрузке и получал 404 — впустую, потому
+    что кадр всё равно рисует <Photo> под ним. Вернуть тег имеет смысл
+    вместе с реальным файлом; требования к ролику — в CONTENT_NEEDED.md.
+  -->
 
   <div
     class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent"
@@ -119,7 +99,11 @@ const heroPoster = heroSource
       </span>
     </div>
 
-    <div data-hero-anim class="mt-8">
+    <!-- Вторичное действие рядом с основным: посетителю, который ещё не готов
+         писать, нужен способ сначала посмотреть дорогу, а не уходить со
+         страницы. Ссылка намеренно текстовая — вторая кнопка отобрала бы
+         часть внимания у заявки. -->
+    <div data-hero-anim class="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
       <a
         data-analytics="hero_cta_click"
         href="#zayavka"
@@ -132,6 +116,14 @@ const heroPoster = heroSource
         <span class="relative transition-colors duration-300 group-hover:text-graphite">
           {hero.cta}
         </span>
+      </a>
+
+      <a
+        data-analytics="hero_route_click"
+        href="#marshrut"
+        class="font-body text-sm font-semibold tracking-[0.14em] text-paper/85 uppercase underline decoration-marker decoration-2 underline-offset-[0.4em] transition-colors hover:text-marker"
+      >
+        {hero.ctaSecondary}
       </a>
     </div>
 
