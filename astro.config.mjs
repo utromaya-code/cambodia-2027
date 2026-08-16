@@ -20,7 +20,11 @@ export default defineConfig({
   site: SITE_URL,
   base: BASE_PATH,
   trailingSlash: 'ignore',
-  integrations: [sitemap()],
+  integrations: [
+    // Политику конфиденциальности в поиск не отдаём: она помечена noindex,
+    // и держать её в sitemap было бы противоречием.
+    sitemap({ filter: (page) => !page.includes('/privacy') }),
+  ],
   build: {
     inlineStylesheets: 'auto',
   },

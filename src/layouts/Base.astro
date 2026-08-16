@@ -15,9 +15,11 @@ interface Props {
   ogImage?: string;
   /** Готовые блоки schema.org. */
   structuredData?: unknown[];
+  /** Служебные страницы (политика) в поиск не отдаём. */
+  noindex?: boolean;
 }
 
-const { title, description, ogImage, structuredData = [] } = Astro.props;
+const { title, description, ogImage, structuredData = [], noindex = false } = Astro.props;
 
 const canonical = Astro.site
   ? new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site).href
@@ -47,6 +49,7 @@ const faviconHref = `data:image/svg+xml,${encodeURIComponent(faviconSvg)}`;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="canonical" href={canonical} />
 
     <meta property="og:type" content="website" />

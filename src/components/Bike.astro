@@ -1,10 +1,18 @@
 ---
 import Photo from './Photo.astro';
 import { bike, bikeUpgrade } from '../data/bike';
+import { hasPhoto } from '../data/images';
+
+/**
+ * Фото реального байка от прокатчика ещё не получено. Пока его нет, секция
+ * идёт одной колонкой: пустая половина сетки читалась бы как поломка вёрстки,
+ * а надпись-заглушку показывать посетителю нельзя.
+ */
+const bikePhotoReady = hasPhoto(bike.image);
 ---
 
 <section class="bike section section--stone" id="bayk">
-  <div class="wrap bike__grid">
+  <div class:list={['wrap', 'bike__grid', !bikePhotoReady && 'bike__grid--text-only']}>
     <div class="bike__text">
       <p class="kicker reveal">{bike.title}</p>
       <h2 class="bike__model reveal">{bike.model}</h2>
@@ -34,6 +42,7 @@ import { bike, bikeUpgrade } from '../data/bike';
          не достаёт до корневого элемента дочернего компонента, поэтому на
          самом <Photo> правило молча не работало и снимок на десктопе
          оставался справа вместо левой колонки. -->
+    {bikePhotoReady && (
     <div class="bike__photo reveal">
       <Photo
         src={bike.image}
@@ -42,6 +51,7 @@ import { bike, bikeUpgrade } from '../data/bike';
         ratio="4 / 3"
       />
     </div>
+    )}
   </div>
 
   <!-- Апгрейд за доплату. Отдельным блоком под основным байком, а не рядом
@@ -126,8 +136,14 @@ import { bike, bikeUpgrade } from '../data/bike';
     text-transform: uppercase;
   }
 
+  /* Без фотографии колонка одна — иначе половина экрана остаётся пустой */
+  .bike__grid--text-only {
+    grid-template-columns: 1fr;
+    max-width: 46rem;
+  }
+
   @media (min-width: 60rem) {
-    .bike__grid {
+    .bike__grid:not(.bike__grid--text-only) {
       grid-template-columns: 1fr 1fr;
       gap: 4rem;
       align-items: center;

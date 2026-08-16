@@ -322,6 +322,7 @@ const labelFor = (id: string) => labelOffsets[id] ?? { side: 'start' as const, d
 </style>
 
 <script>
+  import { track } from '../scripts/analytics';
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -396,6 +397,7 @@ const labelFor = (id: string) => labelOffsets[id] ?? { side: 'start' as const, d
 
         // Раскрытая панель меняет высоту списка, а границы ScrollTrigger для
         // рейки посчитаны один раз при загрузке — без пересчёта они «уедут».
+        track('route_point_open', { point: id });
         ScrollTrigger.refresh();
 
         if (!open) {

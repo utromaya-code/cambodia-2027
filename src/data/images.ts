@@ -34,6 +34,11 @@ export function getPhoto(key: string | undefined): ImageMetadata | undefined {
   return key ? byKey.get(key) : undefined;
 }
 
+/** Есть ли файл под этим ключом — чтобы секция могла перестроить раскладку. */
+export function hasPhoto(key: string | undefined): boolean {
+  return Boolean(key && byKey.has(key));
+}
+
 export function getCredit(key: string | undefined): PhotoCredit | undefined {
   return key ? credits[key] : undefined;
 }

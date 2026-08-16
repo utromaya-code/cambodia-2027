@@ -1,6 +1,8 @@
 ---
 import { trip } from '../data/trip';
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 interface Props {
   title?: string;
   lead?: string;
@@ -75,6 +77,24 @@ const {
         <textarea name="comment" rows="4" placeholder="Опыт езды, вопросы, пожелания"></textarea>
       </label>
 
+      <!-- Ловушка для ботов: поле скрыто от людей и от скринридеров,
+           реальный пользователь его не заполнит. Дешевле и вежливее CAPTCHA. -->
+      <div class="form__trap" aria-hidden="true">
+        <label>
+          Не заполняйте это поле
+          <input type="text" name="website" tabindex="-1" autocomplete="off" />
+        </label>
+      </div>
+
+      <label class="form__consent">
+        <input type="checkbox" name="consent" required />
+        <span>
+          Согласен на обработку персональных данных в соответствии с
+          <a href={`${base}/privacy`} rel="noopener">политикой конфиденциальности</a>.
+        </span>
+      </label>
+      <span class="field__error" data-error-for="consent"></span>
+
       <button class="btn btn--wide" type="submit">Оставить заявку</button>
 
       <p class="form__status" role="status" aria-live="polite" data-form-status></p>
@@ -82,7 +102,7 @@ const {
 
     <p class="lead__alt reveal">
       Или просто напишите в Telegram:
-      <a href={trip.contacts.telegram} rel="noopener">{trip.contacts.telegramHandle}</a>
+      <a href={trip.contacts.telegram} rel="noopener" data-analytics="telegram_click">{trip.contacts.telegramHandle}</a>
     </p>
   </div>
 </section>
@@ -92,6 +112,37 @@ const {
     display: grid;
     gap: 1.4rem;
     margin-top: clamp(1.8rem, 4vw, 2.6rem);
+  }
+
+  /* Ловушку прячем вне экрана, а не display:none — часть ботов
+     игнорирует скрытые через display поля. */
+  .form__trap {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .form__consent {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.7rem;
+    align-items: start;
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--paper) 78%, transparent);
+  }
+
+  .form__consent input {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.15rem;
+  }
+
+  .form__consent a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   .form__row {
@@ -225,7 +276,7 @@ const {
 </style>
 
 <script>
-  import { submitLead, type Lead } from '../scripts/lead';
+  import { submitLead, collectUtm, type Lead } from '../scripts/lead';
   import { track } from '../scripts/analytics';
 
   const form = document.querySelector<HTMLFormElement>('#lead-form');
@@ -267,18 +318,41 @@ const {
         ?.classList.toggle('field--invalid', Boolean(message));
     };
 
+    // Первое касание формы — отдельное событие: показывает, сколько людей
+    // начали заполнять и сколько дошли до отправки.
+    let started = false;
+    form.addEventListener('input', () => {
+      if (started) return;
+      started = true;
+      track('lead_form_start');
+    }, { once: false });
+
+    // Флаг рядом с disabled: кнопку можно активировать программно,
+    // а повторный submit прилетает и с Enter в поле.
+    let submitting = false;
+
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
+      if (submitting) return;
       const data = new FormData(form);
 
       const name = String(data.get('name') ?? '').trim();
       const contact = String(data.get('contact') ?? '').trim();
       const email = String(data.get('email') ?? '').trim();
 
+      // Ловушка заполнена — это бот. Показываем успех, ничего не отправляя:
+      // так бот не узнает, что его отсеяли, и не начнёт подбирать обход.
+      if (String(data.get('website') ?? '').trim() !== '') {
+        status.dataset.tone = 'ok';
+        status.textContent = 'Спасибо, заявка отправлена.';
+        return;
+      }
+
       let valid = true;
       setError('name', '');
       setError('contact', '');
       setError('email', '');
+      setError('consent', '');
 
       if (name.length < 2) {
         setError('name', 'Напишите, как к вам обращаться');
@@ -292,6 +366,10 @@ const {
         setError('email', 'Проверьте адрес почты');
         valid = false;
       }
+      if (!data.get('consent')) {
+        setError('consent', 'Без согласия на обработку данных мы не сможем ответить');
+        valid = false;
+      }
 
       if (!valid) {
         form.querySelector<HTMLElement>('.field--invalid input')?.focus();
@@ -299,6 +377,7 @@ const {
       }
 
       const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+      submitting = true;
       button.disabled = true;
       status.textContent = 'Отправляем…';
       status.removeAttribute('data-tone');
@@ -312,22 +391,26 @@ const {
         comment: String(data.get('comment') ?? '').trim() || undefined,
         page: location.href,
         referrer: document.referrer,
+        utm: collectUtm(),
       };
 
       track('lead_form_submit', { mode: lead.mode, island: lead.island });
       const result = await submitLead(lead);
 
       if (result.ok) {
+        track('lead_form_success', { mode: lead.mode, island: lead.island });
         form.reset();
         status.dataset.tone = 'ok';
         status.textContent =
           'Спасибо. Мы свяжемся с вами и расскажем про маршрут, технику и детали поездки.';
       } else {
+        track('lead_form_error', { reason: result.reason });
         status.dataset.tone = 'error';
         status.textContent =
           'Не получилось отправить. Напишите нам в Telegram — так точно дойдёт.';
       }
       button.disabled = false;
+      submitting = false;
     });
   }
 </script>

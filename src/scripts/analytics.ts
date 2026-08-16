@@ -4,15 +4,34 @@
  * не загружается — за это отвечает разметка счётчика в Base.astro.
  */
 
+/**
+ * Полный перечень событий из ТЗ плюс те, что уже были в проекте.
+ * Имена фиксированы: по ним настраиваются цели в аналитике, поэтому
+ * переименовывать их без согласования нельзя.
+ */
 export type AnalyticsEvent =
+  // первый экран и переходы к заявке
   | 'hero_cta_click'
+  | 'price_cta_click'
   | 'route_cta_click'
-  | 'bike_price_cta'
-  | 'van_price_cta'
   | 'retreat_cta'
+  // раскрытие содержимого
+  | 'route_point_open'
+  | 'program_day_open'
+  | 'bike_option_select'
+  | 'island_details_click'
+  | 'leader_click'
+  // форма заявки
+  | 'lead_form_start'
   | 'lead_form_open'
   | 'lead_form_submit'
-  | 'leader_click'
+  | 'lead_form_success'
+  | 'lead_form_error'
+  | 'telegram_click'
+  // прежние имена ценовых кнопок — оставлены, чтобы не потерять уже
+  // настроенные цели; новые кнопки шлют price_cta_click с параметром option
+  | 'bike_price_cta'
+  | 'van_price_cta'
   | 'route_day_open';
 
 type Payload = Record<string, unknown>;
