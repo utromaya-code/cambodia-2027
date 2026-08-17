@@ -152,7 +152,8 @@ const nav = [
   .footer__legal {
     margin-top: 1.5rem;
     font-size: var(--step--1);
-    color: color-mix(in srgb, var(--paper) 45%, transparent);
+    /* 45% давали 4,44:1 на чернильном фоне — на волос ниже порога 4,5:1 */
+    color: color-mix(in srgb, var(--paper) 52%, transparent);
   }
 
   @media (min-width: 48rem) {

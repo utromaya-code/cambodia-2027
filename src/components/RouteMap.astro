@@ -235,7 +235,10 @@ const labelFor = (id: string) => labelOffsets[id] ?? { side: 'start' as const, d
     font-family: var(--font-display);
     font-size: var(--step--1);
     letter-spacing: 0.1em;
-    color: var(--laterite);
+    /* Терракота на джунглевой зелени даёт 2,6:1 — номера точек не читались.
+       --accent в тёмных секциях и есть золото рассвета, заведённое ровно
+       для этого случая: 7,1:1. */
+    color: var(--accent);
   }
 
   .route__names {

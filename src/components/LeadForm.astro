@@ -188,7 +188,8 @@ const {
 
   input::placeholder,
   textarea::placeholder {
-    color: color-mix(in srgb, var(--paper) 45%, transparent);
+    /* Тот же порог, что и у мелкого текста в подвале: 45% не дотягивали */
+    color: color-mix(in srgb, var(--paper) 52%, transparent);
   }
 
   input:user-invalid,

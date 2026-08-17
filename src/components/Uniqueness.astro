@@ -42,7 +42,9 @@ import { uniqueness } from '../data/sections';
     font-family: var(--font-display);
     font-size: var(--step-1);
     line-height: 1;
-    color: var(--laterite);
+    /* Затемнённая терракота: сама --laterite на светлом фоне даёт 3,9:1,
+       а размер здесь мелкий и порог для него 4,5:1. */
+    color: var(--laterite-ink);
   }
 
   .uniq__item h3 {
