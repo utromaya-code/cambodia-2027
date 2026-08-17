@@ -16,7 +16,11 @@ export type AnalyticsEvent =
   | 'route_cta_click'
   | 'retreat_cta'
   // раскрытие содержимого
+  // route_point_open остался от раскрывающихся точек маршрута: их заменила
+  // карта, и событие больше не отправляется. Имя не удаляем — в аналитике
+  // по нему уже накоплена история.
   | 'route_point_open'
+  | 'route_map_open'
   | 'program_day_open'
   | 'bike_option_select'
   | 'island_details_click'

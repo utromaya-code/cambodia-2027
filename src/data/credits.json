@@ -382,5 +382,21 @@
     "licenseUrl": null,
     "source": "leo-japan.ru",
     "originalUrl": "https://leo-japan.ru"
+  },
+  "bg-intro": {
+    "title": "Рисовые поля и сахарные пальмы (размытый фон) — по снимку «Trees in the rice fields»",
+    "author": "MarPa87",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/",
+    "source": "Flickr (через Openverse)",
+    "originalUrl": "https://www.flickr.com/photos/135702251@N07/35833550942"
+  },
+  "bg-manifesto": {
+    "title": "Башни Ангкора в утренней дымке (размытый фон) — по снимку «File:Angkor Wat at Dawn (7409409436).jpg»",
+    "author": "Donald Macauley from Carshalton, Surrey, UK",
+    "license": "CC BY-SA 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Angkor_Wat_at_Dawn_(7409409436).jpg"
   }
 }

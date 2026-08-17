@@ -1,6 +1,8 @@
 ---
+import { getImage } from 'astro:assets';
 import Photo from './Photo.astro';
 import { manifesto } from '../data/trip';
+import { getPhoto } from '../data/images';
 
 /**
  * Графический блок-мост между героем и объяснением (TripIntro) — раздел 03
@@ -8,10 +10,20 @@ import { manifesto } from '../data/trip';
  * text-секция. «Зачёркивание» негативных формулировок анимируется через уже
  * существующий механизм .reveal/is-visible (src/scripts/reveal.ts) — отдельный
  * скрипт не нужен, prefers-reduced-motion уже уважается глобально.
+ *
+ * Фон — размытые башни Ангкора в утренней дымке. Экран занимает всю высоту
+ * окна и до этого был пустым бежевым полем с несколькими строками. Размытие
+ * сделано на сборке (bg-manifesto.jpg), не фильтром в браузере.
  */
+const bg = getPhoto('bg-manifesto');
+const bgUrl = bg ? (await getImage({ src: bg, width: 1400, format: 'webp' })).src : null;
 ---
 
-<section class="manifesto section section--stone" aria-label="Что это за путешествие">
+<section
+  class="manifesto section section--stone"
+  aria-label="Что это за путешествие"
+  style={bgUrl ? `--bg-image:url(${bgUrl})` : undefined}
+>
   <div class="wrap manifesto__inner">
     <p class="manifesto__opening">
       {
@@ -71,11 +83,25 @@ import { manifesto } from '../data/trip';
 <style>
   .manifesto {
     position: relative;
+    isolation: isolate;
     min-height: 100vh;
     display: flex;
     align-items: center;
     padding-block: clamp(4rem, 10vh, 7rem);
     overflow: clip;
+  }
+
+  /* Прозрачность та же, что и в TripIntro: выше 0.24 тёмный текст на
+     бумаге начинает терять контраст на светлых участках кадра. */
+  .manifesto::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: var(--bg-image);
+    background-size: cover;
+    background-position: center;
+    opacity: 0.24;
   }
 
   .manifesto__inner {

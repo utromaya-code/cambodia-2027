@@ -1,35 +1,56 @@
 ---
-import Photo from './Photo.astro';
-import { getGalleryAlt } from '../data/images';
 import { routePoints, islandPoint } from '../data/route';
-import { cambodiaPath, mapViewBox, projectPoint } from '../data/cambodia-shape';
-
-const points = routePoints.map((p) => ({ ...p, ...projectPoint(p.lon, p.lat) }));
-const island = { ...islandPoint, ...projectPoint(islandPoint.lon, islandPoint.lat) };
-
-/** Линия маршрута по точкам — её и «прорисовывает» скролл. */
-const routeLine = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x} ${p.y}`).join(' ');
+import { trip } from '../data/trip';
 
 /**
- * Смещения подписей. Точки стоят плотно в двух местах — Сиемреап с Ангкором
- * на севере и весь южный кластер у побережья, — поэтому положение каждой
- * подписи задано вручную: сторона и сдвиг по вертикали.
+ * Маршрут на настоящей карте.
+ *
+ * Здесь раньше стоял раскрывающийся список из десяти точек: у каждой —
+ * абзац текста и мини-галерея. Он дублировал программу по дням, которая
+ * идёт ниже и рассказывает то же самое подробнее, а на телефоне вообще
+ * подменял собой карту: SVG-контур страны прятался на узких экранах.
+ * Человек, открывший раздел «Маршрут», карты не видел вовсе.
+ *
+ * Теперь наоборот: карта — главное, а список под ней только называет
+ * точки по порядку. Подробности остались в одном месте, в программе.
+ *
+ * Карта собирается на Leaflet поверх тайлов OpenStreetMap. Google Maps
+ * Embed API требует ключ, которого у проекта нет; вместо встраивания
+ * под картой стоит кнопка, открывающая тот же маршрут в самом Google Maps —
+ * там его удобно посмотреть в приложении или отправить себе.
+ *
+ * Рисованный контур страны из src/data/cambodia-shape.ts больше не
+ * используется — файл оставлен на случай, если понадобится вернуться
+ * к схематичной карте.
  */
-const labelOffsets: Record<string, { side: 'start' | 'end'; dy: number }> = {
-  'siem-reap': { side: 'start', dy: 26 },
-  // Ангкор подписываем слева: справа стоит точка Пном Кулена
-  angkor: { side: 'end', dy: 2 },
-  'phnom-kulen': { side: 'start', dy: -4 },
-  battambang: { side: 'end', dy: 4 },
-  'kampong-chhnang': { side: 'start', dy: 6 },
-  kirirom: { side: 'start', dy: 6 },
-  bokor: { side: 'start', dy: -18 },
-  kampot: { side: 'start', dy: 26 },
-  ream: { side: 'end', dy: 40 },
-  sihanoukville: { side: 'end', dy: 8 },
+
+const points = routePoints.map((p, i) => ({
+  n: i + 1,
+  id: p.id,
+  name: p.name,
+  latin: p.latin,
+  lat: p.lat,
+  lon: p.lon,
+  note: p.note,
+}));
+
+const island = {
+  name: islandPoint.name,
+  latin: islandPoint.latin,
+  lat: islandPoint.lat,
+  lon: islandPoint.lon,
 };
 
-const labelFor = (id: string) => labelOffsets[id] ?? { side: 'start' as const, dy: 6 };
+/**
+ * Ссылка на маршрут в Google Maps: /dir/ с координатами через слэш.
+ * Ко Ронг сюда не добавляем — на остров идут по воде, и Google построил бы
+ * несуществующую дорогу. Остров показан на нашей карте отдельной линией.
+ */
+const googleMapsUrl = `https://www.google.com/maps/dir/${points
+  .map((p) => `${p.lat},${p.lon}`)
+  .join('/')}`;
+
+const mapData = JSON.stringify({ points, island });
 ---
 
 <section class="route section section--dark" id="marshrut">
@@ -41,374 +62,353 @@ const labelFor = (id: string) => labelOffsets[id] ?? { side: 'start' as const, d
     </p>
   </div>
 
+  <!-- На широком экране карта и список идут в две колонки: маршрут вытянут
+       с севера на юг, и в полную ширину карта оставляла бы по бокам пустоту
+       шире самой страны. -->
   <div class="wrap route__layout">
-    <!-- Карта: на узких экранах скрыта в пользу вертикального списка -->
-    <figure class="route__map reveal" aria-hidden="true">
-      <svg viewBox={mapViewBox} class="route__svg" role="presentation">
-        <path class="route__country" d={cambodiaPath} />
+    <div class="route__mapwrap reveal">
+      <div class="route__map" id="route-map" data-route-map={mapData}></div>
 
-        <path class="route__line" d={routeLine} pathLength="1" />
-
-        {
-          points.map((p) => (
-            <g class="route__pin" data-point={p.id}>
-              <circle cx={p.x} cy={p.y} r="9" class="route__dot" />
-              <text
-                x={labelFor(p.id).side === 'end' ? p.x - 17 : p.x + 17}
-                y={p.y + labelFor(p.id).dy}
-                text-anchor={labelFor(p.id).side}
-                class="route__label"
-              >
-                {p.latin}
-              </text>
-            </g>
-          ))
-        }
-
-        <g class="route__pin route__pin--island">
-          <circle cx={island.x} cy={island.y} r="7" class="route__dot route__dot--island" />
-          <text x={island.x - 14} y={island.y - 20} text-anchor="end" class="route__label">
-            {island.latin}
-          </text>
-        </g>
-      </svg>
-    </figure>
-
-    <!-- Вертикальный список — основной способ читать маршрут на телефоне -->
-    <div class="route__list-wrap" data-route-progress>
-      <div class="route__rail" aria-hidden="true">
-        <div class="route__rail-fill" data-rail-fill></div>
-      </div>
-
-      <ol class="route__list">
-        {
-          points.map((p, i) => {
-            const galleryKeys = [p.image, ...(p.gallery ?? [])];
-            return (
-              <li class="route__item reveal">
-                <button
-                  class="route__btn"
-                  type="button"
-                  aria-expanded="false"
-                  aria-controls={`route-panel-${p.id}`}
-                  data-route-toggle={p.id}
-                >
-                  <span class="route__index">{String(i + 1).padStart(2, '0')}</span>
-                  <span class="route__names">
-                    <span class="route__name">{p.name}</span>
-                    <span class="route__latin">{p.latin}</span>
-                  </span>
-                  <span class="route__chevron" aria-hidden="true" />
-                </button>
-
-                <div class="route__panel" id={`route-panel-${p.id}`} hidden>
-                  <div class="route__gallery" data-count={galleryKeys.length}>
-                    {galleryKeys.map((key, gi) => (
-                      <Photo
-                        src={key}
-                        alt={gi === 0 ? p.note : getGalleryAlt(key, p.name)}
-                        sizes="(min-width: 60rem) 16vw, 44vw"
-                        ratio="4 / 3"
-                      />
-                    ))}
-                  </div>
-                  <p>{p.note}</p>
-                </div>
-              </li>
-            );
-          })
-        }
-      </ol>
+      <!-- Пока карта не поднялась (или если скрипты выключены), на её месте
+           видна подпись, а не пустой прямоугольник неизвестного назначения. -->
+      <p class="route__mapfallback">Карта маршрута: {trip.start} → {trip.finish}</p>
     </div>
+
+    <div class="route__actions reveal">
+      <a
+        class="route__gmaps"
+        href={googleMapsUrl}
+        target="_blank"
+        rel="noopener"
+        data-analytics="route_map_open"
+      >
+        Открыть маршрут в Google Maps
+      </a>
+      <p class="route__islandnote">
+        Пунктиром — Ко Ронг: отдельная программа 8–15 марта, туда идут по воде.
+      </p>
+    </div>
+
+    <!-- Порядок точек текстом. Он же — то, что видят поисковые системы
+         и программы чтения с экрана: внутри карты для них ничего нет. -->
+    <ol class="route__list reveal" aria-label="Точки маршрута по порядку">
+      {
+        points.map((p) => (
+          <li class="route__item">
+            <span class="route__index">{String(p.n).padStart(2, '0')}</span>
+            <span class="route__name">{p.name}</span>
+            <span class="route__latin">{p.latin}</span>
+          </li>
+        ))
+      }
+    </ol>
   </div>
 </section>
 
 <style>
   .route__layout {
-    display: grid;
-    gap: 2.5rem;
-    margin-top: clamp(2rem, 5vw, 3.5rem);
+    margin-top: clamp(2rem, 5vw, 3rem);
+  }
+
+  .route__mapwrap {
+    position: relative;
+    background: color-mix(in srgb, var(--paper) 8%, transparent);
+    border: 1px solid var(--rule);
   }
 
   .route__map {
-    display: none;
-    margin: 0;
-  }
-
-  .route__svg {
-    width: 100%;
-    height: auto;
-  }
-
-  .route__country {
-    fill: color-mix(in srgb, var(--paper) 9%, transparent);
-    stroke: color-mix(in srgb, var(--paper) 26%, transparent);
-    stroke-width: 2;
-  }
-
-  .route__line {
-    fill: none;
-    stroke: var(--laterite);
-    stroke-width: 5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-dasharray: 1;
-    /* Скролл двигает это значение от 1 к 0, «прорисовывая» дорогу */
-    stroke-dashoffset: 1;
-  }
-
-  .route__dot {
-    fill: var(--paper);
-    stroke: var(--laterite);
-    stroke-width: 4;
-    transition: r 0.2s ease;
-  }
-
-  .route__dot--island {
-    stroke: var(--sea-light);
-    stroke-dasharray: 3 3;
-  }
-
-  .route__label {
-    fill: color-mix(in srgb, var(--paper) 88%, transparent);
-    font-family: var(--font-display);
-    font-size: 26px;
-    letter-spacing: 0.06em;
-  }
-
-  .route__pin.is-active .route__dot {
-    r: 13;
-  }
-
-  /* Список + вертикальная рейка прогресса слева от номеров */
-  .route__list-wrap {
+    height: clamp(22rem, 62svh, 34rem);
+    /* Пока Leaflet не инициализирован, блок пустой и прозрачный —
+       под ним читается запасная подпись. */
     position: relative;
+    z-index: 1;
   }
 
-  .route__rail {
-    position: absolute;
-    top: 0.3em;
-    bottom: 0.3em;
-    left: 0.55em;
-    width: 2px;
-    background: var(--rule);
-  }
-
-  .route__rail-fill {
+  .route__mapfallback {
     position: absolute;
     inset: 0;
-    transform: scaleY(0);
-    transform-origin: top;
-    background: var(--laterite);
+    z-index: 0;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    color: color-mix(in srgb, var(--paper) 60%, transparent);
+  }
+
+  .route__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.9rem 1.6rem;
+    margin-top: 1.2rem;
+  }
+
+  .route__gmaps {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.9rem;
+    padding: 0.6rem 1.3rem;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: var(--step--1);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .route__gmaps:hover,
+  .route__gmaps:focus-visible {
+    background: var(--accent);
+    color: var(--ink);
+  }
+
+  .route__islandnote {
+    max-width: 32ch;
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--paper) 70%, transparent);
   }
 
   .route__list {
     display: grid;
-    gap: 0;
-    padding-left: 1.7rem;
-    counter-reset: route;
+    gap: 0.55rem;
+    margin: clamp(1.8rem, 4vw, 2.6rem) 0 0;
+    padding: 0;
+    list-style: none;
   }
 
   .route__item {
-    border-top: 1px solid var(--rule);
-  }
-
-  .route__item:last-child {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 0.8rem;
+    padding-bottom: 0.55rem;
     border-bottom: 1px solid var(--rule);
-  }
-
-  .route__btn {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 1rem;
-    width: 100%;
-    padding: 1.1rem 0;
-    background: none;
-    border: 0;
-    text-align: left;
-    cursor: pointer;
-    color: inherit;
   }
 
   .route__index {
     font-family: var(--font-display);
     font-size: var(--step--1);
     letter-spacing: 0.1em;
-    /* Терракота на джунглевой зелени даёт 2,6:1 — номера точек не читались.
-       --accent в тёмных секциях и есть золото рассвета, заведённое ровно
-       для этого случая: 7,1:1. */
     color: var(--accent);
-  }
-
-  .route__names {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.2rem 0.75rem;
   }
 
   .route__name {
     font-family: var(--font-display);
-    font-size: var(--step-2);
+    font-size: var(--step-1);
     text-transform: uppercase;
-    line-height: 1.05;
   }
 
   .route__latin {
     font-size: var(--step--1);
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: color-mix(in srgb, currentColor 55%, transparent);
+    color: color-mix(in srgb, var(--paper) 65%, transparent);
   }
 
-  .route__chevron {
-    width: 0.7rem;
-    height: 0.7rem;
-    border-right: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    rotate: 45deg;
-    transition: rotate 0.25s ease;
+  @media (min-width: 48rem) and (max-width: 61.99rem) {
+    .route__list {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.55rem 2.5rem;
+    }
   }
 
-  .route__btn[aria-expanded='true'] .route__chevron {
-    rotate: 225deg;
-  }
-
-  .route__panel {
-    padding-bottom: 1.5rem;
-    display: grid;
-    gap: 0.9rem;
-  }
-
-  /* Без этого display:grid перебивает атрибут hidden и панель видна всегда */
-  .route__panel[hidden] {
-    display: none;
-  }
-
-  .route__panel p {
-    max-width: 46ch;
-    color: color-mix(in srgb, var(--paper) 80%, transparent);
-  }
-
-  .route__gallery {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.6rem;
-    max-width: 32rem;
-  }
-
-  /* Один снимок — во всю ширину панели, а не растянут в узкую колонку */
-  .route__gallery[data-count='1'] {
-    grid-template-columns: 1fr;
-    max-width: 18rem;
-  }
-
-  @media (min-width: 60rem) {
+  @media (min-width: 62rem) {
     .route__layout {
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 3.5rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(16rem, 0.85fr);
+      gap: 2.5rem 3rem;
       align-items: start;
     }
 
-    /* Колонки должны уметь сжиматься, иначе длинный список выдавливает карту */
-    .route__layout > * {
-      min-width: 0;
+    /* Карта занимает левую колонку и обе строки, список и кнопка — правую */
+    .route__mapwrap {
+      grid-row: span 2;
+      height: 100%;
     }
 
     .route__map {
-      display: block;
-      position: sticky;
-      top: 4rem;
+      height: clamp(26rem, 68svh, 40rem);
     }
+
+    .route__list {
+      order: -1;
+      margin-top: 0;
+    }
+
+    .route__actions {
+      margin-top: 0;
+      align-items: start;
+      flex-direction: column;
+    }
+  }
+
+  /*
+   * Подложку задаём самому .route__map, а не через :global(.leaflet-container).
+   * Leaflet вешает класс leaflet-container на тот же элемент, который ему
+   * передали, — то есть на .route__map. Селектор-потомок ".route__map
+   * .leaflet-container" не совпадал бы ни с чем, и под непрогрузившимися
+   * тайлами оставался бы дефолтный серый прямоугольник Leaflet.
+   */
+  .route__map {
+    background: var(--jungle);
+    font-family: var(--font-body);
+  }
+
+  .route__map :global(.route-pin) {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    background: var(--laterite);
+    color: #fff;
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    line-height: 1;
+    box-shadow: 0 0 0 2px color-mix(in srgb, #fff 85%, transparent);
+  }
+
+  .route__map :global(.route-pin--island) {
+    background: var(--sea-light);
+    color: var(--ink);
+  }
+
+  .route__map :global(.leaflet-popup-content-wrap) {
+    border-radius: 2px;
+  }
+
+  .route__map :global(.leaflet-popup-content) {
+    margin: 0.7rem 0.9rem;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .route__map :global(.route-popup__name) {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    text-transform: uppercase;
   }
 </style>
 
 <script>
-  import { track } from '../scripts/analytics';
-  import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  /**
+   * Карта поднимается только когда до неё доскроллили: Leaflet вместе со
+   * стилями весит заметно больше всего остального скрипта страницы, и
+   * тянуть его ради раздела, до которого могут не дойти, незачем.
+   */
+  const el = document.querySelector<HTMLElement>('#route-map');
 
-  gsap.registerPlugin(ScrollTrigger);
+  interface MapPoint {
+    n: number;
+    name: string;
+    latin: string;
+    lat: number;
+    lon: number;
+    note: string;
+  }
 
-  const section = document.querySelector<HTMLElement>('#marshrut');
-  if (section) {
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const line = section.querySelector<SVGPathElement>('.route__line');
-    const pins = section.querySelectorAll<SVGGElement>('.route__pin[data-point]');
+  if (el?.dataset.routeMap) {
+    const { points, island } = JSON.parse(el.dataset.routeMap) as {
+      points: MapPoint[];
+      island: { name: string; latin: string; lat: number; lon: number };
+    };
 
-    /* Рейка слева от списка — заполняется по мере прохождения списка через экран */
-    const railFill = section.querySelector<HTMLElement>('[data-rail-fill]');
-    const listWrap = section.querySelector<HTMLElement>('[data-route-progress]');
-    if (railFill && listWrap) {
-      if (reduceMotion) {
-        railFill.style.transform = 'scaleY(1)';
-      } else {
-        gsap.to(railFill, {
-          scaleY: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: listWrap,
-            start: 'top 75%',
-            end: 'bottom 55%',
-            scrub: true,
-          },
-        });
-      }
-    }
+    let started = false;
 
-    /* Прорисовка линии по мере прохождения секции через экран */
-    if (line) {
-      if (reduceMotion) {
-        line.style.strokeDashoffset = '0';
-      } else {
-        let ticking = false;
-        const update = () => {
-          ticking = false;
-          const rect = section.getBoundingClientRect();
-          const total = rect.height - window.innerHeight * 0.4;
-          const progress = total > 0 ? (window.innerHeight * 0.6 - rect.top) / total : 1;
-          const clamped = Math.min(1, Math.max(0, progress));
-          line.style.strokeDashoffset = String(1 - clamped);
+    const boot = async () => {
+      if (started) return;
+      started = true;
 
-          pins.forEach((pin, i) => {
-            const threshold = i / Math.max(1, pins.length - 1);
-            pin.classList.toggle('is-active', clamped >= threshold - 0.02);
-          });
-        };
-        const onScroll = () => {
-          if (!ticking) {
-            ticking = true;
-            requestAnimationFrame(update);
-          }
-        };
-        window.addEventListener('scroll', onScroll, { passive: true });
-        window.addEventListener('resize', onScroll);
-        update();
-      }
-    }
+      const [L] = await Promise.all([
+        import('leaflet'),
+        import('leaflet/dist/leaflet.css'),
+      ]);
 
-    /* Раскрытие точки маршрута */
-    section.querySelectorAll<HTMLButtonElement>('[data-route-toggle]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const id = btn.dataset.routeToggle!;
-        const panel = document.getElementById(`route-panel-${id}`);
-        if (!panel) return;
-        const open = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', String(!open));
-        panel.hidden = open;
-
-        // Раскрытая панель меняет высоту списка, а границы ScrollTrigger для
-        // рейки посчитаны один раз при загрузке — без пересчёта они «уедут».
-        track('route_point_open', { point: id });
-        ScrollTrigger.refresh();
-
-        if (!open) {
-          window.dispatchEvent(
-            new CustomEvent('analytics', { detail: { event: 'route_day_open', id } }),
-          );
-        }
+      const map = L.map(el, {
+        scrollWheelZoom: false, // колесо должно листать страницу, а не зумить карту
+        attributionControl: true,
+        // Кнопки масштаба Leaflet подписывает по-английски, а страница русская:
+        // подписи уходят и в title, и в aria-label кнопок.
+        zoomControl: false,
       });
-    });
+
+      L.control
+        .zoom({ zoomInTitle: 'Приблизить', zoomOutTitle: 'Отдалить' })
+        .addTo(map);
+
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        attribution: '&copy; OpenStreetMap',
+      }).addTo(map);
+
+      const latlngs = points.map((p) => [p.lat, p.lon] as [number, number]);
+
+      L.polyline(latlngs, { color: '#c8401d', weight: 4, opacity: 0.95 }).addTo(map);
+
+      // Ко Ронг — пунктиром: это отдельная программа, и добираются туда по воде
+      L.polyline(
+        [latlngs[latlngs.length - 1], [island.lat, island.lon]],
+        { color: '#46c3ac', weight: 3, dashArray: '6 8', opacity: 0.9 },
+      ).addTo(map);
+
+      const pin = (label: string, extra = '') =>
+        L.divIcon({
+          className: '',
+          html: `<span class="route-pin ${extra}">${label}</span>`,
+          iconSize: [28, 28],
+          iconAnchor: [14, 14],
+        });
+
+      for (const p of points) {
+        L.marker([p.lat, p.lon], { icon: pin(String(p.n)), title: p.name })
+          .addTo(map)
+          .bindPopup(
+            `<span class="route-popup__name">${p.name}</span>${p.note}`,
+          );
+      }
+
+      L.marker([island.lat, island.lon], {
+        icon: pin('★', 'route-pin--island'),
+        title: island.name,
+      })
+        .addTo(map)
+        .bindPopup(
+          `<span class="route-popup__name">${island.name}</span>Дополнительная программа 8–15 марта`,
+        );
+
+      const bounds = L.latLngBounds([...latlngs, [island.lat, island.lon]]);
+      map.fitBounds(bounds, { padding: [36, 36] });
+
+      /*
+       * Карта поднимается за 200 px до появления на экране, и в этот момент
+       * блок ещё может доезжать до своего конечного размера. Leaflet
+       * запоминает габариты один раз, поэтому после смены размера ему нужно
+       * сказать пересчитать их — иначе часть тайлов не запрашивается.
+       */
+      const refit = () => {
+        map.invalidateSize({ animate: false });
+        map.fitBounds(bounds, { padding: [36, 36] });
+      };
+      requestAnimationFrame(refit);
+      new ResizeObserver(() => map.invalidateSize({ animate: false })).observe(el);
+    };
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          io.disconnect();
+          void boot();
+        }
+      },
+      { rootMargin: '200px' },
+    );
+    io.observe(el);
   }
 </script>

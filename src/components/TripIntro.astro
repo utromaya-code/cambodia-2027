@@ -1,5 +1,7 @@
 ---
+import { getImage } from 'astro:assets';
 import { intro } from '../data/trip';
+import { getPhoto } from '../data/images';
 
 /**
  * Короткая мысль под первым экраном.
@@ -9,10 +11,22 @@ import { intro } from '../data/trip';
  * и две одинаковые таблички шли подряд через один экран. Оставлена одна,
  * та, что полнее: она добавляет модель байка, апгрейд и латинские названия
  * городов, а недостающие факты умеет скрывать.
+ *
+ * Фон — размытые рисовые поля с сахарными пальмами. Экран был сплошным бежевым
+ * полем с текстом в углу; размытая фотография даёт ему воздух и не мешает
+ * читать. Размытие сделано на сборке (см. bg-intro.jpg), а не фильтром
+ * в браузере: filter: blur() на картинке во весь экран стоит кадров при
+ * прокрутке, а результат тот же.
  */
+const bg = getPhoto('bg-intro');
+const bgUrl = bg ? (await getImage({ src: bg, width: 1400, format: 'webp' })).src : null;
 ---
 
-<section class="intro section" id="zachem">
+<section
+  class="intro section"
+  id="zachem"
+  style={bgUrl ? `--bg-image:url(${bgUrl})` : undefined}
+>
   <div class="wrap intro__grid">
     <h2 class="intro__title reveal">{intro.title}</h2>
 
@@ -25,6 +39,28 @@ import { intro } from '../data/trip';
 </section>
 
 <style>
+  .intro {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  /*
+   * 0.24 — потолок, при котором тёмный текст на бумаге гарантированно
+   * держит контраст: даже под самым чёрным пикселем фон остаётся светлее
+   * #c0b8ab, и ink на нём даёт больше 9:1.
+   */
+  .intro::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: var(--bg-image);
+    background-size: cover;
+    background-position: center;
+    opacity: 0.24;
+  }
+
   .intro__title {
     font-size: var(--step-4);
     text-transform: uppercase;
