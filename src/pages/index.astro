@@ -31,6 +31,8 @@ import { whyCambodia, practice, accommodation, pastTrips } from '../data/section
 import { island } from '../data/island';
 import { bike, bikeUpgrade } from '../data/bike';
 import { faq } from '../data/faq';
+import { readyLeaders } from '../data/leaders';
+import { isReady } from '../data/content';
 
 const title = 'Камбоджа на байках 2027 — авторское путешествие от Ангкора до моря';
 const description =
@@ -53,8 +55,9 @@ const photoKeys = [
   ...whyCambodia.cards.map((c) => c.image),
   ...routePoints.flatMap((p) => [p.image, ...(p.gallery ?? [])]),
   ...days.map((d) => d.image),
-  'leader-ilya',
-  'leader-andrey',
+  // Портреты берём из того же списка, что и рендерит секция, — иначе
+  // добавленный ведущий появлялся бы на странице без записи в подвале.
+  ...readyLeaders.map((l) => l.portrait).filter(isReady),
 ];
 
 const structuredData = [

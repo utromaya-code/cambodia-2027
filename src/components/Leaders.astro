@@ -1,7 +1,14 @@
 ---
 import Photo from './Photo.astro';
-import { leaders, leadersSection } from '../data/leaders';
+import { readyLeaders, leadersSection } from '../data/leaders';
 import { isReady } from '../data/content';
+
+/**
+ * Ведущие. Пункт 4.11 ТЗ: карточку без роли и биографии публиковать нельзя,
+ * фразы «расскажем подробнее ближе к старту» на странице быть не должно.
+ * Поэтому список приходит уже отфильтрованным (readyLeaders), а число
+ * ведущих в заголовке считается от него же — см. src/data/leaders.ts.
+ */
 ---
 
 <section class="leaders section section--stone" id="vedushchie">
@@ -11,7 +18,7 @@ import { isReady } from '../data/content';
 
     <ul class="leaders__grid">
       {
-        leaders.map((leader) => (
+        readyLeaders.map((leader) => (
           <li class="leader reveal" data-analytics-leader={leader.id}>
             {isReady(leader.portrait) ? (
               <Photo
@@ -30,12 +37,13 @@ import { isReady } from '../data/content';
 
             <div class="leader__text">
               <h3>{leader.name}</h3>
-              {isReady(leader.role) && <p class="leader__role">{leader.role}</p>}
-              {isReady(leader.shortBio) ? (
-                <p class="leader__bio">{leader.shortBio}</p>
-              ) : (
-                <p class="leader__bio leader__bio--pending">
-                  Расскажем подробнее ближе к старту.
+              <p class="leader__role">{leader.role}</p>
+              <p class="leader__bio">{leader.shortBio}</p>
+              {leader.url && (
+                <p class="leader__link">
+                  <a href={leader.url} rel="noopener">
+                    {leader.url.replace(/^https?:\/\//, '')}
+                  </a>
                 </p>
               )}
             </div>
@@ -93,9 +101,15 @@ import { isReady } from '../data/content';
     color: var(--ink-soft);
   }
 
-  .leader__bio--pending {
-    color: var(--ink-mute);
-    font-style: normal;
+  .leader__link {
+    margin-top: 0.6rem;
+    font-size: var(--step--1);
+  }
+
+  .leader__link a {
+    color: var(--laterite-ink);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
   }
 
   @media (min-width: 34rem) {

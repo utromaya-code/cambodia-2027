@@ -1,4 +1,4 @@
-import { TODO_CONTENT, type Pending } from './content';
+import { TODO_CONTENT, isReady, type Pending } from './content';
 
 export interface Leader {
   id: string;
@@ -12,9 +12,14 @@ export interface Leader {
 }
 
 /**
- * Био Ильи и Андрея взяты с действующих сайтов организаторов
- * (kanchenjunga.ru, dahab-camp.ru) — это подтверждённые факты.
- * По Леониду и Елене данных нет: ставим TODO_CONTENT, ничего не придумываем.
+ * Био взяты с действующих сайтов организаторов — это подтверждённые факты,
+ * а не пересказ: Илья с kanchenjunga.ru, Андрей с dahab-camp.ru, Леонид
+ * с leo-japan.ru (его собственный проект — там же указан @vsemaya и Андрей
+ * Баранов как организатор, то есть это та же команда).
+ *
+ * По Елене данных нет: TODO_CONTENT, ничего не придумываем. Карточка без
+ * роли и биографии на страницу не выводится — пункт 4.11 ТЗ это прямо
+ * запрещает, а число ведущих в заголовке считается от готовых карточек.
  */
 export const leaders: readonly Leader[] = [
   {
@@ -28,9 +33,14 @@ export const leaders: readonly Leader[] = [
   {
     id: 'leonid-kutuzov',
     name: 'Леонид Кутузов',
-    role: TODO_CONTENT as unknown as string,
-    shortBio: TODO_CONTENT,
-    portrait: TODO_CONTENT,
+    /* Формулировка его собственная — так подписан его проект: «Леонид
+       Кутузов. Путешествия и практики». Заодно не пересекается с ролью
+       Ильи, у которого в карточке стоят «Практики». */
+    role: 'Путешествия и практики',
+    shortBio:
+      'Президент Федерации Йоги Санкт-Петербурга. Практикует йогу с 1998 года, преподаёт с 2000-го, больше пятнадцати лет водит выездные ретриты по разным странам. Ведёт медитацию и работу с вниманием, дыхательные техники и лекции о том, что практики делают с мозгом.',
+    portrait: 'leader-leonid',
+    url: 'https://leo-japan.ru',
   },
   {
     id: 'andrey-baranov',
@@ -49,7 +59,31 @@ export const leaders: readonly Leader[] = [
   },
 ];
 
+/** Ведущие, у которых есть и роль, и биография, — только их и показываем. */
+export const readyLeaders = leaders.filter(
+  (l): l is Leader & { role: string; shortBio: string } =>
+    isReady(l.role) && isReady(l.shortBio),
+);
+
+/**
+ * Заголовок и подводка считаются от числа готовых карточек, а не записаны
+ * числом в текст. Иначе страница обещала бы «четырёх ведущих» и показывала
+ * трёх: у Елены ещё нет ни роли, ни биографии. Как только они появятся,
+ * и карточка, и числительные обновятся сами.
+ */
+const numerals: Record<number, { title: string; lead: string }> = {
+  2: { title: 'Двое ведущих', lead: 'с этими двумя' },
+  3: { title: 'Трое ведущих', lead: 'с этими тремя' },
+  4: { title: 'Четверо ведущих', lead: 'с этими четырьмя' },
+  5: { title: 'Пятеро ведущих', lead: 'с этими пятерыми' },
+};
+
+const numeral = numerals[readyLeaders.length] ?? {
+  title: `${readyLeaders.length} ведущих`,
+  lead: 'с ними',
+};
+
 export const leadersSection = {
-  title: 'Четыре ведущих. Одна дорога.',
-  lead: 'Поездка держится не на расписании, а на людях. С этими четырьмя вы проведёте десять дней подряд — в дороге, за столом и на берегу.',
+  title: `${numeral.title}. Одна дорога.`,
+  lead: `Поездка держится не на расписании, а на людях. ${numeral.lead[0].toUpperCase()}${numeral.lead.slice(1)} вы проведёте десять дней подряд — в дороге, за столом и на берегу.`,
 } as const;

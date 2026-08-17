@@ -1,5 +1,6 @@
 import { TODO_CONTENT, type Pending } from './content';
 import { checkProductionContent } from './production';
+import { readyLeaders } from './leaders';
 
 /**
  * Базовые факты о путешествии — единственный источник правды.
@@ -160,7 +161,10 @@ export const hero = {
  * и секция PastTrips с реальными снимками бутанской экспедиции.
  */
 export const trustStrip: readonly Pending<string>[] = [
-  'Четыре ведущих на группу',
+  // Число берём из того же места, что и заголовок секции ведущих: пока
+  // у Елены нет роли и биографии, её карточка не выводится, и полоса
+  // не должна обещать ведущего, которого на странице не показать.
+  `${readyLeaders.length === 4 ? 'Четыре' : readyLeaders.length === 3 ? 'Трое' : String(readyLeaders.length)} ведущих на группу`,
   'Один маршрут, два способа его пройти',
   'Honda FTR 230 в базе, Himalayan по запросу',
   'Этой командой мы уже ходили — снимки ниже',
