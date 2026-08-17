@@ -24,10 +24,18 @@ import { pricing } from '../data/pricing';
 
             <p class="price__prepay">{option.prepayment}</p>
 
+            {/*
+              Две метки на одной кнопке: старая (bike_price_cta / van_price_cta)
+              сохранена, чтобы не обнулить уже настроенные цели, новая
+              price_cta_click из пункта 8 ТЗ приходит с параметром option
+              и позволяет считать обе колонки одним отчётом.
+            */}
             <a
               class="btn btn--wide price__cta"
               href="#zayavka"
               data-analytics={option.analyticsEvent}
+              data-analytics-also="price_cta_click"
+              data-analytics-option={option.id}
               data-prefill={option.id}
             >
               {option.cta}

@@ -21,6 +21,26 @@ const iconGlyphs: Record<DayIcon, string> = {
   water: '≈',
   rest: '○',
 };
+
+/**
+ * Программа — аккордеон по дням (пункт 4.9 ТЗ).
+ *
+ * Раньше одиннадцать дней шли сплошной лентой: каждый с полноразмерным
+ * снимком и тремя-четырьмя абзацами. Пролистать программу целиком было
+ * невозможно, а именно это человек и делает первым делом.
+ *
+ * Взят нативный <details>, а не самодельный аккордеон на кнопках. Причины:
+ * он открывается и закрывается с клавиатуры без единой строки скрипта,
+ * сам сообщает состояние программам чтения с экрана, работает при
+ * отключённом JS и остаётся в DOM для поисковых систем. Отдельный
+ * aria-expanded на <summary> здесь не ставим: у нативного элемента роль
+ * и состояние уже есть, а ручной атрибут пришлось бы синхронизировать
+ * скриптом и он конфликтовал бы с собственным состоянием элемента.
+ *
+ * Раскрытым по умолчанию идёт первый ходовой день. День прилёта и день
+ * в Ангкоре ходовыми не считаются — признак приходит из days.ts.
+ */
+const firstRidingDay = days.find((d) => d.ridingDay)?.n;
 ---
 
 <section class="days section" id="programma">
@@ -35,41 +55,64 @@ const iconGlyphs: Record<DayIcon, string> = {
   <div class="wrap days__list">
     {
       days.map((day) => (
-        <article class="day reveal" id={`den-${day.n}`}>
-          <div class="day__head">
-            <p class="day__date">{day.dateHuman}</p>
-            <h3 class="day__title">{day.title}</h3>
-            {day.leg && <p class="day__leg">{day.leg}</p>}
-          </div>
+        /*
+         * .reveal висит на самом <details> и никогда — на его содержимом.
+         * Внутри закрытого элемента блоки имеют нулевой размер, наблюдатель
+         * из reveal.ts до них не достучится, и после раскрытия они остались
+         * бы прозрачными навсегда.
+         */
+        <details
+          class="day reveal"
+          id={`den-${day.n}`}
+          open={day.n === firstRidingDay}
+          data-analytics-toggle="program_day_open"
+          data-analytics-id={String(day.n)}
+        >
+          <summary class="day__summary">
+            <span class="day__thumb" aria-hidden="true">
+              <Photo src={day.image} alt="" sizes="7rem" ratio="1 / 1" />
+            </span>
 
-          <div class="day__media">
-            <Photo
-              src={day.image}
-              alt={day.alt}
-              sizes="(min-width: 60rem) 42vw, 100vw"
-              ratio="3 / 2"
-            />
-          </div>
+            <span class="day__head">
+              <span class="day__date">{day.dateHuman}</span>
+              <span class="day__title">{day.title}</span>
+              {day.leg && <span class="day__leg">{day.leg}</span>}
+            </span>
 
-          <div class="day__body">
-            <div class="prose day__text">
-              {day.text.map((line) => (
-                <p>{line}</p>
-              ))}
+            <span class="day__marker" aria-hidden="true" />
+          </summary>
+
+          <div class="day__panel">
+            <div class="day__media">
+              <Photo
+                src={day.image}
+                alt={day.alt}
+                sizes="(min-width: 60rem) 42vw, 100vw"
+                ratio="3 / 2"
+                loading="lazy"
+              />
             </div>
 
-            <ul class="day__icons">
-              {day.icons.map((icon) => (
-                <li>
-                  <span aria-hidden="true">{iconGlyphs[icon]}</span>
-                  {iconLabels[icon]}
-                </li>
-              ))}
-              {/* Километраж показываем только после подтверждения */}
-              {isReady(day.km) && <li class="day__km">{day.km} км</li>}
-            </ul>
+            <div class="day__body">
+              <div class="prose day__text">
+                {day.text.map((line) => (
+                  <p>{line}</p>
+                ))}
+              </div>
+
+              <ul class="day__icons">
+                {day.icons.map((icon) => (
+                  <li>
+                    <span aria-hidden="true">{iconGlyphs[icon]}</span>
+                    {iconLabels[icon]}
+                  </li>
+                ))}
+                {/* Километраж показываем только после подтверждения */}
+                {isReady(day.km) && <li class="day__km">{day.km} км</li>}
+              </ul>
+            </div>
           </div>
-        </article>
+        </details>
       ))
     }
   </div>
@@ -78,15 +121,46 @@ const iconGlyphs: Record<DayIcon, string> = {
 <style>
   .days__list {
     display: grid;
-    gap: clamp(2.5rem, 6vw, 4.5rem);
     margin-top: clamp(2.2rem, 5vw, 3.5rem);
   }
 
   .day {
-    display: grid;
-    gap: 1.3rem;
-    padding-top: 1.6rem;
     border-top: 1px solid var(--rule);
+  }
+
+  .day:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .day__summary {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1.1rem;
+    padding-block: 1.1rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  /* Safari рисует собственный треугольник — убираем, свой знак ниже */
+  .day__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .day__summary:focus-visible {
+    outline: 3px solid var(--laterite);
+    outline-offset: 3px;
+  }
+
+  .day__thumb {
+    display: block;
+    width: clamp(3.2rem, 9vw, 4.6rem);
+    overflow: hidden;
+  }
+
+  .day__head {
+    display: grid;
+    gap: 0.25rem;
   }
 
   .day__date {
@@ -98,16 +172,54 @@ const iconGlyphs: Record<DayIcon, string> = {
   }
 
   .day__title {
-    margin-top: 0.4rem;
-    font-size: var(--step-3);
+    font-family: var(--font-display);
+    font-size: var(--step-1);
+    line-height: 1.15;
     text-transform: uppercase;
   }
 
   .day__leg {
-    margin-top: 0.5rem;
     font-size: var(--step--1);
     letter-spacing: 0.06em;
     color: var(--ink-mute);
+  }
+
+  /* Знак раскрытия — плюс, который в открытом состоянии становится минусом.
+     Рисуем двумя линиями, чтобы не тащить иконочный шрифт ради одного знака. */
+  .day__marker {
+    position: relative;
+    width: 1.1rem;
+    height: 1.1rem;
+    flex: none;
+  }
+
+  .day__marker::before,
+  .day__marker::after {
+    content: '';
+    position: absolute;
+    inset: 50% 0 auto 0;
+    height: 2px;
+    background: var(--ink);
+    transition: transform 0.2s ease;
+  }
+
+  .day__marker::after {
+    transform: rotate(90deg);
+  }
+
+  .day[open] .day__marker::after {
+    transform: rotate(0deg);
+  }
+
+  .day[open] .day__thumb {
+    /* В раскрытом дне тот же кадр показан крупно — миниатюра дублирует его */
+    opacity: 0.35;
+  }
+
+  .day__panel {
+    display: grid;
+    gap: 1.3rem;
+    padding-bottom: clamp(1.8rem, 4vw, 2.6rem);
   }
 
   .day__text {
@@ -141,19 +253,50 @@ const iconGlyphs: Record<DayIcon, string> = {
   }
 
   @media (min-width: 60rem) {
-    .day {
-      grid-template-columns: 1fr 1fr;
-      gap: 1.6rem 3rem;
-      align-items: start;
+    .day__summary {
+      gap: 1.6rem;
+      padding-block: 1.4rem;
     }
 
     .day__head {
-      grid-column: 1 / -1;
+      grid-template-columns: 12rem 1fr;
+      align-items: baseline;
+      gap: 0.3rem 2rem;
     }
 
-    /* Каждый второй день переворачиваем — монтаж, а не таблица */
-    .day:nth-child(even) .day__media {
-      order: 2;
+    /* Дата держит левую колонку, название и перегон — правую */
+    .day__date {
+      grid-row: span 2;
+    }
+
+    .day__title {
+      font-size: var(--step-2);
+    }
+
+    .day__panel {
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem 3rem;
+      align-items: start;
+      /* Отступ под ширину миниатюры и зазор — текст встаёт под заголовок */
+      padding-left: calc(clamp(3.2rem, 9vw, 4.6rem) + 1.6rem);
     }
   }
 </style>
+
+<script>
+  /**
+   * Открытие дня программы. Нативный <details> сам меняет состояние —
+   * скрипту остаётся только сообщить о нём аналитике, и только на открытие:
+   * закрытие интереса не представляет и удваивало бы поток событий.
+   */
+  document.querySelectorAll<HTMLDetailsElement>('details[data-analytics-toggle]').forEach((el) => {
+    el.addEventListener('toggle', () => {
+      if (!el.open) return;
+      window.dispatchEvent(
+        new CustomEvent('analytics', {
+          detail: { event: el.dataset.analyticsToggle!, id: el.dataset.analyticsId },
+        }),
+      );
+    });
+  });
+</script>

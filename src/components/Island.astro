@@ -37,7 +37,10 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     <p class="island__price reveal">{island.price}</p>
     <p class="island__note reveal">{island.priceNote}</p>
 
-    <a class="btn island__cta reveal" href={`${base}/island`} data-analytics="retreat_cta">
+    <!-- Переход на страницу острова: имя события — из пункта 8 ТЗ.
+       Прежнее retreat_cta осталось за кнопкой на самой странице /island,
+       чтобы переход сюда и заявка оттуда не смешивались в одну цель. -->
+    <a class="btn island__cta reveal" href={`${base}/island`} data-analytics="island_details_click">
       {island.cta}
     </a>
 

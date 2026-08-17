@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
+import SiteNav from '../components/SiteNav.astro';
 import TrustStrip from '../components/TrustStrip.astro';
 import VisualManifesto from '../components/VisualManifesto.astro';
 import TripIntro from '../components/TripIntro.astro';
@@ -106,6 +107,7 @@ const structuredData = [
   ogImage="og-image.jpg"
   structuredData={structuredData}
 >
+  <SiteNav />
   <Hero />
 
   <main id="main">

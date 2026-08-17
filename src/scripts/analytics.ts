@@ -60,7 +60,26 @@ export function track(event: AnalyticsEvent | string, payload: Payload = {}): vo
 /** Навешивает отправку событий на элементы с data-analytics. */
 export function bindAnalytics(): void {
   document.querySelectorAll<HTMLElement>('[data-analytics]').forEach((el) => {
-    el.addEventListener('click', () => track(el.dataset.analytics!));
+    el.addEventListener('click', () => {
+      track(el.dataset.analytics!);
+      /*
+       * Вторая метка на том же элементе. Нужна ценовым кнопкам: частное
+       * событие (bike_price_cta / van_price_cta) уже заведено целью в
+       * аналитике и терять его нельзя, а обобщающее price_cta_click из
+       * пункта 8 ТЗ приходит с параметром option и считает обе колонки
+       * одним отчётом.
+       */
+      if (el.dataset.analyticsAlso) {
+        track(el.dataset.analyticsAlso, { option: el.dataset.analyticsOption });
+      }
+    });
+  });
+
+  /** Выбор формата участия в форме заявки: байк, микроавтобус, «ещё выбираю». */
+  document.querySelectorAll<HTMLInputElement>('input[name="mode"]').forEach((input) => {
+    input.addEventListener('change', () => {
+      if (input.checked) track('bike_option_select', { option: input.value });
+    });
   });
 
   document.querySelectorAll<HTMLElement>('[data-analytics-leader]').forEach((el) => {
