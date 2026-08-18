@@ -103,7 +103,9 @@ const {
       <p class="form__status" role="status" aria-live="polite" data-form-status></p>
     </form>
 
-    <p class="lead__alt reveal">
+    <!-- data-telegram-url читает скрипт формы: пока приёмник заявок не задан,
+         заполненная форма уходит сюда же готовым сообщением. -->
+    <p class="lead__alt reveal" data-telegram-url={trip.contacts.telegram}>
       Или просто напишите в Telegram:
       <a href={trip.contacts.telegram} rel="noopener" data-analytics="telegram_click">{trip.contacts.telegramHandle}</a>
     </p>
@@ -280,8 +282,19 @@ const {
 </style>
 
 <script>
-  import { submitLead, collectUtm, type Lead } from '../scripts/lead';
+  import {
+    submitLead,
+    collectUtm,
+    hasEndpoint,
+    buildTelegramLink,
+    type Lead,
+  } from '../scripts/lead';
   import { track } from '../scripts/analytics';
+
+  /** Куда вести, если приёмник заявок не настроен. Значение из trip.contacts. */
+  const TELEGRAM = document
+    .querySelector<HTMLElement>('[data-telegram-url]')
+    ?.dataset.telegramUrl;
 
   const form = document.querySelector<HTMLFormElement>('#lead-form');
   const status = document.querySelector<HTMLElement>('[data-form-status]');
@@ -399,6 +412,23 @@ const {
       };
 
       track('lead_form_submit', { mode: lead.mode, island: lead.island });
+
+      /*
+       * Приёмник не настроен — уводим в Telegram с уже собранным сообщением.
+       * Переход делаем до любого await: после него браузер уже не считает
+       * действие пользовательским жестом и может заблокировать открытие.
+       * Навигация в той же вкладке не блокируется никогда.
+       */
+      if (!hasEndpoint && TELEGRAM) {
+        track('lead_form_success', { mode: lead.mode, island: lead.island, via: 'telegram' });
+        status.dataset.tone = 'ok';
+        status.textContent = 'Открываем Telegram — заявка уже вписана в сообщение, отправьте её.';
+        location.href = buildTelegramLink(lead, TELEGRAM);
+        button.disabled = false;
+        submitting = false;
+        return;
+      }
+
       const result = await submitLead(lead);
 
       if (result.ok) {
