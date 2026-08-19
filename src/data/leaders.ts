@@ -51,10 +51,13 @@ export const leaders: readonly Leader[] = [
     portrait: 'leader-andrey',
   },
   {
-    id: 'elena',
-    name: 'Елена',
-    role: TODO_CONTENT as unknown as string,
-    shortBio: TODO_CONTENT,
+    id: 'elena-bakina',
+    name: 'Елена Бакина',
+    /* Роль сформулирована по её же описанию: она не сопровождает группу
+       как гид, а придумывает и собирает сами маршруты. */
+    role: 'Азия изнутри',
+    shortBio:
+      'Девять лет живёт в Азии и делает путешествия, в которых регион открывается изнутри, а не с обзорной площадки. Знает, чем отличается место, куда возят всех, от места, куда стоит доехать.',
     portrait: TODO_CONTENT,
   },
 ];
