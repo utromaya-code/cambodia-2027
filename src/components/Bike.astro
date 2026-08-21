@@ -46,10 +46,13 @@ const bikePhotoReady = hasPhoto(bike.image);
     <div class="bike__photo reveal">
       <Photo
         src={bike.image}
-        alt={`Мотоцикл ${bike.model} — лёгкий универсальный байк с двигателем ${bike.engine}`}
+        alt={bike.imageAlt}
         sizes="(min-width: 60rem) 48vw, 100vw"
         ratio="4 / 3"
       />
+      {/* Подпись обязательна: на кадре модель, а не парк проката.
+          Пункт 4.8 ТЗ запрещает выдавать одно за другое. */}
+      <p class="bike__photonote">{bike.imageNote}</p>
     </div>
     )}
   </div>
@@ -102,6 +105,13 @@ const bikePhotoReady = hasPhoto(bike.image);
     max-width: 48ch;
     margin-top: 1.5rem;
     color: var(--ink-soft);
+  }
+
+  .bike__photonote {
+    margin-top: 0.6rem;
+    font-size: var(--step--1);
+    line-height: 1.4;
+    color: var(--ink-mute);
   }
 
   .bike__specs {
@@ -191,6 +201,7 @@ const bikePhotoReady = hasPhoto(bike.image);
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.7rem;
+    align-items: start;
   }
 
   @media (min-width: 60rem) {
