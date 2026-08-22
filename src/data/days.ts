@@ -32,8 +32,8 @@ export const days: readonly Day[] = [
       'Ехать в этот день никуда не нужно.',
     ],
     icons: ['rest'],
-    image: 'monks-temple',
-    alt: 'Монахи в оранжевых одеяниях идут между храмовыми руинами',
+    image: 'angkor-thom-sunset',
+    alt: 'Солнце в проёме южных ворот Ангкор-Тхома на закате',
     km: TODO_CONTENT,
     ridingDay: false,
   },
@@ -51,8 +51,8 @@ export const days: readonly Day[] = [
     icons: ['culture', 'rest'],
     // Сиренево-розовый кадр ушёл на первый экран — здесь второй рассветный
     // дубль, чтобы день Ангкора не показывал ту же фотографию, что и hero.
-    image: 'angkor-thom-sunset',
-    alt: 'Солнце в проёме южных ворот Ангкор-Тхома на закате',
+    image: 'angkor-sunrise-gold',
+    alt: 'Восход над Ангкор-Ватом: солнце поднимается за башнями храма, сахарные пальмы в золотом свете',
     km: TODO_CONTENT,
     ridingDay: false,
   },

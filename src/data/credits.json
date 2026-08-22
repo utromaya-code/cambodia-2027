@@ -542,5 +542,37 @@
     "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
     "source": "Wikimedia Commons",
     "originalUrl": "https://commons.wikimedia.org/wiki/File:Royal-Enfield-Himalayan-450.jpg"
+  },
+  "road-rider": {
+    "title": "Karakarom Highway",
+    "author": "M.wali94",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Karakarom_Highway.jpg"
+  },
+  "bikes-line": {
+    "title": "Gita in moto a Castelluccio",
+    "author": "Justinawind",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Gita_in_moto_a_Castelluccio.jpg"
+  },
+  "bike-himalayan-450-white": {
+    "author": "Royal Enfield",
+    "license": "Официальное изображение производителя",
+    "licenseUrl": null,
+    "source": "royalenfield.com",
+    "originalUrl": "https://www.royalenfield.com/in/en/motorcycles/himalayan/",
+    "title": "Royal Enfield Himalayan 450, Kamet White — студийный кадр производителя"
+  },
+  "bike-himalayan-450-black": {
+    "author": "Royal Enfield",
+    "license": "Официальное изображение производителя",
+    "licenseUrl": null,
+    "source": "royalenfield.com",
+    "originalUrl": "https://www.royalenfield.com/in/en/motorcycles/himalayan/",
+    "title": "Royal Enfield Himalayan 450, Hanle Black — студийный кадр производителя"
   }
 }
