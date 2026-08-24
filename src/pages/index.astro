@@ -5,7 +5,6 @@ import TripIntro from '../components/TripIntro.astro';
 import WhyCambodia from '../components/WhyCambodia.astro';
 import Bike from '../components/Bike.astro';
 import RouteMap from '../components/RouteMap.astro';
-import Timeline from '../components/Timeline.astro';
 import Uniqueness from '../components/Uniqueness.astro';
 import Leaders from '../components/Leaders.astro';
 import PastTrips from '../components/PastTrips.astro';
@@ -20,7 +19,6 @@ import MobileStickyCta from '../components/MobileStickyCta.astro';
 import { trip } from '../data/trip';
 import { pricing } from '../data/pricing';
 import { routePoints } from '../data/route';
-import { days } from '../data/days';
 import { whyCambodia, practice, accommodation, pastTrips } from '../data/sections';
 import { island } from '../data/island';
 import { bike, bikeUpgrade } from '../data/bike';
@@ -45,7 +43,6 @@ const photoKeys = [
   island.image,
   ...whyCambodia.cards.map((c) => c.image),
   ...routePoints.flatMap((p) => [p.image, ...(p.gallery ?? [])]),
-  ...days.map((d) => d.image),
   'leader-ilya',
   'leader-leonid',
   'leader-andrey',
@@ -112,7 +109,6 @@ const structuredData = [
     <WhyCambodia />
     <RouteMap />
     <Bike />
-    <Timeline />
     <Uniqueness />
     <Leaders />
     <PastTrips />
