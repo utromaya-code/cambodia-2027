@@ -4,17 +4,17 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 /**
- * Адрес сайта и базовый путь берутся из переменных окружения, чтобы один и тот же
- * код работал и на GitHub Pages (проектный подкаталог), и на собственном домене.
+ * Адрес сайта и базовый путь берутся из переменных окружения, чтобы при
+ * необходимости домен можно было сменить без правки компонентов.
  *
  *   SITE_URL   — полный адрес сайта, попадает в canonical, OG и sitemap.
- *   BASE_PATH  — подкаталог, в котором лежит сайт ('/cambodia-2027' или '/').
+ *   BASE_PATH  — подкаталог, в котором лежит сайт.
  *
- * Значения по умолчанию рассчитаны на GitHub Pages без своего домена.
- * Как подключить домен — см. README, раздел «Домен».
+ * Пустые переменные GitHub Actions не должны перебивать рабочие значения:
+ * поэтому здесь используется логический fallback, а не nullish coalescing.
  */
-const SITE_URL = process.env.SITE_URL ?? 'https://utromaya-code.github.io';
-const BASE_PATH = process.env.BASE_PATH ?? '/cambodia-2027';
+const SITE_URL = process.env.SITE_URL?.trim() || 'https://cambodiamoto.ru';
+const BASE_PATH = process.env.BASE_PATH?.trim() || '/';
 
 export default defineConfig({
   site: SITE_URL,
