@@ -59,18 +59,25 @@ import { pricing, priceIncludes } from '../data/pricing';
         </div>
 
         <div>
-          <p class="incl__sub">{priceIncludes.extraTitle}</p>
-          <ul class="incl__list incl__list--extra">
-            {
-              priceIncludes.extra.map((x) => (
-                <li>
-                  <span>{x.label}</span>
-                  <span class="incl__price">{x.price}</span>
-                </li>
-              ))
-            }
+          <p class="incl__sub incl__sub--out">{priceIncludes.excludedTitle}</p>
+          <ul class="incl__list incl__list--out">
+            {priceIncludes.excluded.map((x) => <li>{x}</li>)}
           </ul>
         </div>
+      </div>
+
+      <div class="incl__extra">
+        <p class="incl__sub">{priceIncludes.extraTitle}</p>
+        <ul class="incl__list incl__list--extra">
+          {
+            priceIncludes.extra.map((x) => (
+              <li>
+                <span>{x.label}</span>
+                <span class="incl__price">{x.price}</span>
+              </li>
+            ))
+          }
+        </ul>
       </div>
 
       <ul class="incl__payment">
@@ -133,6 +140,30 @@ import { pricing, priceIncludes } from '../data/pricing';
     width: 0.4rem;
     height: 1px;
     background: var(--accent);
+  }
+
+  /* «Не входит» набирается приглушённее: это справочная колонка, она не
+     должна перетягивать внимание с того, что человек получает за деньги. */
+  .incl__sub--out {
+    color: color-mix(in srgb, var(--paper) 55%, transparent);
+  }
+
+  .incl__list--out {
+    color: color-mix(in srgb, var(--paper) 72%, transparent);
+  }
+
+  .incl__list--out li::before {
+    background: color-mix(in srgb, var(--paper) 45%, transparent);
+  }
+
+  .incl__extra {
+    margin-top: 1.8rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .incl__extra .incl__list {
+    max-width: 34rem;
   }
 
   .incl__list--extra li {
