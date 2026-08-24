@@ -11,8 +11,8 @@ interface Props {
 }
 
 const {
-  title = 'Поехали',
-  lead = 'Напишите пару слов о себе — мы вернёмся с деталями по маршруту, технике и датам.',
+  title = 'Хочу в Камбоджу',
+  lead = 'Оставьте удобный контакт — обсудим формат поездки и поможем забронировать место.',
   islandDefault = 'unsure',
 } = Astro.props;
 ---
@@ -95,7 +95,7 @@ const {
       </label>
       <span class="field__error" data-error-for="consent"></span>
 
-      <button class="btn btn--wide" type="submit">Оставить заявку</button>
+      <button class="btn btn--wide" type="submit">Обсудить поездку</button>
 
       <p class="form__status" role="status" aria-live="polite" data-form-status></p>
     </form>

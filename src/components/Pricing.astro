@@ -38,7 +38,6 @@ import { pricing } from '../data/pricing';
     </ul>
 
     <p class="pricing__foot reveal">{pricing.footnote}</p>
-    <p class="pricing__foot pricing__foot--note reveal">{pricing.footnoteSecondary}</p>
   </div>
 </section>
 
@@ -114,12 +113,6 @@ import { pricing } from '../data/pricing';
     margin-top: 1.5rem;
     font-size: var(--step--1);
     color: color-mix(in srgb, var(--paper) 65%, transparent);
-  }
-
-  .pricing__foot--note {
-    max-width: 60ch;
-    margin-top: 0.6rem;
-    color: color-mix(in srgb, var(--paper) 48%, transparent);
   }
 
   /* На узких экранах карточки идут последовательно, а не двумя колонками */

@@ -1,11 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
-import VisualManifesto from '../components/VisualManifesto.astro';
 import TripIntro from '../components/TripIntro.astro';
 import WhyCambodia from '../components/WhyCambodia.astro';
-import Escape from '../components/Escape.astro';
-import RideVsRoad from '../components/RideVsRoad.astro';
 import Bike from '../components/Bike.astro';
 import RouteMap from '../components/RouteMap.astro';
 import Timeline from '../components/Timeline.astro';
@@ -38,7 +35,6 @@ const photoKeys = [
   'hero',
   ...pastTrips.photos.map((p) => p.image),
   'escape',
-  'sunset-mekong',
   'palms-field',
   'jungle-river',
   'waterfall-jungle',
@@ -107,12 +103,9 @@ const structuredData = [
   <Hero />
 
   <main id="main">
-    <VisualManifesto />
     <TripIntro />
     <WhyCambodia />
-    <Escape />
     <RouteMap />
-    <RideVsRoad />
     <Bike />
     <Timeline />
     <Uniqueness />

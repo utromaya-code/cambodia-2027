@@ -1,17 +1,32 @@
 ---
 import Photo from './Photo.astro';
 import { leaders, leadersSection } from '../data/leaders';
+import type { Leader } from '../data/leaders';
 import { isReady } from '../data/content';
+
+interface Props {
+  items?: readonly Leader[];
+  title?: string;
+  lead?: string;
+  sectionId?: string;
+}
+
+const {
+  items = leaders,
+  title = leadersSection.title,
+  lead = leadersSection.lead,
+  sectionId = 'vedushchie',
+} = Astro.props;
 ---
 
-<section class="leaders section section--stone" id="vedushchie">
+<section class="leaders section section--stone" id={sectionId}>
   <div class="wrap">
-    <h2 class="section__title reveal">{leadersSection.title}</h2>
-    <p class="section__lead reveal">{leadersSection.lead}</p>
+    <h2 class="section__title reveal">{title}</h2>
+    <p class="section__lead reveal">{lead}</p>
 
     <ul class="leaders__grid">
       {
-        leaders.map((leader) => (
+        items.map((leader) => (
           <li class="leader reveal" data-analytics-leader={leader.id}>
             {isReady(leader.portrait) ? (
               <Photo
@@ -107,7 +122,12 @@ import { isReady } from '../data/content';
 
   @media (min-width: 68rem) {
     .leaders__grid {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .leaders__grid:has(> :nth-child(2):last-child) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      max-width: 64rem;
     }
   }
 </style>

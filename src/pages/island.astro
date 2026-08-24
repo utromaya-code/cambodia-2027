@@ -4,9 +4,11 @@ import IslandHero from '../components/IslandHero.astro';
 import Photo from './../components/Photo.astro';
 import Faq from '../components/Faq.astro';
 import LeadForm from '../components/LeadForm.astro';
+import Leaders from '../components/Leaders.astro';
 import Footer from '../components/Footer.astro';
 
 import { island, islandFaq } from '../data/island';
+import { islandLeaders, islandLeadersSection } from '../data/leaders';
 import { trip } from '../data/trip';
 
 const { page } = island;
@@ -17,6 +19,7 @@ const photoKeys = [
   ...page.place.images,
   ...page.practice.images,
   page.stay.image,
+  'leader-ilya',
 ];
 
 const structuredData = [
@@ -156,6 +159,13 @@ const structuredData = [
       </div>
     </section>
 
+    <Leaders
+      items={islandLeaders}
+      title={islandLeadersSection.title}
+      lead={islandLeadersSection.lead}
+      sectionId="vedushchie-ostrov"
+    />
+
     <!-- Что входит -->
     <section class="section section--sea includes">
       <div class="wrap wrap--narrow">
@@ -186,23 +196,11 @@ const structuredData = [
       </div>
     </section>
 
-    <!-- Честно: что ещё уточняем -->
-    <section class="section">
-      <div class="wrap wrap--narrow">
-        <h2 class="section__title reveal">{page.pending.title}</h2>
-        <p class="section__lead reveal">{page.pending.lead}</p>
-        <ul class="pending__list reveal">
-          {page.pending.items.map((item) => <li>{item}</li>)}
-        </ul>
-        <p class="pending__note reveal">{page.pending.note}</p>
-      </div>
-    </section>
-
     <Faq items={islandFaq} title="Вопросы про остров" />
 
     <LeadForm
       title="Поехали на остров"
-      lead="Напишите пару слов о себе — расскажем про программу, дорогу до Ко Ронга и детали, как только они станут окончательными."
+      lead="Оставьте удобный контакт — расскажем о программе и поможем забронировать участие."
       islandDefault="yes"
     />
 

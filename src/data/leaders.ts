@@ -11,11 +11,7 @@ export interface Leader {
   url?: string;
 }
 
-/**
- * Био Ильи и Андрея взяты с действующих сайтов организаторов
- * (kanchenjunga.ru, dahab-camp.ru) — это подтверждённые факты.
- * По Леониду и Елене данных нет: ставим TODO_CONTENT, ничего не придумываем.
- */
+/** Основная команда мотопутешествия. */
 export const leaders: readonly Leader[] = [
   {
     id: 'ilya-barinov',
@@ -28,8 +24,9 @@ export const leaders: readonly Leader[] = [
   {
     id: 'leonid-kutuzov',
     name: 'Леонид Кутузов',
-    role: TODO_CONTENT as unknown as string,
-    shortBio: TODO_CONTENT,
+    role: 'Организатор путешествия',
+    shortBio:
+      'Организует авторские путешествия с 2009 года. Преподаватель йоги и медитации, основатель Yoga-Fest и «Вселенной нейрохакинга». Отвечает за атмосферу поездки, программу и общий ритм группы.',
     portrait: TODO_CONTENT,
   },
   {
@@ -51,5 +48,15 @@ export const leaders: readonly Leader[] = [
 
 export const leadersSection = {
   title: 'Четыре ведущих. Одна дорога.',
-  lead: 'Поездка держится не на расписании, а на людях. С этими четырьмя вы проведёте десять дней подряд — в дороге, за столом и на берегу.',
+  lead: 'Команда проходит с группой весь маршрут — от первой встречи в Сиемреапе до моря.',
+} as const;
+
+/** На островной программе остаются Илья и Леонид. */
+export const islandLeaders = leaders.filter(
+  (leader) => leader.id === 'ilya-barinov' || leader.id === 'leonid-kutuzov',
+);
+
+export const islandLeadersSection = {
+  title: 'Ведущие островной программы',
+  lead: 'Илья Баринов и Леонид Кутузов проведут практики и всю неделю будут вместе с группой на Ко Ронге.',
 } as const;
