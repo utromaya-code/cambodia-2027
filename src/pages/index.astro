@@ -27,7 +27,7 @@ import { trip } from '../data/trip';
 import { pricing } from '../data/pricing';
 import { routePoints } from '../data/route';
 import { days } from '../data/days';
-import { whyCambodia, practice, accommodation, pastTrips } from '../data/sections';
+import { whyCambodia, practice, pastTrips } from '../data/sections';
 import { island } from '../data/island';
 import { bike, bikeUpgrade } from '../data/bike';
 import { faq } from '../data/faq';
@@ -46,15 +46,12 @@ const photoKeys = [
   'bg-manifesto',
   'bg-intro',
   ...pastTrips.photos.map((p) => p.image),
-  'escape',
   'sunset-mekong',
-  'palms-field',
   'naga-sky',
   'bayon-face-close',
   bike.image,
   ...bikeUpgrade.photos.map((p) => p.image),
   practice.image,
-  accommodation.image,
   island.image,
   ...whyCambodia.cards.map((c) => c.image),
   // Снимков точек маршрута на странице больше нет: раздел «Маршрут» стал
