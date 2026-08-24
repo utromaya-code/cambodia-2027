@@ -55,7 +55,11 @@ export const bike = {
   deposit: 'За Honda FTR 230 депозита нет; за Himalayan — около €2 000',
   licenseRequirements: TODO_CONTENT as Pending<string>,
 
-  image: 'bike-ftr',
+  image: 'bike-ftr-ref',
+  imageAlt:
+    'Honda FTR 223 — красно-белый мотоцикл с прямым рулём и спицованными колёсами',
+  imageNote:
+    'Фото модели Honda FTR 223/230. Цвет и комплектация байка в прокате могут отличаться.',
 } as const;
 
 /**
@@ -67,9 +71,8 @@ export const bike = {
  * подтверждается при бронировании. Обещать конкретный байк, которого может
  * не оказаться, на странице с ценой €2 200 нельзя.
  *
- * Кадры для блока — из архива организаторов: в бутанской экспедиции группа
- * ехала как раз на Himalayan, так что фотографии показывают ровно ту
- * технику, о которой идёт речь.
+ * В блоке показываем обе названные модели крупно: 411 и 450. Кадры прошлой
+ * экспедиции на Himalayan остаются ниже, в блоке «Мы уже так ездили».
  */
 export const bikeUpgrade = {
   title: 'Хочется мотоцикл побольше',
@@ -81,15 +84,15 @@ export const bikeUpgrade = {
   ],
   photos: [
     {
-      image: 'crew-group',
-      alt: 'Участники прошлой экспедиции на мотоциклах Royal Enfield Himalayan',
+      image: 'bike-himalayan-411',
+      alt: 'Royal Enfield Himalayan 411 на грунтовой дороге среди холмов',
     },
     {
-      image: 'crew-chortens',
-      alt: 'Royal Enfield Himalayan на стоянке у чортенов',
+      image: 'bike-himalayan-450',
+      alt: 'Royal Enfield Himalayan 450 с белым баком, вид сбоку',
     },
   ],
-  note: 'Фотографии Himalayan — с нашей прошлой экспедиции в Бутане.',
+  note: 'Слева Himalayan 411, справа Himalayan 450. Цвет и комплектация в прокате могут отличаться.',
 } as const;
 
 /**

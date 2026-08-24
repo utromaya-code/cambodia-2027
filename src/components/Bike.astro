@@ -3,11 +3,7 @@ import Photo from './Photo.astro';
 import { bike, bikeUpgrade } from '../data/bike';
 import { hasPhoto } from '../data/images';
 
-/**
- * Фото реального байка от прокатчика ещё не получено. Пока его нет, секция
- * идёт одной колонкой: пустая половина сетки читалась бы как поломка вёрстки,
- * а надпись-заглушку показывать посетителю нельзя.
- */
+/** Если снимка модели нет, секция аккуратно перестраивается в одну колонку. */
 const bikePhotoReady = hasPhoto(bike.image);
 ---
 
@@ -46,10 +42,11 @@ const bikePhotoReady = hasPhoto(bike.image);
     <div class="bike__photo reveal">
       <Photo
         src={bike.image}
-        alt={`Мотоцикл ${bike.model} — лёгкий универсальный байк с двигателем ${bike.engine}`}
+        alt={bike.imageAlt}
         sizes="(min-width: 60rem) 48vw, 100vw"
         ratio="4 / 3"
       />
+      <p class="bike__photo-note">{bike.imageNote}</p>
     </div>
     )}
   </div>
@@ -134,6 +131,13 @@ const bikePhotoReady = hasPhoto(bike.image);
     font-size: var(--step-1);
     line-height: 1.2;
     text-transform: uppercase;
+  }
+
+  .bike__photo-note {
+    margin-top: 0.65rem;
+    color: var(--ink-mute);
+    font-size: var(--step--1);
+    line-height: 1.45;
   }
 
   /* Без фотографии колонка одна — иначе половина экрана остаётся пустой */

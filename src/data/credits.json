@@ -438,5 +438,29 @@
     "licenseUrl": "",
     "source": "Личный архив",
     "originalUrl": ""
+  },
+  "bike-ftr-ref": {
+    "title": "FTR223",
+    "author": "Ypy31",
+    "license": "Public domain",
+    "licenseUrl": null,
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:FTR223.jpg"
+  },
+  "bike-himalayan-411": {
+    "title": "Royal Enfield Himalayan",
+    "author": "Tritinum",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Royal_Enfield_Himalayan.jpg"
+  },
+  "bike-himalayan-450": {
+    "title": "Royal-Enfield-Himalayan-450",
+    "author": "Rouv1505",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "source": "Wikimedia Commons",
+    "originalUrl": "https://commons.wikimedia.org/wiki/File:Royal-Enfield-Himalayan-450.jpg"
   }
 }
