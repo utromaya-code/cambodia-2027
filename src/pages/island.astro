@@ -18,7 +18,7 @@ const photoKeys = [
   'island-hero',
   ...page.place.images,
   ...page.practice.images,
-  page.stay.image,
+  ...page.stay.images.map((photo) => photo.image),
   'leader-ilya',
 ];
 
@@ -186,13 +186,19 @@ const structuredData = [
           </div>
         </div>
 
-        <Photo
-          src={page.stay.image}
-          alt="Домики на сваях над водой у берега острова"
-          class="reveal"
-          sizes="(min-width: 60rem) 48vw, 100vw"
-          ratio="3 / 2"
-        />
+        <div class="stay__gallery">
+          {
+            page.stay.images.map((photo, index) => (
+              <Photo
+                src={photo.image}
+                alt={photo.alt}
+                class:list={['reveal', index === 0 && 'stay__photo--wide']}
+                sizes={index === 0 ? '(min-width: 60rem) 54vw, 100vw' : '(min-width: 60rem) 27vw, 50vw'}
+                ratio={index === 0 ? '4 / 3' : '3 / 2'}
+              />
+            ))
+          }
+        </div>
       </div>
     </section>
 
@@ -336,34 +342,14 @@ const structuredData = [
     color: var(--ink-soft);
   }
 
-  /* Что уточняем */
-  .pending__list {
+  .stay__gallery {
     display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.8rem;
-    max-width: 52ch;
-    margin-top: 1.8rem;
   }
 
-  .pending__list li {
-    position: relative;
-    padding-left: 1.4rem;
-    color: var(--ink-soft);
-  }
-
-  .pending__list li::before {
-    content: '—';
-    position: absolute;
-    left: 0;
-    color: var(--laterite);
-  }
-
-  .pending__note {
-    max-width: 52ch;
-    margin-top: 1.6rem;
-    padding-top: 1.2rem;
-    border-top: 1px solid var(--rule);
-    font-size: var(--step--1);
-    color: var(--ink-mute);
+  .stay__photo--wide {
+    grid-column: 1 / -1;
   }
 
   /* Возврат к путешествию */
