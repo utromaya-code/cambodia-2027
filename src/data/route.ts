@@ -90,8 +90,7 @@ export const routePoints: readonly RoutePoint[] = [
     lat: 11.3167,
     lon: 104.0333,
     note: 'Равнина заканчивается: сосны, горы и первая прохлада за всю дорогу.',
-    image: 'kirirom',
-    gallery: ['kirirom-2'],
+    image: 'kirirom-2',
     days: [6],
   },
   {
@@ -111,7 +110,7 @@ export const routePoints: readonly RoutePoint[] = [
     lat: 10.6478,
     lon: 104.0206,
     note: 'Серпантин в облако: туман, тропический лес и панорама всего побережья.',
-    image: 'jungle-valley',
+    image: 'bokor',
     days: [8],
   },
   {
