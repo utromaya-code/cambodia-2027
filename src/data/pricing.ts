@@ -1,5 +1,3 @@
-import { TODO_CONTENT, type Pending } from './content';
-
 export interface PriceOption {
   id: 'motorcycle' | 'road';
   eyebrow: string;
@@ -105,6 +103,10 @@ export const rideVsRoad = {
  * завтраки, а молчание не значит «не входит» — писать это в правой колонке
  * без подтверждения нельзя. Как появится ответ, строка добавляется в нужный
  * массив, разметку трогать не нужно.
+ *
+ * Депозит стоит в условиях оплаты, а не в «можно добавить»: это не услуга,
+ * которую докупают, а возвратная сумма под залог техники. Смешивать их
+ * в одном списке значит показать €2 000 как ещё одну строку расходов.
  */
 export const priceIncludes = {
   title: 'Что входит и что сверху',
@@ -134,6 +136,7 @@ export const priceIncludes = {
 
   extraTitle: 'Можно добавить',
   extra: [
+    { label: 'Одноместное размещение', price: '+€400' },
     { label: 'Апгрейд на Royal Enfield Himalayan', price: '+€300' },
     { label: 'Островная программа на Ко Ронге, 8–15 марта', price: '+€1 000' },
   ],
@@ -142,32 +145,8 @@ export const priceIncludes = {
   payment: [
     'Предоплата €1 000 для обоих вариантов участия',
     'Остаток — €1 200 за байк или €1 000 за микроавтобус — по приезде в Камбоджу',
+    'За Royal Enfield Himalayan прокат берёт депозит — около €2 000. За Honda FTR 230 депозита нет',
   ],
 
   ask: 'Что-то важное для вас в этот список не попало — спросите, разберём по вашему варианту.',
 } as const;
-
-/**
- * Комплектация цены не подтверждена организатором.
- * До подтверждения секция скрыта флагом featureFlags.includedExcluded.
- */
-export const included: readonly Pending<string>[] = [
-  TODO_CONTENT, // аренда байка
-  TODO_CONTENT, // топливо
-  TODO_CONTENT, // отели
-  TODO_CONTENT, // завтраки и другие приёмы пищи
-  TODO_CONTENT, // локальные гиды
-  TODO_CONTENT, // билеты в Ангкор и другие входные билеты
-  TODO_CONTENT, // машина сопровождения и механик
-  TODO_CONTENT, // трансферы и перевозка багажа
-];
-
-export const notIncluded: readonly Pending<string>[] = [
-  TODO_CONTENT, // международный перелёт
-  TODO_CONTENT, // виза
-  TODO_CONTENT, // страховка
-  TODO_CONTENT, // экипировка
-  TODO_CONTENT, // алкоголь и личные расходы
-  TODO_CONTENT, // депозит за технику
-  TODO_CONTENT, // доплата за одноместное размещение
-];
