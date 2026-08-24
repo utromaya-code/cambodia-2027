@@ -43,9 +43,11 @@ jobs:
       - name: Собрать сайт
         run: npm run build
         env:
-          # Пусто по умолчанию — тогда используются значения из astro.config.mjs.
-          SITE_URL: ${{ vars.SITE_URL }}
-          BASE_PATH: ${{ vars.BASE_PATH }}
+          # Если переменные репозитория не заданы, используем боевой домен.
+          SITE_URL: ${{ vars.SITE_URL || 'https://cambodiamoto.ru' }}
+          BASE_PATH: ${{ vars.BASE_PATH || '/' }}
+          # Поддерживаем новое и прежнее имя секрета приёмника заявок.
+          PUBLIC_LEAD_FORM_ENDPOINT: ${{ secrets.PUBLIC_LEAD_FORM_ENDPOINT }}
           PUBLIC_LEAD_WEBHOOK_URL: ${{ secrets.PUBLIC_LEAD_WEBHOOK_URL }}
 
       # enablement: true включает GitHub Pages сам, если он ещё не включён,
@@ -53,6 +55,13 @@ jobs:
       - uses: actions/configure-pages@v5
         with:
           enablement: true
+
+      # Custom Actions не используют CNAME из репозитория, поэтому домен
+      # закрепляется через официальный GitHub Pages API. Шаг идемпотентный.
+      - name: Настроить домен GitHub Pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT "repos/${GITHUB_REPOSITORY}/pages" -f cname="cambodiamoto.ru"
 
       - uses: actions/upload-pages-artifact@v3
         with:
