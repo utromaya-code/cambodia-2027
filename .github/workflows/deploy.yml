@@ -56,6 +56,13 @@ jobs:
         with:
           enablement: true
 
+      # Custom Actions не используют CNAME из репозитория, поэтому домен
+      # закрепляется через официальный GitHub Pages API. Шаг идемпотентный.
+      - name: Настроить домен GitHub Pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method PUT "repos/${GITHUB_REPOSITORY}/pages" -f cname="cambodiamoto.ru"
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
