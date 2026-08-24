@@ -48,7 +48,7 @@ export const routePoints: readonly RoutePoint[] = [
     image: 'angkor-organizer-frame',
     // Ангкор — главная точка маршрута, поэтому галерея здесь шире
     // остальных: шесть кадров ложатся ровной сеткой 2x3.
-    gallery: ['bayon-organizer-face', 'taprohm-doorway', 'taprohm-root', 'taprohm-sky', 'angkor-gate-face'],
+    gallery: ['bayon-organizer-face', 'taprohm-root', 'taprohm-sky', 'angkor-gate-face'],
     days: [2],
   },
   {
@@ -90,7 +90,7 @@ export const routePoints: readonly RoutePoint[] = [
     lat: 11.3167,
     lon: 104.0333,
     note: 'Равнина заканчивается: сосны, горы и первая прохлада за всю дорогу.',
-    image: 'kirirom-2',
+    image: 'taprohm-doorway',
     days: [6],
   },
   {
@@ -110,7 +110,7 @@ export const routePoints: readonly RoutePoint[] = [
     lat: 10.6478,
     lon: 104.0206,
     note: 'Серпантин в облако: туман, тропический лес и панорама всего побережья.',
-    image: 'bokor',
+    image: 'monks-temple',
     days: [8],
   },
   {
