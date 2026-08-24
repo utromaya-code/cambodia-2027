@@ -6,10 +6,10 @@ const [moto, road] = pricing.options;
 
 <div class="sticky" id="sticky-cta" hidden>
   <p class="sticky__prices">
-    <span class="sticky__label">Байк / бус</span>
+    <span class="sticky__label">Стоимость от</span>
     <span class="sticky__value">{road.priceHuman} — {moto.priceHuman}</span>
   </p>
-  <a class="btn sticky__btn" href="#zayavka" data-analytics="hero_cta_click">Хочу в Камбоджу</a>
+  <a class="btn sticky__btn" href="#zayavka" data-analytics="hero_cta_click">Забронировать</a>
 </div>
 
 <style>
@@ -77,7 +77,7 @@ const [moto, road] = pricing.options;
 
 <script>
   const bar = document.querySelector<HTMLElement>('#sticky-cta');
-  const hero = document.querySelector<HTMLElement>('.hero');
+  const hero = document.querySelector<HTMLElement>('[data-hero]');
   const form = document.querySelector<HTMLElement>('#zayavka');
 
   if (bar && hero) {
