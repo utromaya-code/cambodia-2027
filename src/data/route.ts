@@ -45,10 +45,10 @@ export const routePoints: readonly RoutePoint[] = [
     lat: 13.4125,
     lon: 103.867,
     note: 'Рассвет над Ангкор-Ватом, корни Та-Прома и лица Байона до того, как приедут автобусы.',
-    image: 'angkor-dawn-pink',
+    image: 'angkor-organizer-frame',
     // Ангкор — главная точка маршрута, поэтому галерея здесь шире
     // остальных: шесть кадров ложатся ровной сеткой 2x3.
-    gallery: ['bayon-face', 'taprohm-doorway', 'taprohm-root', 'taprohm-sky', 'angkor-gate-face'],
+    gallery: ['bayon-organizer-face', 'taprohm-doorway', 'taprohm-root', 'taprohm-sky', 'angkor-gate-face'],
     days: [2],
   },
   {

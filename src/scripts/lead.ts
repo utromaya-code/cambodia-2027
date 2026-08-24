@@ -28,6 +28,40 @@ export interface Lead {
   utm?: Record<string, string>;
 }
 
+const modeLabels: Record<Lead['mode'], string> = {
+  motorcycle: 'на байке',
+  road: 'на микроавтобусе',
+  unsure: 'ещё выбирает',
+};
+
+const islandLabels: Record<Lead['island'], string> = {
+  yes: 'интересен',
+  no: 'только основной маршрут',
+  unsure: 'ещё думает',
+};
+
+/** Собирает короткое, читаемое сообщение для передачи заявки в Telegram. */
+export function buildTelegramLeadUrl(
+  lead: Lead,
+  telegramUrl = 'https://t.me/vsemaya',
+): string {
+  const lines = [
+    'Новая заявка: Камбоджа 2027',
+    '',
+    `Имя: ${lead.name}`,
+    `Контакт: ${lead.contact}`,
+    lead.email ? `Email: ${lead.email}` : '',
+    `Формат: ${modeLabels[lead.mode]}`,
+    `Остров 8–15 марта: ${islandLabels[lead.island]}`,
+    lead.comment ? `Комментарий: ${lead.comment}` : '',
+    '',
+    `Страница: ${lead.page}`,
+  ].filter(Boolean);
+
+  const separator = telegramUrl.includes('?') ? '&' : '?';
+  return `${telegramUrl}${separator}text=${encodeURIComponent(lines.join('\n'))}`;
+}
+
 /**
  * Собирает utm_* из адресной строки.
  *

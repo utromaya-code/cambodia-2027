@@ -22,7 +22,12 @@ const {
     <h2 class="section__title reveal">{title}</h2>
     <p class="section__lead reveal">{lead}</p>
 
-    <form class="form reveal" id="lead-form" novalidate>
+    <form
+      class="form reveal"
+      id="lead-form"
+      novalidate
+      data-telegram={trip.contacts.telegram}
+    >
       <div class="form__row">
         <label class="field">
           <span class="field__label">Имя <abbr title="обязательное поле">*</abbr></span>
@@ -95,7 +100,7 @@ const {
       </label>
       <span class="field__error" data-error-for="consent"></span>
 
-      <button class="btn btn--wide" type="submit">Обсудить поездку</button>
+      <button class="btn btn--wide" type="submit">Отправить заявку</button>
 
       <p class="form__status" role="status" aria-live="polite" data-form-status></p>
     </form>
@@ -276,7 +281,7 @@ const {
 </style>
 
 <script>
-  import { submitLead, collectUtm, type Lead } from '../scripts/lead';
+  import { buildTelegramLeadUrl, submitLead, collectUtm, type Lead } from '../scripts/lead';
   import { track } from '../scripts/analytics';
 
   const form = document.querySelector<HTMLFormElement>('#lead-form');
@@ -403,6 +408,16 @@ const {
         status.dataset.tone = 'ok';
         status.textContent =
           'Спасибо. Мы свяжемся с вами и расскажем про маршрут, технику и детали поездки.';
+      } else if (result.reason === 'not-configured') {
+        // GitHub Pages — статический сайт. Пока защищённый обработчик не
+        // подключён, передаём заявку в Telegram готовым сообщением: данные
+        // не теряются и никакие токены не оказываются в браузере.
+        const telegram = form.dataset.telegram ?? 'https://t.me/vsemaya';
+        track('lead_form_telegram_handoff', { mode: lead.mode, island: lead.island });
+        status.dataset.tone = 'ok';
+        status.textContent = 'Открываем Telegram с готовой заявкой…';
+        window.location.href = buildTelegramLeadUrl(lead, telegram);
+        return;
       } else {
         track('lead_form_error', { reason: result.reason });
         status.dataset.tone = 'error';
