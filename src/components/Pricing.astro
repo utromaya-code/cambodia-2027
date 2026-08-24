@@ -1,5 +1,5 @@
 ---
-import { pricing } from '../data/pricing';
+import { pricing, priceIncludes } from '../data/pricing';
 ---
 
 <section class="pricing section section--ink" id="stoimost">
@@ -45,12 +45,133 @@ import { pricing } from '../data/pricing';
       }
     </ul>
 
-    <p class="pricing__foot reveal">{pricing.footnote}</p>
-    <p class="pricing__foot pricing__foot--note reveal">{pricing.footnoteSecondary}</p>
+    <!-- Что входит и что сверху. Данные — только подтверждённые;
+         недостающие позиции не помечаются вопросом, а отсутствуют. -->
+    <div class="incl reveal">
+      <h3 class="incl__title">{priceIncludes.title}</h3>
+
+      <div class="incl__cols">
+        <div>
+          <p class="incl__sub">{priceIncludes.includedTitle}</p>
+          <ul class="incl__list">
+            {priceIncludes.included.map((x) => <li>{x}</li>)}
+          </ul>
+        </div>
+
+        <div>
+          <p class="incl__sub">{priceIncludes.extraTitle}</p>
+          <ul class="incl__list incl__list--extra">
+            {
+              priceIncludes.extra.map((x) => (
+                <li>
+                  <span>{x.label}</span>
+                  <span class="incl__price">{x.price}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <ul class="incl__payment">
+        {priceIncludes.payment.map((x) => <li>{x}</li>)}
+      </ul>
+
+      <p class="incl__ask">{priceIncludes.ask}</p>
+    </div>
+
   </div>
 </section>
 
 <style>
+  .incl {
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+    padding-top: clamp(1.8rem, 4vw, 2.6rem);
+    border-top: 1px solid var(--rule);
+  }
+
+  .incl__title {
+    font-size: var(--step-2);
+    text-transform: uppercase;
+  }
+
+  .incl__cols {
+    display: grid;
+    gap: 1.8rem 3rem;
+    margin-top: 1.6rem;
+  }
+
+  .incl__sub {
+    font-size: var(--step--1);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .incl__list {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--step--1);
+    line-height: 1.45;
+  }
+
+  /* Маркер рисуем сами: у списка два вида строк — простые и с ценой,
+     и дефолтный disc сбивал бы выравнивание правой колонки. */
+  .incl__list li {
+    position: relative;
+    padding-left: 1.1rem;
+  }
+
+  .incl__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 0.4rem;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .incl__list--extra li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.3rem 1rem;
+  }
+
+  .incl__price {
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    white-space: nowrap;
+  }
+
+  .incl__payment {
+    display: grid;
+    gap: 0.5rem;
+    margin: 1.8rem 0 0;
+    padding: 1.2rem 0 0;
+    border-top: 1px solid var(--rule);
+    list-style: none;
+    font-size: var(--step--1);
+    line-height: 1.45;
+  }
+
+  .incl__ask {
+    margin-top: 1.2rem;
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--paper) 70%, transparent);
+  }
+
+  @media (min-width: 48rem) {
+    .incl__cols {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
   .pricing__cards {
     display: grid;
     gap: 1.5rem;

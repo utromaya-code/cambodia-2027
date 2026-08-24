@@ -1,4 +1,4 @@
-import { TODO_CONTENT, isReady, type Pending } from './content';
+import { isReady, type Pending } from './content';
 
 export interface Leader {
   id: string;
