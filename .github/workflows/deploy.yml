@@ -43,9 +43,9 @@ jobs:
       - name: Собрать сайт
         run: npm run build
         env:
-          # До включения Custom Domain используем штатный адрес GitHub Pages.
-          SITE_URL: ${{ vars.SITE_URL || 'https://utromaya-code.github.io' }}
-          BASE_PATH: ${{ vars.BASE_PATH || '/cambodia-2027' }}
+          # Custom Domain публикуется из корня cambodiamoto.ru.
+          SITE_URL: ${{ vars.SITE_URL || 'https://cambodiamoto.ru' }}
+          BASE_PATH: ${{ vars.BASE_PATH || '/' }}
           # Поддерживаем новое и прежнее имя секрета приёмника заявок.
           PUBLIC_LEAD_FORM_ENDPOINT: ${{ secrets.PUBLIC_LEAD_FORM_ENDPOINT }}
           PUBLIC_LEAD_WEBHOOK_URL: ${{ secrets.PUBLIC_LEAD_WEBHOOK_URL }}
