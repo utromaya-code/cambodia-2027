@@ -1,4 +1,4 @@
-import { TODO_CONTENT, type Pending } from './content';
+import { trip } from './trip';
 
 export interface PriceOption {
   id: 'motorcycle' | 'road';
@@ -18,7 +18,6 @@ export interface PriceOption {
 export const pricing = {
   title: 'Выберите формат участия',
   lead: 'Одна экспедиция. Два способа пройти дорогу. Группа, отели, города и вечера — общие.',
-  footnote: 'Остаток оплачивается по приезде в Камбоджу.',
 
   options: [
     {
@@ -29,11 +28,9 @@ export const pricing = {
       currency: 'EUR',
       priceHuman: '€2 200',
       summary: 'Проходишь маршрут сам, за рулём.',
-      // Про байк здесь намеренно сказано как о формате участия, а не как о
-      // включённой услуге: входит ли аренда в стоимость — пока не подтверждено.
       bullets: [
         '10 дней маршрута от Ангкора до моря',
-        'Перегоны проходишь сам, за рулём',
+        'Honda FTR 230, топливо и шлем — в стоимости',
         'Общая программа, отели и вечера с группой',
       ],
       prepayment: 'Предоплата €1 000',
@@ -87,27 +84,27 @@ export const rideVsRoad = {
   cta: 'Оставить заявку',
 } as const;
 
-/**
- * Комплектация цены не подтверждена организатором.
- * До подтверждения секция скрыта флагом featureFlags.includedExcluded.
- */
-export const included: readonly Pending<string>[] = [
-  TODO_CONTENT, // аренда байка
-  TODO_CONTENT, // топливо
-  TODO_CONTENT, // отели
-  TODO_CONTENT, // завтраки и другие приёмы пищи
-  TODO_CONTENT, // локальные гиды
-  TODO_CONTENT, // билеты в Ангкор и другие входные билеты
-  TODO_CONTENT, // машина сопровождения и механик
-  TODO_CONTENT, // трансферы и перевозка багажа
-];
+/** Подтверждённый состав стоимости из единого объекта trip. */
+export const priceIncludes = {
+  title: 'Что входит и что сверху',
+  includedTitle: 'Входит в стоимость',
+  included: trip.inclusions.included,
+  excludedTitle: 'Не входит',
+  excluded: trip.inclusions.excluded,
+  extraTitle: 'Можно добавить',
+  extra: [
+    { label: 'Одноместное размещение', price: '+€400' },
+    { label: 'Апгрейд на Royal Enfield Himalayan', price: '+€300' },
+    { label: 'Островная программа на Ко Ронге, 8–15 марта', price: '+€1 000' },
+  ],
+  payment: [
+    'Предоплата €1 000 для обоих вариантов участия',
+    'Остаток — €1 200 за байк или €1 000 за микроавтобус — по приезде в Камбоджу',
+    'За Royal Enfield Himalayan прокат берёт депозит — около €2 000. За Honda FTR 230 депозита нет',
+  ],
+  ask: 'Что-то важное для вас в этот список не попало — спросите, разберём по вашему варианту.',
+} as const;
 
-export const notIncluded: readonly Pending<string>[] = [
-  TODO_CONTENT, // международный перелёт
-  TODO_CONTENT, // виза
-  TODO_CONTENT, // страховка
-  TODO_CONTENT, // экипировка
-  TODO_CONTENT, // алкоголь и личные расходы
-  TODO_CONTENT, // депозит за технику
-  TODO_CONTENT, // доплата за одноместное размещение
-];
+/** Обратная совместимость для компонентов и проверок старой ветки. */
+export const included = trip.inclusions.included;
+export const notIncluded = trip.inclusions.excluded;

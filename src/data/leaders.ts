@@ -1,4 +1,4 @@
-import { TODO_CONTENT, type Pending } from './content';
+import type { Pending } from './content';
 
 export interface Leader {
   id: string;
@@ -24,10 +24,11 @@ export const leaders: readonly Leader[] = [
   {
     id: 'leonid-kutuzov',
     name: 'Леонид Кутузов',
-    role: 'Организатор путешествия',
+    role: 'Путешествия и практики',
     shortBio:
-      'Организует авторские путешествия с 2009 года. Преподаватель йоги и медитации, основатель Yoga-Fest и «Вселенной нейрохакинга». Отвечает за атмосферу поездки, программу и общий ритм группы.',
-    portrait: TODO_CONTENT,
+      'Президент Федерации Йоги Санкт-Петербурга. Практикует йогу с 1998 года, преподаёт с 2000-го, больше пятнадцати лет водит выездные ретриты по разным странам. Ведёт медитацию и работу с вниманием, дыхательные техники и лекции о том, что практики делают с мозгом.',
+    portrait: 'leader-leonid',
+    url: 'https://leo-japan.ru',
   },
   {
     id: 'andrey-baranov',
@@ -38,11 +39,12 @@ export const leaders: readonly Leader[] = [
     portrait: 'leader-andrey',
   },
   {
-    id: 'elena',
-    name: 'Елена',
-    role: TODO_CONTENT as unknown as string,
-    shortBio: TODO_CONTENT,
-    portrait: TODO_CONTENT,
+    id: 'elena-bakina',
+    name: 'Елена Бакина',
+    role: 'Азия изнутри',
+    shortBio:
+      'Девять лет живёт в Азии и делает путешествия, в которых регион открывается изнутри, а не с обзорной площадки. Знает, чем отличается место, куда возят всех, от места, куда стоит доехать.',
+    portrait: 'leader-elena',
   },
 ];
 

@@ -49,11 +49,10 @@ export const bike = {
     { label: 'Высота седла', value: '780 мм' },
   ],
 
-  /** Не подтверждено — на сайте не показываем. */
-  includedInPrice: TODO_CONTENT as Pending<boolean>,
-  helmetIncluded: TODO_CONTENT as Pending<boolean>,
+  includedInPrice: true,
+  helmetIncluded: true,
   luggageSystem: TODO_CONTENT as Pending<string>,
-  deposit: TODO_CONTENT as Pending<string>,
+  deposit: 'За Honda FTR 230 депозита нет; за Himalayan — около €2 000',
   licenseRequirements: TODO_CONTENT as Pending<string>,
 
   image: 'bike-ftr',

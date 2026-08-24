@@ -1,5 +1,5 @@
 ---
-import { pricing } from '../data/pricing';
+import { pricing, priceIncludes } from '../data/pricing';
 ---
 
 <section class="pricing section section--ink" id="stoimost">
@@ -37,11 +37,157 @@ import { pricing } from '../data/pricing';
       }
     </ul>
 
-    <p class="pricing__foot reveal">{pricing.footnote}</p>
+    <div class="incl reveal">
+      <h3 class="incl__title">{priceIncludes.title}</h3>
+
+      <div class="incl__cols">
+        <div>
+          <p class="incl__sub">{priceIncludes.includedTitle}</p>
+          <ul class="incl__list">
+            {priceIncludes.included.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+
+        <div>
+          <p class="incl__sub incl__sub--out">{priceIncludes.excludedTitle}</p>
+          <ul class="incl__list incl__list--out">
+            {priceIncludes.excluded.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      </div>
+
+      <div class="incl__extra">
+        <p class="incl__sub">{priceIncludes.extraTitle}</p>
+        <ul class="incl__list incl__list--extra">
+          {
+            priceIncludes.extra.map((item) => (
+              <li>
+                <span>{item.label}</span>
+                <span class="incl__price">{item.price}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <ul class="incl__payment">
+        {priceIncludes.payment.map((item) => <li>{item}</li>)}
+      </ul>
+
+      <p class="incl__ask">{priceIncludes.ask}</p>
+    </div>
   </div>
 </section>
 
 <style>
+  .incl {
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+    padding-top: clamp(1.8rem, 4vw, 2.6rem);
+    border-top: 1px solid var(--rule);
+  }
+
+  .incl__title {
+    font-size: var(--step-2);
+    text-transform: uppercase;
+  }
+
+  .incl__cols {
+    display: grid;
+    gap: 1.8rem 3rem;
+    margin-top: 1.6rem;
+  }
+
+  .incl__sub {
+    font-size: var(--step--1);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--laterite);
+  }
+
+  .incl__list {
+    display: grid;
+    gap: 0.6rem;
+    margin: 0.9rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--step--1);
+    line-height: 1.45;
+  }
+
+  .incl__list li {
+    position: relative;
+    padding-left: 1.1rem;
+  }
+
+  .incl__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 0.4rem;
+    height: 1px;
+    background: var(--laterite);
+  }
+
+  .incl__sub--out {
+    color: color-mix(in srgb, var(--paper) 55%, transparent);
+  }
+
+  .incl__list--out {
+    color: color-mix(in srgb, var(--paper) 72%, transparent);
+  }
+
+  .incl__list--out li::before {
+    background: color-mix(in srgb, var(--paper) 45%, transparent);
+  }
+
+  .incl__extra {
+    margin-top: 1.8rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .incl__extra .incl__list {
+    max-width: 34rem;
+  }
+
+  .incl__list--extra li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.3rem 1rem;
+  }
+
+  .incl__price {
+    font-family: var(--font-display);
+    font-size: var(--step-0);
+    white-space: nowrap;
+  }
+
+  .incl__payment {
+    display: grid;
+    gap: 0.5rem;
+    margin: 1.8rem 0 0;
+    padding: 1.2rem 0 0;
+    border-top: 1px solid var(--rule);
+    list-style: none;
+    font-size: var(--step--1);
+    line-height: 1.45;
+  }
+
+  .incl__ask {
+    margin-top: 1.2rem;
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--paper) 70%, transparent);
+  }
+
+  @media (min-width: 48rem) {
+    .incl__cols {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
   .pricing__cards {
     display: grid;
     gap: 1.5rem;
@@ -107,12 +253,6 @@ import { pricing } from '../data/pricing';
 
   .price__cta {
     margin-top: 0.4rem;
-  }
-
-  .pricing__foot {
-    margin-top: 1.5rem;
-    font-size: var(--step--1);
-    color: color-mix(in srgb, var(--paper) 65%, transparent);
   }
 
   /* На узких экранах карточки идут последовательно, а не двумя колонками */
