@@ -43,9 +43,11 @@ jobs:
       - name: Собрать сайт
         run: npm run build
         env:
-          # Пусто по умолчанию — тогда используются значения из astro.config.mjs.
-          SITE_URL: ${{ vars.SITE_URL }}
-          BASE_PATH: ${{ vars.BASE_PATH }}
+          # Если переменные репозитория не заданы, используем боевой домен.
+          SITE_URL: ${{ vars.SITE_URL || 'https://cambodiamoto.ru' }}
+          BASE_PATH: ${{ vars.BASE_PATH || '/' }}
+          # Поддерживаем новое и прежнее имя секрета приёмника заявок.
+          PUBLIC_LEAD_FORM_ENDPOINT: ${{ secrets.PUBLIC_LEAD_FORM_ENDPOINT }}
           PUBLIC_LEAD_WEBHOOK_URL: ${{ secrets.PUBLIC_LEAD_WEBHOOK_URL }}
 
       # enablement: true включает GitHub Pages сам, если он ещё не включён,
