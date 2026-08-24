@@ -13,8 +13,8 @@ import tailwindcss from '@tailwindcss/vite';
  * Пустые переменные GitHub Actions не должны перебивать рабочие значения:
  * поэтому здесь используется логический fallback, а не nullish coalescing.
  */
-const SITE_URL = process.env.SITE_URL?.trim() || 'https://utromaya-code.github.io';
-const BASE_PATH = process.env.BASE_PATH?.trim() || '/cambodia-2027';
+const SITE_URL = process.env.SITE_URL?.trim() || 'https://cambodiamoto.ru';
+const BASE_PATH = process.env.BASE_PATH?.trim() || '/';
 
 export default defineConfig({
   site: SITE_URL,
