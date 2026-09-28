@@ -18,7 +18,8 @@ export interface Lead {
   name: string;
   contact: string;
   email?: string;
-  mode: 'motorcycle' | 'road' | 'unsure';
+  /** 'retreat' — заявка со страницы ретрита, где выбора формата дороги нет. */
+  mode: 'motorcycle' | 'road' | 'unsure' | 'retreat';
   island: 'yes' | 'no' | 'unsure';
   comment?: string;
   /** Служебные поля — откуда пришла заявка. */
@@ -53,6 +54,7 @@ const MODE_LABEL: Record<Lead['mode'], string> = {
   motorcycle: 'на байке',
   road: 'на микроавтобусе',
   unsure: 'ещё выбираю',
+  retreat: 'только ретрит на острове',
 };
 
 const ISLAND_LABEL: Record<Lead['island'], string> = {
@@ -72,14 +74,17 @@ const ISLAND_LABEL: Record<Lead['island'], string> = {
  * Служебные поля (referrer, utm) в сообщение не кладём: это переписка живого
  * человека с живым человеком, а не строка в CRM.
  */
-export function buildTelegramLink(lead: Lead, handle: string): string {
+export function buildTelegramLink(lead: Lead, handle: string, source?: string): string {
+  const retreat = lead.mode === 'retreat';
   const lines = [
-    'Заявка с сайта «Камбоджа. Дорога на юг»',
+    `Заявка с сайта «${source ?? 'Камбоджа. Дорога на юг'}»`,
     `Имя: ${lead.name}`,
     `Связь: ${lead.contact}`,
     lead.email ? `Почта: ${lead.email}` : null,
-    `Формат: ${MODE_LABEL[lead.mode]}`,
-    `Остров: ${ISLAND_LABEL[lead.island]}`,
+    // На странице ретрита формат дороги не спрашивают, и строка «Остров: да»
+    // там бессмысленна — вся заявка и есть про остров.
+    retreat ? null : `Формат: ${MODE_LABEL[lead.mode]}`,
+    retreat ? `Программа: ${MODE_LABEL.retreat}` : `Остров: ${ISLAND_LABEL[lead.island]}`,
     lead.comment ? `Комментарий: ${lead.comment}` : null,
   ].filter(Boolean);
 
