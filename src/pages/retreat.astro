@@ -5,6 +5,7 @@ import Photo from '../components/Photo.astro';
 import Faq from '../components/Faq.astro';
 import LeadForm from '../components/LeadForm.astro';
 import Footer from '../components/Footer.astro';
+import MobileStickyCta from '../components/MobileStickyCta.astro';
 
 import { retreat, retreatFaq, retreatLeaders } from '../data/retreat';
 import { isReady } from '../data/content';
@@ -101,10 +102,22 @@ const structuredData = [
       </div>
     </section>
 
+    <!-- Для кого -->
+    <section class="section section--stone audience">
+      <div class="wrap wrap--narrow">
+        <h2 class="section__title reveal">{retreat.audience.title}</h2>
+        <p class="section__lead reveal">{retreat.audience.lead}</p>
+        <ul class="audience__list reveal">
+          {retreat.audience.items.map((item) => <li>{item}</li>)}
+        </ul>
+        <p class="audience__note reveal">{retreat.audience.note}</p>
+      </div>
+    </section>
+
     <!-- Кто ведёт -->
     {
       retreatLeaders.length > 0 && (
-        <section class="section section--stone" id="vedushchie">
+        <section class="section" id="vedushchie">
           <div class="wrap">
             <h2 class="section__title reveal">{retreat.leadersSection.title}</h2>
             <p class="section__lead reveal">{retreat.leadersSection.lead}</p>
@@ -305,12 +318,18 @@ const structuredData = [
         <h2 class="cross__title reveal">{retreat.crossLink.title}</h2>
         <p class="cross__dates reveal">{retreat.crossLink.dates}</p>
         <p class="cross__text reveal">{retreat.crossLink.text}</p>
-        <a class="btn btn--ghost cross__cta reveal" href={`${base}/`}>
+        <a
+          class="btn btn--ghost cross__cta reveal"
+          href={`${base}/`}
+          data-analytics="cross_to_trip_click"
+        >
           {retreat.crossLink.cta}
         </a>
       </div>
     </section>
   </main>
+
+  <MobileStickyCta label="Оставить заявку" analytics="retreat_sticky_cta" />
 
   <Footer
     photoKeys={photoKeys}
@@ -334,6 +353,38 @@ const structuredData = [
     border-top: 1px solid var(--rule);
     font-size: var(--step--1);
     color: var(--ink-mute);
+  }
+
+  /* Для кого */
+  .audience__list {
+    display: grid;
+    gap: 0.9rem;
+    max-width: 54ch;
+    margin-top: 1.8rem;
+  }
+
+  .audience__list li {
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  .audience__list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 0.6rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  .audience__note {
+    max-width: 54ch;
+    margin-top: 1.6rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--rule);
+    font-size: var(--step--1);
   }
 
   /* Кто ведёт — двое, поэтому карточки крупнее, чем на главной */
@@ -507,7 +558,7 @@ const structuredData = [
   .price__cta {
     margin-top: 2rem;
     background: #fff;
-    color: var(--sea);
+    color: var(--sea-ink);
   }
 
   .price__cta:hover {

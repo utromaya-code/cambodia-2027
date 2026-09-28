@@ -1,6 +1,17 @@
+---
+interface Props {
+  /** Подпись кнопки. У ретрита своя: бронировать там пока нечего. */
+  label?: string;
+  /** Имя события, чтобы заявки с разных страниц не складывались в одну цифру. */
+  analytics?: string;
+}
+
+const { label = 'Забронировать место', analytics = 'hero_cta_click' } = Astro.props;
+---
+
 <div class="sticky" id="sticky-cta" hidden>
-  <a class="sticky__btn" href="#zayavka" data-analytics="hero_cta_click">
-    Забронировать место
+  <a class="sticky__btn" href="#zayavka" data-analytics={analytics}>
+    {label}
   </a>
 </div>
 

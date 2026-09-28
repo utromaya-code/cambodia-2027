@@ -9,7 +9,8 @@ const { hero, facts } = retreat;
 const readyFacts = facts.filter((f) => isReady(f.value));
 ---
 
-<header class="rhero" data-retreat-hero>
+{/* data-hero читает липкая кнопка внизу экрана — селектор у неё общий на все страницы */}
+<header class="rhero" data-hero>
   <div class="rhero__media">
     <Photo
       src={retreat.heroImage}
@@ -26,7 +27,10 @@ const readyFacts = facts.filter((f) => isReady(f.value));
     <div class="rhero__plate">
       <p class="rhero__kicker">{hero.kicker}</p>
       <h1 class="rhero__title">{hero.title}</h1>
-      <p class="rhero__lead">{hero.lead}</p>
+      <p class="rhero__lead">
+        {hero.lead}
+        <span class="rhero__lead-extra">{hero.leadExtra}</span>
+      </p>
 
       <div class="rhero__actions">
         <a class="btn rhero__cta" href="#zayavka" data-analytics="retreat_cta">{hero.cta}</a>
@@ -128,6 +132,17 @@ const readyFacts = facts.filter((f) => isReady(f.value));
     color: color-mix(in srgb, #fff 90%, transparent);
   }
 
+  /* На узком экране показываем только первую фразу — см. комментарий в данных */
+  .rhero__lead-extra {
+    display: none;
+  }
+
+  @media (min-width: 40rem) {
+    .rhero__lead-extra {
+      display: inline;
+    }
+  }
+
   .rhero__actions {
     display: flex;
     flex-wrap: wrap;
@@ -139,7 +154,7 @@ const readyFacts = facts.filter((f) => isReady(f.value));
   .rhero__cta {
     width: 100%;
     background: #fff;
-    color: var(--sea);
+    color: var(--sea-ink);
   }
 
   .rhero__cta:hover {
