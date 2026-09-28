@@ -270,32 +270,49 @@ const structuredData = [
 
     <!-- Стоимость -->
     <section class="section section--sea price" id="stoimost">
-      <div class="wrap wrap--narrow">
+      <div class="wrap price__wrap">
         <h2 class="section__title reveal">{retreat.price.title}</h2>
 
-        {
-          isReady(retreat.price.value) ? (
-            <p class="price__value reveal">
-              <span>{retreat.price.value}</span>
-              <em>{retreat.price.note}</em>
-            </p>
-          ) : (
-            <p class="section__lead reveal">{retreat.price.ask}</p>
-          )
-        }
+        <p class="price__value reveal">
+          <span>{retreat.price.value}</span>
+          <em>{retreat.price.note}</em>
+        </p>
 
         {
-          isReady(retreat.price.included) ? (
-            <ul class="price__list reveal">
-              {retreat.price.included.map((item) => (
-                <li>{item}</li>
-              ))}
-            </ul>
-          ) : (
-            /* Состава стоимости ещё нет — говорим об этом здесь и только здесь */
-            <p class="price__ask reveal">{retreat.price.ask}</p>
-          )
+          isReady(retreat.price.included) && isReady(retreat.price.excluded) ? (
+            <div class="price__cols reveal">
+              <div>
+                <h3 class="price__coltitle">{retreat.price.includedTitle}</h3>
+                <ul class="price__list">
+                  {retreat.price.included.map((item) => <li>{item}</li>)}
+                </ul>
+              </div>
+              <div>
+                <h3 class="price__coltitle">{retreat.price.excludedTitle}</h3>
+                <ul class="price__list price__list--out">
+                  {retreat.price.excluded.map((item) => <li>{item}</li>)}
+                </ul>
+              </div>
+            </div>
+          ) : null
         }
+
+        <dl class="price__terms reveal">
+          {
+            isReady(retreat.price.singleSupplement) && (
+              <div>
+                <dt>{retreat.price.singleSupplementLabel}</dt>
+                <dd>{retreat.price.singleSupplement}</dd>
+              </div>
+            )
+          }
+          <div>
+            <dt>Бронирование</dt>
+            <dd>{retreat.price.payment}</dd>
+          </div>
+        </dl>
+
+        <p class="price__ask reveal">{retreat.price.ask}</p>
 
         <a class="btn price__cta reveal" href="#zayavka" data-analytics="price_cta_click">
           {retreat.price.cta}
@@ -554,6 +571,14 @@ const structuredData = [
   }
 
   /* Стоимость */
+  /*
+    Блок стоимости лежит на бирюзовом. Мелкий текст здесь только чисто
+    белый: полупрозрачный и золотой на этом фоне не добирают до 4,5:1.
+  */
+  .price__wrap {
+    max-width: 62rem;
+  }
+
   .price__value {
     display: grid;
     gap: 0.45rem;
@@ -566,28 +591,95 @@ const structuredData = [
     line-height: 1;
   }
 
-  /*
-    Условие размещения стоит крупным (--step-1, то есть 24px и выше):
-    на бирюзовом фоне мелкий текст не берёт 4,5:1 даже чисто белым —
-    см. комментарий к --sea-ink в global.css.
-  */
   .price__value em {
     font-style: normal;
     font-size: var(--step-1);
   }
 
-  .price__ask {
-    max-width: 52ch;
-    margin-top: 1.6rem;
-    font-size: var(--step-1);
-    line-height: 1.45;
+  .price__cols {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2.2rem;
+    padding-top: 1.8rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .price__coltitle {
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #fff;
   }
 
   .price__list {
     display: grid;
     gap: 0.7rem;
+    margin-top: 1rem;
+  }
+
+  .price__list li {
+    position: relative;
+    padding-left: 1.6rem;
+    color: #fff;
+    line-height: 1.45;
+  }
+
+  .price__list li::before {
+    content: '+';
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+  }
+
+  .price__list--out li::before {
+    content: '—';
+  }
+
+  .price__terms {
+    display: grid;
+    gap: 0.9rem;
+    margin: 2rem 0 0;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .price__terms > div {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .price__terms dt {
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .price__terms dd {
+    margin: 0;
+    font-size: var(--step-1);
+    color: #fff;
+  }
+
+  .price__ask {
     max-width: 52ch;
-    margin-top: 1.8rem;
+    margin-top: 1.6rem;
+    color: #fff;
+  }
+
+  @media (min-width: 48rem) {
+    .price__cols {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .price__terms {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
   }
 
   .price__cta {

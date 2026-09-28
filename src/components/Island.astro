@@ -66,11 +66,16 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     overflow: hidden;
   }
 
+  /*
+    Снимок — фактура под бирюзой, а не картинка. При 30% его светлые места
+    поднимали фон под мелким текстом до 3,7:1. 10% — со всем текстом
+    чисто белым — дают порог с запасом и сохраняют ощущение воды под цветом.
+  */
   .island__media {
     position: absolute;
     inset: 0;
     z-index: -1;
-    opacity: 0.3;
+    opacity: 0.1;
   }
 
   .island__media :global(.photo) {
@@ -97,7 +102,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .island__text {
     max-width: 52ch;
     margin-top: 1.6rem;
-    color: color-mix(in srgb, #ffffff 88%, transparent);
+    color: #fff;
   }
 
   .island__list {
@@ -121,10 +126,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     line-height: 1;
   }
 
+  /* Мелкий текст на бирюзовом — только чисто белый: полупрозрачный
+     на фоне со снимком не добирает до 4,5:1. */
   .island__note {
     margin-top: 0.5rem;
     font-size: var(--step--1);
-    color: color-mix(in srgb, #ffffff 75%, transparent);
+    color: #fff;
   }
 
   .island__cta {
@@ -137,7 +144,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .island__alt {
     margin-top: 1rem;
     font-size: var(--step--1);
-    color: color-mix(in srgb, #ffffff 78%, transparent);
+    color: #fff;
   }
 
   /* Отделяем от «общей заявки»: это не вариант той же покупки, а другая поездка */
