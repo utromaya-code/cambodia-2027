@@ -6,6 +6,7 @@ import Faq from '../components/Faq.astro';
 import LeadForm from '../components/LeadForm.astro';
 import Footer from '../components/Footer.astro';
 import MobileStickyCta from '../components/MobileStickyCta.astro';
+import WeekPrice from '../components/WeekPrice.astro';
 
 import { retreat, retreatFaq, retreatLeaders } from '../data/retreat';
 import { isReady } from '../data/content';
@@ -269,68 +270,30 @@ const structuredData = [
     </section>
 
     <!-- Стоимость -->
-    <section class="section section--sea price" id="stoimost">
-      <div class="wrap price__wrap">
-        <h2 class="section__title reveal">{retreat.price.title}</h2>
+    <WeekPrice
+      title={retreat.price.title}
+      value={retreat.price.value}
+      note={retreat.price.note}
+      terms={retreat.price.terms}
+      ask={retreat.price.ask}
+      cta={retreat.price.cta}
+    />
 
-        <p class="price__value reveal">
-          <span>{retreat.price.value}</span>
-          <em>{retreat.price.note}</em>
-        </p>
-
-        {
-          isReady(retreat.price.included) && isReady(retreat.price.excluded) ? (
-            <div class="price__cols reveal">
-              <div>
-                <h3 class="price__coltitle">{retreat.price.includedTitle}</h3>
-                <ul class="price__list">
-                  {retreat.price.included.map((item) => <li>{item}</li>)}
-                </ul>
-              </div>
-              <div>
-                <h3 class="price__coltitle">{retreat.price.excludedTitle}</h3>
-                <ul class="price__list price__list--out">
-                  {retreat.price.excluded.map((item) => <li>{item}</li>)}
-                </ul>
-              </div>
-            </div>
-          ) : null
-        }
-
-        <dl class="price__terms reveal">
-          {
-            isReady(retreat.price.singleSupplement) && (
-              <div>
-                <dt>{retreat.price.singleSupplementLabel}</dt>
-                <dd>{retreat.price.singleSupplement}</dd>
-              </div>
-            )
-          }
-          <div>
-            <dt>Бронирование</dt>
-            <dd>{retreat.price.payment}</dd>
+    {/* Честный список открытого. Пустой — секции нет: пустое «уточняем» хуже, чем ничего. */}
+    {
+      retreat.pending.items.length > 0 && (
+        <section class="section">
+          <div class="wrap wrap--narrow">
+            <h2 class="section__title reveal">{retreat.pending.title}</h2>
+            <p class="section__lead reveal">{retreat.pending.lead}</p>
+            <ul class="pending reveal">
+              {retreat.pending.items.map((item) => <li>{item}</li>)}
+            </ul>
+            <p class="pending__note reveal">{retreat.pending.note}</p>
           </div>
-        </dl>
-
-        <p class="price__ask reveal">{retreat.price.ask}</p>
-
-        <a class="btn price__cta reveal" href="#zayavka" data-analytics="price_cta_click">
-          {retreat.price.cta}
-        </a>
-      </div>
-    </section>
-
-    <!-- Честно: что ещё уточняем -->
-    <section class="section">
-      <div class="wrap wrap--narrow">
-        <h2 class="section__title reveal">{retreat.pending.title}</h2>
-        <p class="section__lead reveal">{retreat.pending.lead}</p>
-        <ul class="pending reveal">
-          {retreat.pending.items.map((item) => <li>{item}</li>)}
-        </ul>
-        <p class="pending__note reveal">{retreat.pending.note}</p>
-      </div>
-    </section>
+        </section>
+      )
+    }
 
     <Faq items={retreatFaq} title="Вопросы про неделю на острове" />
 
@@ -571,127 +534,6 @@ const structuredData = [
   }
 
   /* Стоимость */
-  /*
-    Блок стоимости лежит на бирюзовом. Мелкий текст здесь только чисто
-    белый: полупрозрачный и золотой на этом фоне не добирают до 4,5:1.
-  */
-  .price__wrap {
-    max-width: 62rem;
-  }
-
-  .price__value {
-    display: grid;
-    gap: 0.45rem;
-    margin-top: 1.2rem;
-  }
-
-  .price__value span {
-    font-family: var(--font-display);
-    font-size: var(--step-4);
-    line-height: 1;
-  }
-
-  .price__value em {
-    font-style: normal;
-    font-size: var(--step-1);
-  }
-
-  .price__cols {
-    display: grid;
-    gap: 2rem;
-    margin-top: 2.2rem;
-    padding-top: 1.8rem;
-    border-top: 1px solid var(--rule);
-  }
-
-  .price__coltitle {
-    font-family: var(--font-body);
-    font-size: var(--step--1);
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #fff;
-  }
-
-  .price__list {
-    display: grid;
-    gap: 0.7rem;
-    margin-top: 1rem;
-  }
-
-  .price__list li {
-    position: relative;
-    padding-left: 1.6rem;
-    color: #fff;
-    line-height: 1.45;
-  }
-
-  .price__list li::before {
-    content: '+';
-    position: absolute;
-    left: 0;
-    font-weight: 700;
-  }
-
-  .price__list--out li::before {
-    content: '—';
-  }
-
-  .price__terms {
-    display: grid;
-    gap: 0.9rem;
-    margin: 2rem 0 0;
-    padding-top: 1.6rem;
-    border-top: 1px solid var(--rule);
-  }
-
-  .price__terms > div {
-    display: grid;
-    gap: 0.2rem;
-  }
-
-  .price__terms dt {
-    font-size: var(--step--1);
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #fff;
-  }
-
-  .price__terms dd {
-    margin: 0;
-    font-size: var(--step-1);
-    color: #fff;
-  }
-
-  .price__ask {
-    max-width: 52ch;
-    margin-top: 1.6rem;
-    color: #fff;
-  }
-
-  @media (min-width: 48rem) {
-    .price__cols {
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-    }
-
-    .price__terms {
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-    }
-  }
-
-  .price__cta {
-    margin-top: 2rem;
-    background: #fff;
-    color: var(--sea-ink);
-  }
-
-  .price__cta:hover {
-    background: #ffe9c9;
-  }
-
   /* Что уточняем */
   .pending {
     display: grid;

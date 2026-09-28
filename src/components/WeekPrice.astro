@@ -1,0 +1,203 @@
+---
+import { islandWeek } from '../data/island';
+
+/**
+ * Стоимость недели на Ко Ронге. Один компонент на две страницы: ретрит
+ * (€1 000, отдельный продукт) и остров для участников мотопутешествия
+ * (+€1 000 к маршруту). Состав недели общий и приходит из islandWeek,
+ * а сумма, подпись и условия у каждой страницы свои.
+ */
+interface Props {
+  title: string;
+  value: string;
+  note: string;
+  /** Условия под составом: одноместное, бронирование, возврат. */
+  terms?: ReadonlyArray<{ label: string; value: string }>;
+  ask?: string;
+  cta: string;
+  /** Имя события аналитики для кнопки. */
+  analytics?: string;
+}
+
+const {
+  title,
+  value,
+  note,
+  terms = [{ label: islandWeek.singleSupplementLabel, value: islandWeek.singleSupplement }],
+  ask,
+  cta,
+  analytics = 'price_cta_click',
+} = Astro.props;
+---
+
+<section class="section section--sea price" id="stoimost">
+  <div class="wrap price__wrap">
+    <h2 class="section__title reveal">{title}</h2>
+
+    <p class="price__value reveal">
+      <span>{value}</span>
+      <em>{note}</em>
+    </p>
+
+    <div class="price__cols reveal">
+      <div>
+        <h3 class="price__coltitle">{islandWeek.includedTitle}</h3>
+        <ul class="price__list">
+          {islandWeek.included.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+      <div>
+        <h3 class="price__coltitle">{islandWeek.excludedTitle}</h3>
+        <ul class="price__list price__list--out">
+          {islandWeek.excluded.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </div>
+
+    {
+      terms.length > 0 && (
+        <dl class="price__terms reveal">
+          {terms.map((t) => (
+            <div>
+              <dt>{t.label}</dt>
+              <dd>{t.value}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+
+    {ask && <p class="price__ask reveal">{ask}</p>}
+
+    <a class="btn price__cta reveal" href="#zayavka" data-analytics={analytics}>
+      {cta}
+    </a>
+  </div>
+</section>
+
+<style>
+  /*
+    Блок стоимости лежит на бирюзовом. Мелкий текст здесь только чисто
+    белый: полупрозрачный и золотой на этом фоне не добирают до 4,5:1.
+  */
+  .price__wrap {
+    max-width: 62rem;
+  }
+
+  .price__value {
+    display: grid;
+    gap: 0.45rem;
+    margin-top: 1.2rem;
+  }
+
+  .price__value span {
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+    line-height: 1;
+  }
+
+  .price__value em {
+    font-style: normal;
+    font-size: var(--step-1);
+  }
+
+  .price__cols {
+    display: grid;
+    gap: 2rem;
+    margin-top: 2.2rem;
+    padding-top: 1.8rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .price__coltitle {
+    font-family: var(--font-body);
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .price__list {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 1rem;
+  }
+
+  .price__list li {
+    position: relative;
+    padding-left: 1.6rem;
+    color: #fff;
+    line-height: 1.45;
+  }
+
+  .price__list li::before {
+    content: '+';
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+  }
+
+  .price__list--out li::before {
+    content: '—';
+  }
+
+  .price__terms {
+    display: grid;
+    gap: 0.9rem;
+    margin: 2rem 0 0;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .price__terms > div {
+    display: grid;
+    gap: 0.2rem;
+  }
+
+  .price__terms dt {
+    font-size: var(--step--1);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .price__terms dd {
+    margin: 0;
+    font-size: var(--step-1);
+    color: #fff;
+  }
+
+  .price__ask {
+    max-width: 52ch;
+    margin-top: 1.6rem;
+    color: #fff;
+  }
+
+  @media (min-width: 48rem) {
+    .price__cols {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .price__terms {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .price__cta {
+    margin-top: 2rem;
+    background: #fff;
+    color: var(--sea-ink);
+  }
+
+  .price__cta:hover {
+    background: #ffe9c9;
+  }
+
+  .price__cta:hover {
+    background: #ffe9c9;
+  }
+</style>

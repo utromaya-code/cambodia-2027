@@ -6,6 +6,7 @@ import Faq from '../components/Faq.astro';
 import LeadForm from '../components/LeadForm.astro';
 import Leaders from '../components/Leaders.astro';
 import Footer from '../components/Footer.astro';
+import WeekPrice from '../components/WeekPrice.astro';
 
 import { island, islandFaq } from '../data/island';
 import { islandLeaders, islandLeadersSection } from '../data/leaders';
@@ -203,10 +204,19 @@ const structuredData = [
       </div>
     </section>
 
+    {/* Состав тот же, что у ретрита, — компонент общий, данные в islandWeek */}
+    <WeekPrice
+      title="Сколько это стоит"
+      value={island.price}
+      note="К стоимости путешествия, при двухместном размещении."
+      cta="Оставить заявку"
+      analytics="island_price_cta_click"
+    />
+
     {/*
       Переход на страницу для тех, кому нужна только неделя на острове.
-      Ссылка стоит после «что уточняем» не случайно: там же снят вопрос
-      «можно ли приехать только на остров», и человеку нужно, куда пойти.
+      Стоит сразу после стоимости: человек только что увидел цену и состав
+      и может решить, что маршрут ему не нужен, — ему нужно, куда пойти.
     */}
     <section class="section section--stone standalone">
       <div class="wrap wrap--narrow standalone__inner">
