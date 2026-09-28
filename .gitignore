@@ -13,3 +13,6 @@ commons.json
 candidates.json
 bright.json
 __pycache__/
+
+# Скриншоты для показа заказчику, не часть сайта
+preview/

@@ -17,9 +17,21 @@ interface Props {
   structuredData?: unknown[];
   /** Служебные страницы (политика) в поиск не отдаём. */
   noindex?: boolean;
+  /**
+   * Название сайта в превью соцсетей. У ретрита оно своё: в мессенджере
+   * ссылка на него не должна подписываться мотопутешествием.
+   */
+  siteName?: string;
 }
 
-const { title, description, ogImage, structuredData = [], noindex = false } = Astro.props;
+const {
+  title,
+  description,
+  ogImage,
+  structuredData = [],
+  noindex = false,
+  siteName = 'Камбоджа: Дорога на юг',
+} = Astro.props;
 
 const canonical = Astro.site
   ? new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site).href
@@ -54,7 +66,7 @@ const faviconHref = `data:image/svg+xml,${encodeURIComponent(faviconSvg)}`;
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ru_RU" />
-    <meta property="og:site_name" content="Камбоджа: Дорога на юг" />
+    <meta property="og:site_name" content={siteName} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />

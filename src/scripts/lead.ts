@@ -18,7 +18,8 @@ export interface Lead {
   name: string;
   contact: string;
   email?: string;
-  mode: 'motorcycle' | 'road' | 'unsure';
+  /** 'retreat' — заявка со страницы ретрита, где выбора формата дороги нет. */
+  mode: 'motorcycle' | 'road' | 'unsure' | 'retreat';
   island: 'yes' | 'no' | 'unsure';
   comment?: string;
   /** Служебные поля — откуда пришла заявка. */
@@ -32,6 +33,7 @@ const modeLabels: Record<Lead['mode'], string> = {
   motorcycle: 'на байке',
   road: 'на микроавтобусе',
   unsure: 'ещё выбирает',
+  retreat: 'только ретрит на острове',
 };
 
 const islandLabels: Record<Lead['island'], string> = {
@@ -44,15 +46,20 @@ const islandLabels: Record<Lead['island'], string> = {
 export function buildTelegramLeadUrl(
   lead: Lead,
   telegramUrl = 'https://t.me/vsemaya',
+  /** Название продукта в первой строке. У ретрита оно своё. */
+  source?: string,
 ): string {
+  // На странице ретрита формат дороги не спрашивают, и строка
+  // «Остров: интересен» там бессмысленна — вся заявка и есть про остров.
+  const retreat = lead.mode === 'retreat';
   const lines = [
-    'Новая заявка: Камбоджа 2027',
+    `Новая заявка: ${source ?? 'Камбоджа 2027'}`,
     '',
     `Имя: ${lead.name}`,
     `Контакт: ${lead.contact}`,
     lead.email ? `Email: ${lead.email}` : '',
-    `Формат: ${modeLabels[lead.mode]}`,
-    `Остров 8–15 марта: ${islandLabels[lead.island]}`,
+    retreat ? `Программа: ${modeLabels.retreat}` : `Формат: ${modeLabels[lead.mode]}`,
+    retreat ? '' : `Остров 8–15 марта: ${islandLabels[lead.island]}`,
     lead.comment ? `Комментарий: ${lead.comment}` : '',
     '',
     `Страница: ${lead.page}`,

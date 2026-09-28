@@ -14,6 +14,12 @@ interface Props {
   class?: string;
   /** Соотношение сторон кадра; без него подставляется исходное. */
   ratio?: string;
+  /**
+   * Качество webp. По умолчанию отдаём на откуп Astro; понижаем точечно там,
+   * где картинка большая и грузится сразу, — прежде всего на первом экране:
+   * она и есть LCP, и каждый лишний десяток килобайт виден в метрике.
+   */
+  quality?: number;
 }
 
 const {
@@ -25,6 +31,7 @@ const {
   fetchpriority = 'auto',
   class: className = '',
   ratio,
+  quality,
 } = Astro.props;
 
 const image = getPhoto(src);
@@ -49,6 +56,7 @@ const decorative = alt.trim() === '';
         loading={loading}
         fetchpriority={fetchpriority}
         decoding="async"
+        quality={quality}
         role={decorative ? 'presentation' : undefined}
       />
     </div>

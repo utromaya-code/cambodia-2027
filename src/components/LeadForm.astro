@@ -8,13 +8,32 @@ interface Props {
   lead?: string;
   /** На странице острова разумно сразу отметить интерес к нему. */
   islandDefault?: 'yes' | 'no' | 'unsure';
+  /**
+   * 'retreat' — форма на странице ретрита. Там не спрашивают, как ехать
+   * по маршруту и интересен ли остров: человек пришёл именно за островом,
+   * а мотоциклов в его поездке нет вовсе. Оба ответа проставляются скрытыми
+   * полями, чтобы заявка дошла в том же формате, что и все остальные.
+   */
+  variant?: 'trip' | 'retreat';
+  /** Название продукта в заголовке письма/сообщения с заявкой. */
+  source?: string;
+  /** Подпись под кнопкой — например, чем именно мы ответим. */
+  note?: string;
 }
 
 const {
   title = 'Хочу в Камбоджу',
   lead = 'Оставьте удобный контакт — обсудим формат поездки и поможем забронировать место.',
   islandDefault = 'unsure',
+  variant = 'trip',
+  source,
+  note,
 } = Astro.props;
+
+const isRetreat = variant === 'retreat';
+const commentPlaceholder = isRetreat
+  ? 'Опыт практики, вопросы, пожелания'
+  : 'Опыт езды, вопросы, пожелания';
 ---
 
 <section class="lead section section--dark" id="zayavka">
@@ -27,6 +46,7 @@ const {
       id="lead-form"
       novalidate
       data-telegram={trip.contacts.telegram}
+      data-lead-source={source}
     >
       <div class="form__row">
         <label class="field">
@@ -50,36 +70,47 @@ const {
         <span class="field__error" data-error-for="email"></span>
       </label>
 
-      <fieldset class="choice">
-        <legend class="field__label">Как хочу ехать</legend>
-        <div class="choice__options">
-          <label><input type="radio" name="mode" value="motorcycle" /><span>На байке</span></label>
-          <label><input type="radio" name="mode" value="road" /><span>На микроавтобусе</span></label>
-          <label><input type="radio" name="mode" value="unsure" checked /><span>Ещё выбираю</span></label>
-        </div>
-      </fieldset>
+      {
+        isRetreat ? (
+          <>
+            <input type="hidden" name="mode" value="retreat" />
+            <input type="hidden" name="island" value="yes" />
+          </>
+        ) : (
+          <>
+            <fieldset class="choice">
+              <legend class="field__label">Как хочу ехать</legend>
+              <div class="choice__options">
+                <label><input type="radio" name="mode" value="motorcycle" /><span>На байке</span></label>
+                <label><input type="radio" name="mode" value="road" /><span>На микроавтобусе</span></label>
+                <label><input type="radio" name="mode" value="unsure" checked /><span>Ещё выбираю</span></label>
+              </div>
+            </fieldset>
 
-      <fieldset class="choice">
-        <legend class="field__label">Остров 8–15 марта</legend>
-        <div class="choice__options">
-          <label>
-            <input type="radio" name="island" value="yes" checked={islandDefault === 'yes'} />
-            <span>Интересен</span>
-          </label>
-          <label>
-            <input type="radio" name="island" value="no" checked={islandDefault === 'no'} />
-            <span>Только маршрут</span>
-          </label>
-          <label>
-            <input type="radio" name="island" value="unsure" checked={islandDefault === 'unsure'} />
-            <span>Ещё думаю</span>
-          </label>
-        </div>
-      </fieldset>
+            <fieldset class="choice">
+              <legend class="field__label">Остров 8–15 марта</legend>
+              <div class="choice__options">
+                <label>
+                  <input type="radio" name="island" value="yes" checked={islandDefault === 'yes'} />
+                  <span>Интересен</span>
+                </label>
+                <label>
+                  <input type="radio" name="island" value="no" checked={islandDefault === 'no'} />
+                  <span>Только маршрут</span>
+                </label>
+                <label>
+                  <input type="radio" name="island" value="unsure" checked={islandDefault === 'unsure'} />
+                  <span>Ещё думаю</span>
+                </label>
+              </div>
+            </fieldset>
+          </>
+        )
+      }
 
       <label class="field">
         <span class="field__label">Комментарий</span>
-        <textarea name="comment" rows="4" placeholder="Опыт езды, вопросы, пожелания"></textarea>
+        <textarea name="comment" rows="4" placeholder={commentPlaceholder}></textarea>
       </label>
 
       <!-- Ловушка для ботов: поле скрыто от людей и от скринридеров,
@@ -94,7 +125,9 @@ const {
       <label class="form__consent">
         <input type="checkbox" name="consent" required />
         <span>
-          Согласен на обработку персональных данных в соответствии с
+          {/* Пробел задан явно: перенос строки между «с» и ссылкой Astro
+              съедает, и в разметке получалось «сполитикой». */}
+          Согласен на обработку персональных данных в соответствии с{' '}
           <a href={`${base}/privacy`} rel="noopener">политикой конфиденциальности</a>.
         </span>
       </label>
@@ -104,6 +137,8 @@ const {
 
       <p class="form__status" role="status" aria-live="polite" data-form-status></p>
     </form>
+
+    {note && <p class="lead__note reveal">{note}</p>}
 
     <p class="lead__alt reveal">
       Или просто напишите в Telegram:
@@ -267,6 +302,13 @@ const {
     color: #f0a68b;
   }
 
+  .lead__note {
+    max-width: 58ch;
+    margin-top: 1.4rem;
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--paper) 70%, transparent);
+  }
+
   .lead__alt {
     margin-top: 1.6rem;
     font-size: var(--step--1);
@@ -413,10 +455,12 @@ const {
         // подключён, передаём заявку в Telegram готовым сообщением: данные
         // не теряются и никакие токены не оказываются в браузере.
         const telegram = form.dataset.telegram ?? 'https://t.me/vsemaya';
+        // У ретрита своё название продукта в первой строке сообщения.
+        const leadSource = form.dataset.leadSource;
         track('lead_form_telegram_handoff', { mode: lead.mode, island: lead.island });
         status.dataset.tone = 'ok';
         status.textContent = 'Открываем Telegram с готовой заявкой…';
-        window.location.href = buildTelegramLeadUrl(lead, telegram);
+        window.location.href = buildTelegramLeadUrl(lead, telegram, leadSource);
         return;
       } else {
         track('lead_form_error', { reason: result.reason });

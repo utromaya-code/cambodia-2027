@@ -203,6 +203,26 @@ const structuredData = [
       </div>
     </section>
 
+    <!--
+      Переход на страницу для тех, кому нужна только неделя на острове.
+      Ссылка стоит после «что уточняем» не случайно: там же снят вопрос
+      «можно ли приехать только на остров», и человеку нужно, куда пойти.
+    -->
+    <section class="section section--stone standalone">
+      <div class="wrap wrap--narrow standalone__inner">
+        <p class="standalone__eyebrow reveal">Без маршрута</p>
+        <h2 class="standalone__title reveal">Неделя на острове</h2>
+        <p class="standalone__text reveal">
+          На остров можно приехать отдельно, без путешествия по Камбодже: те же
+          8–15 марта, практики с Леонидом Кутузовым и Ильёй Бариновым. Условия
+          участия и стоимость там свои.
+        </p>
+        <a class="btn btn--ghost standalone__cta reveal" href={`${base}/retreat`}>
+          Открыть страницу ретрита
+        </a>
+      </div>
+    </section>
+
     <Faq items={islandFaq} title="Вопросы про остров" />
 
     <LeadForm
@@ -349,8 +369,41 @@ const structuredData = [
     gap: 0.8rem;
   }
 
-  .stay__photo--wide {
+  /*
+    :global нужен по делу: класс лежит на корне компонента Photo, а скоуп
+    стилей Astro туда не достаёт — правило без :global просто не срабатывало,
+    и крупный кадр вставал в колонку наравне с мелкими.
+  */
+  .stay__gallery :global(.stay__photo--wide) {
     grid-column: 1 / -1;
+  }
+
+  /* Отдельное участие без маршрута */
+  .standalone__inner {
+    text-align: center;
+  }
+
+  .standalone__eyebrow {
+    font-size: var(--step--1);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .standalone__title {
+    margin-top: 0.7rem;
+    font-size: var(--step-3);
+    text-transform: uppercase;
+  }
+
+  .standalone__text {
+    max-width: 48ch;
+    margin: 0.9rem auto 0;
+    color: var(--ink-soft);
+  }
+
+  .standalone__cta {
+    margin-top: 1.6rem;
   }
 
   /* Возврат к путешествию */

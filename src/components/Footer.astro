@@ -5,29 +5,43 @@ import { usedCredits } from '../data/images';
 interface Props {
   /** Ключи всех показанных на странице снимков — для указания авторства. */
   photoKeys: readonly string[];
+  /**
+   * Чем подписан подвал. По умолчанию — мотопутешествие: оно основной продукт.
+   * Страница ретрита продаёт другую поездку, и подвал «Дорога на юг» на ней
+   * сбивал бы с толку человека, который приехал именно за островом.
+   */
+  title?: string;
+  dates?: string;
+  nav?: ReadonlyArray<{ href: string; label: string }>;
 }
-
-const { photoKeys } = Astro.props;
-const credits = usedCredits(photoKeys);
-const year = new Date().getFullYear();
 
 // Ссылки ведут на разделы главной, поэтому они абсолютные:
 // подвал стоит и на странице острова, где этих якорей нет.
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const nav = [
-  { href: `${base}/#marshrut`, label: 'Маршрут' },
-  { href: `${base}/#programma`, label: 'Программа' },
-  { href: `${base}/#stoimost`, label: 'Стоимость' },
-  { href: `${base}/island`, label: 'Остров' },
-  { href: '#zayavka', label: 'Заявка' },
-];
+
+const {
+  photoKeys,
+  title = 'Камбоджа · Дорога на юг',
+  dates = trip.dates.human,
+  nav = [
+    { href: `${base}/#marshrut`, label: 'Маршрут' },
+    { href: `${base}/#programma`, label: 'Программа' },
+    { href: `${base}/#stoimost`, label: 'Стоимость' },
+    { href: `${base}/island`, label: 'Остров' },
+    { href: `${base}/retreat`, label: 'Ретрит' },
+    { href: '#zayavka', label: 'Заявка' },
+  ],
+} = Astro.props;
+
+const credits = usedCredits(photoKeys);
+const year = new Date().getFullYear();
 ---
 
 <footer class="footer">
   <div class="wrap footer__grid">
     <div>
-      <p class="footer__title">Камбоджа · Дорога на юг</p>
-      <p class="footer__dates">{trip.dates.human}</p>
+      <p class="footer__title">{title}</p>
+      <p class="footer__dates">{dates}</p>
     </div>
 
     <nav class="footer__nav" aria-label="Разделы сайта">

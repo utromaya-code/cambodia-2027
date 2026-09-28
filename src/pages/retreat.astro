@@ -1,0 +1,622 @@
+---
+import Base from '../layouts/Base.astro';
+import RetreatHero from '../components/RetreatHero.astro';
+import Photo from '../components/Photo.astro';
+import Faq from '../components/Faq.astro';
+import LeadForm from '../components/LeadForm.astro';
+import Footer from '../components/Footer.astro';
+
+import { retreat, retreatFaq, retreatLeaders } from '../data/retreat';
+import { isReady } from '../data/content';
+import { trip } from '../data/trip';
+
+/**
+ * Ретрит на Ко Ронге как отдельный продукт.
+ *
+ * Страница написана для человека, который не едет в мотопутешествие и,
+ * возможно, вообще про него не знает. Поэтому ни один блок здесь не опирается
+ * на «после дороги»: неделя объясняется с нуля. Ссылка на мотомаршрут стоит
+ * одна и в самом низу — как предложение, а не как условие.
+ */
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+/**
+ * Портреты ведущих стоят в двух колонках внутри .wrap (максимум 1240px):
+ * на широком экране карточка ровно 600px, уже — почти половина ширины.
+ * Без этого браузер брал 30vw = 432px на контейнер 600px, и лица мылили.
+ */
+const LEADER_SIZES = '(min-width: 78rem) 600px, (min-width: 48rem) 46vw, 92vw';
+
+const photoKeys = [
+  retreat.heroImage,
+  ...retreat.practice.images,
+  ...retreat.island.images,
+  ...retreat.stay.images.map((photo) => photo.image),
+  ...retreatLeaders.map((l) => l.portrait).filter(isReady),
+];
+
+const footerNav = [
+  { href: '#den', label: 'День' },
+  { href: '#praktika', label: 'Практика' },
+  { href: '#ostrov', label: 'Остров' },
+  { href: '#voprosy', label: 'Вопросы' },
+  { href: '#zayavka', label: 'Заявка' },
+  { href: `${base}/`, label: 'Мотопутешествие' },
+];
+
+/**
+ * schema.org. Блок offers намеренно отсутствует: стоимость отдельного
+ * участия ещё не подтверждена, а Offer без цены поисковику бесполезен.
+ * Появится цена — появится и offers.
+ */
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: `${retreat.hero.title} — ${retreat.placeLatin}`,
+    description: retreat.seoDescription,
+    startDate: retreat.datesIso.start,
+    endDate: retreat.datesIso.end,
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    eventStatus: 'https://schema.org/EventScheduled',
+    location: {
+      '@type': 'Place',
+      name: `${retreat.place} (${retreat.placeLatin})`,
+      address: { '@type': 'PostalAddress', addressCountry: 'KH' },
+    },
+    performer: retreatLeaders.map((l) => ({ '@type': 'Person', name: l.name })),
+    organizer: { '@type': 'Organization', name: 'Vsemaya', url: trip.contacts.telegram },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: retreatFaq.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  },
+];
+---
+
+<Base
+  title={retreat.seoTitle}
+  description={retreat.seoDescription}
+  ogImage="og-retreat.jpg"
+  siteName="Ретрит на Ко Ронге"
+  structuredData={structuredData}
+>
+  <RetreatHero />
+
+  <main id="main">
+    <!-- Что это за неделя -->
+    <section class="section">
+      <div class="wrap wrap--narrow">
+        <h2 class="section__title reveal">{retreat.about.title}</h2>
+        <div class="prose prose--lead about__text reveal">
+          {retreat.about.lines.map((line) => <p>{line}</p>)}
+        </div>
+        <p class="about__note reveal">{retreat.about.note}</p>
+      </div>
+    </section>
+
+    <!-- Кто ведёт -->
+    {
+      retreatLeaders.length > 0 && (
+        <section class="section section--stone" id="vedushchie">
+          <div class="wrap">
+            <h2 class="section__title reveal">{retreat.leadersSection.title}</h2>
+            <p class="section__lead reveal">{retreat.leadersSection.lead}</p>
+
+            <ul class="leaders">
+              {retreatLeaders.map((leader) => (
+                <li class="leader reveal" data-analytics-leader={leader.id}>
+                  {isReady(leader.portrait) && (
+                    <Photo
+                      src={leader.portrait}
+                      alt={`${leader.name} — один из ведущих недели на острове`}
+                      class="leader__photo"
+                      sizes={LEADER_SIZES}
+                      ratio="4 / 5"
+                    />
+                  )}
+
+                  <div class="leader__text">
+                    <h3>{leader.name}</h3>
+                    <p class="leader__role">{leader.role}</p>
+                    <p class="leader__bio">{leader.shortBio}</p>
+                    {leader.url && (
+                      <p class="leader__link">
+                        <a href={leader.url} rel="noopener">
+                          {leader.url.replace(/^https?:\/\//, '')}
+                        </a>
+                      </p>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )
+    }
+
+    <!-- Как устроен день -->
+    <section class="section section--dark" id={retreat.rhythm.id}>
+      <div class="wrap">
+        <h2 class="section__title reveal">{retreat.rhythm.title}</h2>
+
+        <ol class="rhythm">
+          {
+            retreat.rhythm.items.map((item) => (
+              <li class="rhythm__item reveal">
+                <p class="rhythm__time">{item.time}</p>
+                <p class="rhythm__text">{item.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+
+        <p class="rhythm__note reveal">{retreat.rhythm.note}</p>
+      </div>
+    </section>
+
+    <!-- Практика -->
+    <section class="section" id="praktika">
+      <div class="wrap practice">
+        <Photo
+          src={retreat.practice.images[0]}
+          alt="Монах в оранжевом одеянии идёт по тропе через тропический лес"
+          class="practice__photo reveal"
+          sizes="(min-width: 60rem) 42vw, 100vw"
+          ratio="4 / 5"
+        />
+
+        <div class="practice__text reveal">
+          <h2 class="section__title">{retreat.practice.title}</h2>
+          <div class="prose practice__prose">
+            {retreat.practice.lines.map((line) => <p>{line}</p>)}
+          </div>
+          <Photo
+            src={retreat.practice.images[1]}
+            alt="Водопад среди мшистых камней и зелени на Ко Ронге"
+            class="practice__inline"
+            sizes="(min-width: 60rem) 46vw, 100vw"
+            ratio="3 / 2"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Что за остров -->
+    <section class="section section--stone" id="ostrov">
+      <div class="wrap place">
+        <div class="place__text reveal">
+          <h2 class="section__title">{retreat.island.title}</h2>
+          <div class="prose place__prose">
+            {retreat.island.lines.map((line) => <p>{line}</p>)}
+          </div>
+        </div>
+
+        <div class="place__photos">
+          <Photo
+            src={retreat.island.images[0]}
+            alt="Хижина на сваях под деревом на белом песчаном берегу Ко Ронга"
+            class="reveal"
+            sizes="(min-width: 60rem) 42vw, 100vw"
+            ratio="4 / 3"
+          />
+          <Photo
+            src={retreat.island.images[1]}
+            alt="Деревянный пирс над бирюзовой водой у зелёного берега острова"
+            class="reveal"
+            sizes="(min-width: 60rem) 42vw, 100vw"
+            ratio="3 / 2"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Где живём -->
+    <section class="section">
+      <div class="wrap stay">
+        <div class="stay__text reveal">
+          <h2 class="section__title">{retreat.stay.title}</h2>
+          <div class="prose stay__prose">
+            {retreat.stay.lines.map((line) => <p>{line}</p>)}
+          </div>
+        </div>
+
+        <div class="stay__gallery">
+          {
+            retreat.stay.images.map((photo, index) => (
+              <Photo
+                src={photo.image}
+                alt={photo.alt}
+                class:list={['reveal', index === 0 && 'stay__photo--wide']}
+                sizes={index === 0 ? '(min-width: 60rem) 54vw, 100vw' : '(min-width: 60rem) 27vw, 50vw'}
+                ratio={index === 0 ? '4 / 3' : '3 / 2'}
+              />
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!--
+      Стоимость. Пока цена отдельного участия не подтверждена, здесь стоит
+      прямой запрос, а не число: подставить сюда €1 000 с островной страницы
+      нельзя — это цена добавки к мотопутешествию, а не этой недели.
+    -->
+    <section class="section section--sea price" id="stoimost">
+      <div class="wrap wrap--narrow">
+        <h2 class="section__title reveal">{retreat.price.title}</h2>
+
+        {
+          isReady(retreat.price.value) ? (
+            <p class="price__value reveal">{retreat.price.value}</p>
+          ) : (
+            <p class="section__lead reveal">{retreat.price.ask}</p>
+          )
+        }
+
+        {
+          isReady(retreat.price.included) && (
+            <ul class="price__list reveal">
+              {retreat.price.included.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          )
+        }
+
+        <a class="btn price__cta reveal" href="#zayavka" data-analytics="price_cta_click">
+          {isReady(retreat.price.value) ? 'Оставить заявку' : retreat.price.cta}
+        </a>
+      </div>
+    </section>
+
+    <!-- Честно: что ещё уточняем -->
+    <section class="section">
+      <div class="wrap wrap--narrow">
+        <h2 class="section__title reveal">{retreat.pending.title}</h2>
+        <p class="section__lead reveal">{retreat.pending.lead}</p>
+        <ul class="pending reveal">
+          {retreat.pending.items.map((item) => <li>{item}</li>)}
+        </ul>
+        <p class="pending__note reveal">{retreat.pending.note}</p>
+      </div>
+    </section>
+
+    <Faq items={retreatFaq} title="Вопросы про неделю на острове" />
+
+    <LeadForm
+      title={retreat.form.title}
+      lead={retreat.form.lead}
+      variant="retreat"
+      source="Ретрит на Ко Ронге"
+    />
+
+    <!-- Переход к мотопутешествию — для тех, кому всё же хочется дороги -->
+    <section class="section cross">
+      <div class="wrap wrap--narrow cross__inner">
+        <p class="cross__eyebrow reveal">{retreat.crossLink.eyebrow}</p>
+        <h2 class="cross__title reveal">{retreat.crossLink.title}</h2>
+        <p class="cross__dates reveal">{retreat.crossLink.dates}</p>
+        <p class="cross__text reveal">{retreat.crossLink.text}</p>
+        <a class="btn btn--ghost cross__cta reveal" href={`${base}/`}>
+          {retreat.crossLink.cta}
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <Footer
+    photoKeys={photoKeys}
+    title="Ко Ронг · Неделя на острове"
+    dates={retreat.dates}
+    nav={footerNav}
+  />
+</Base>
+
+<style>
+  /* Что это за неделя */
+  .about__text {
+    margin-top: 1.6rem;
+    color: var(--ink-soft);
+  }
+
+  .about__note {
+    max-width: 56ch;
+    margin-top: 1.8rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--rule);
+    font-size: var(--step--1);
+    color: var(--ink-mute);
+  }
+
+  /* Кто ведёт — двое, поэтому карточки крупнее, чем на главной */
+  .leaders {
+    display: grid;
+    gap: 2.4rem;
+    margin-top: clamp(2.2rem, 5vw, 3.5rem);
+  }
+
+  .leader {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.1rem;
+    /*
+      Карточки в ряду растягиваются до одной высоты, и свободное место
+      гридом раздаётся строкам. У кого биография короче, у того подпись
+      уезжает вниз, и имена в ряду перестают стоять на одной линии.
+      align-content: start прижимает содержимое к верху — фото и имена
+      совпадают, лишнее место остаётся снизу.
+    */
+    align-content: start;
+  }
+
+  .leader__text h3 {
+    font-size: var(--step-2);
+    text-transform: uppercase;
+  }
+
+  .leader__role {
+    margin-top: 0.3rem;
+    font-size: var(--step--1);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--laterite);
+  }
+
+  .leader__bio {
+    margin-top: 0.7rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  .leader__link {
+    margin-top: 0.7rem;
+    font-size: var(--step--1);
+  }
+
+  .leader__link a {
+    color: var(--laterite-ink);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  /* Ритм дня */
+  .rhythm {
+    display: grid;
+    gap: 0;
+    margin-top: clamp(2rem, 5vw, 3rem);
+  }
+
+  .rhythm__item {
+    display: grid;
+    gap: 0.4rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .rhythm__item:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .rhythm__time {
+    font-family: var(--font-display);
+    font-size: var(--step-2);
+    text-transform: uppercase;
+    color: var(--paper);
+  }
+
+  .rhythm__text {
+    max-width: 52ch;
+    color: color-mix(in srgb, var(--paper) 78%, transparent);
+  }
+
+  .rhythm__note {
+    max-width: 56ch;
+    margin-top: 1.4rem;
+    font-size: var(--step--1);
+    color: color-mix(in srgb, var(--paper) 62%, transparent);
+  }
+
+  /* Практика */
+  .practice {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .practice > * {
+    min-width: 0;
+  }
+
+  .practice__prose {
+    max-width: 46ch;
+    margin-top: 1.4rem;
+    color: var(--ink-soft);
+  }
+
+  .practice__inline {
+    margin-top: 2rem;
+  }
+
+  /* Что за остров */
+  .place,
+  .stay {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .place > *,
+  .stay > * {
+    min-width: 0;
+  }
+
+  .place__prose,
+  .stay__prose {
+    max-width: 46ch;
+    margin-top: 1.4rem;
+    color: var(--ink-soft);
+  }
+
+  .place__photos {
+    display: grid;
+    gap: 1.2rem;
+  }
+
+  /*
+    Три кадра отеля — та же раскладка, что и на /island: крупный сверху,
+    два поменьше под ним. Модификатор передаём классом через class:list:
+    селектор вида «.stay__gallery > :first-child» до дочернего компонента
+    не достаёт — скоуп стилей Astro его туда не пускает.
+  */
+  .stay__gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+  }
+
+  /*
+    :global нужен по делу: класс лежит на корне компонента Photo, а скоуп
+    стилей Astro туда не достаёт — правило без :global просто не срабатывало,
+    и крупный кадр вставал в колонку наравне с мелкими.
+  */
+  .stay__gallery :global(.stay__photo--wide) {
+    grid-column: 1 / -1;
+  }
+
+  /* Стоимость */
+  .price__value {
+    margin-top: 1.2rem;
+    font-family: var(--font-display);
+    font-size: var(--step-4);
+    line-height: 1;
+  }
+
+  .price__list {
+    display: grid;
+    gap: 0.7rem;
+    max-width: 52ch;
+    margin-top: 1.8rem;
+  }
+
+  .price__cta {
+    margin-top: 2rem;
+    background: #fff;
+    color: var(--sea);
+  }
+
+  .price__cta:hover {
+    background: #ffe9c9;
+  }
+
+  /* Что уточняем */
+  .pending {
+    display: grid;
+    gap: 0.8rem;
+    max-width: 52ch;
+    margin-top: 1.8rem;
+  }
+
+  .pending li {
+    position: relative;
+    padding-left: 1.4rem;
+    color: var(--ink-soft);
+  }
+
+  .pending li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--laterite);
+  }
+
+  .pending__note {
+    max-width: 52ch;
+    margin-top: 1.6rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--rule);
+    font-size: var(--step--1);
+    color: var(--ink-mute);
+  }
+
+  /* Переход к мотопутешествию */
+  .cross {
+    background: var(--paper-warm);
+  }
+
+  .cross__inner {
+    text-align: center;
+  }
+
+  .cross__eyebrow {
+    font-size: var(--step--1);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .cross__title {
+    margin-top: 0.7rem;
+    font-size: var(--step-3);
+    text-transform: uppercase;
+  }
+
+  .cross__dates {
+    margin-top: 0.5rem;
+    color: var(--ink-soft);
+  }
+
+  .cross__text {
+    max-width: 48ch;
+    margin: 0.9rem auto 0;
+    color: var(--ink-soft);
+  }
+
+  .cross__cta {
+    margin-top: 1.6rem;
+  }
+
+  @media (min-width: 48rem) {
+    .leaders {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem 2.5rem;
+    }
+  }
+
+  @media (min-width: 60rem) {
+    .place,
+    .stay {
+      grid-template-columns: 1fr 1fr;
+      gap: 3.5rem;
+      align-items: center;
+    }
+
+    .practice {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 3.5rem;
+      align-items: start;
+    }
+
+    .rhythm {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0 2.5rem;
+    }
+
+    .rhythm__item {
+      border-bottom: 1px solid var(--rule);
+    }
+  }
+</style>
+
+<script>
+  import { bindAnalytics } from '../scripts/analytics';
+  import { initReveal } from '../scripts/reveal';
+
+  bindAnalytics();
+  initReveal();
+</script>
