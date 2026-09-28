@@ -44,8 +44,11 @@ jobs:
         run: npm run build
         env:
           # Custom Domain публикуется из корня cambodiamoto.ru.
-          SITE_URL: ${{ vars.SITE_URL || 'https://cambodiamoto.ru' }}
-          BASE_PATH: ${{ vars.BASE_PATH || '/' }}
+          # Этот Pages-проект привязан к отдельному домену. Старые переменные
+          # SITE_URL/BASE_PATH для проектного URL могут остаться в настройках
+          # репозитория и ломать пути к CSS, скриптам и фотографиям.
+          SITE_URL: https://cambodiamoto.ru
+          BASE_PATH: /
           # Поддерживаем новое и прежнее имя секрета приёмника заявок.
           PUBLIC_LEAD_FORM_ENDPOINT: ${{ secrets.PUBLIC_LEAD_FORM_ENDPOINT }}
           PUBLIC_LEAD_WEBHOOK_URL: ${{ secrets.PUBLIC_LEAD_WEBHOOK_URL }}
