@@ -47,9 +47,9 @@ const footerNav = [
 ];
 
 /**
- * schema.org. Блок offers намеренно отсутствует: стоимость отдельного
- * участия ещё не подтверждена, а Offer без цены поисковику бесполезен.
- * Появится цена — появится и offers.
+ * schema.org. Блок offers появляется только когда цена подтверждена:
+ * Offer без цены поисковику бесполезен, а выдуманная цена в разметке —
+ * это то же враньё, только невидимое посетителю.
  */
 const structuredData = [
   {
@@ -68,6 +68,17 @@ const structuredData = [
     },
     performer: retreatLeaders.map((l) => ({ '@type': 'Person', name: l.name })),
     organizer: { '@type': 'Organization', name: 'Vsemaya', url: trip.contacts.telegram },
+    ...(isReady(retreat.price.value)
+      ? {
+          offers: {
+            '@type': 'Offer',
+            price: String(retreat.price.amount),
+            priceCurrency: retreat.price.currency,
+            availability: 'https://schema.org/LimitedAvailability',
+            url: Astro.site ? new URL('/retreat', Astro.site).href : undefined,
+          },
+        }
+      : {}),
   },
   {
     '@context': 'https://schema.org',
@@ -268,24 +279,30 @@ const structuredData = [
 
         {
           isReady(retreat.price.value) ? (
-            <p class="price__value reveal">{retreat.price.value}</p>
+            <p class="price__value reveal">
+              <span>{retreat.price.value}</span>
+              <em>{retreat.price.note}</em>
+            </p>
           ) : (
             <p class="section__lead reveal">{retreat.price.ask}</p>
           )
         }
 
         {
-          isReady(retreat.price.included) && (
+          isReady(retreat.price.included) ? (
             <ul class="price__list reveal">
               {retreat.price.included.map((item) => (
                 <li>{item}</li>
               ))}
             </ul>
+          ) : (
+            /* Состава стоимости ещё нет — говорим об этом здесь и только здесь */
+            <p class="price__ask reveal">{retreat.price.ask}</p>
           )
         }
 
         <a class="btn price__cta reveal" href="#zayavka" data-analytics="price_cta_click">
-          {isReady(retreat.price.value) ? 'Оставить заявку' : retreat.price.cta}
+          {retreat.price.cta}
         </a>
       </div>
     </section>
@@ -542,10 +559,32 @@ const structuredData = [
 
   /* Стоимость */
   .price__value {
+    display: grid;
+    gap: 0.45rem;
     margin-top: 1.2rem;
+  }
+
+  .price__value span {
     font-family: var(--font-display);
     font-size: var(--step-4);
     line-height: 1;
+  }
+
+  /*
+    Условие размещения стоит крупным (--step-1, то есть 24px и выше):
+    на бирюзовом фоне мелкий текст не берёт 4,5:1 даже чисто белым —
+    см. комментарий к --sea-ink в global.css.
+  */
+  .price__value em {
+    font-style: normal;
+    font-size: var(--step-1);
+  }
+
+  .price__ask {
+    max-width: 52ch;
+    margin-top: 1.6rem;
+    font-size: var(--step-1);
+    line-height: 1.45;
   }
 
   .price__list {
