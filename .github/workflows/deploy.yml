@@ -53,6 +53,14 @@ jobs:
           PUBLIC_LEAD_FORM_ENDPOINT: ${{ secrets.PUBLIC_LEAD_FORM_ENDPOINT }}
           PUBLIC_LEAD_WEBHOOK_URL: ${{ secrets.PUBLIC_LEAD_WEBHOOK_URL }}
 
+      - name: Проверить доменные пути в сборке
+        run: |
+          if grep -q '/cambodia-2027/_astro/' dist/index.html; then
+            echo '::error::Сборка использует путь проектного сайта вместо корня домена'
+            exit 1
+          fi
+          grep -q 'href="https://cambodiamoto.ru/"' dist/index.html
+
       # enablement: true включает GitHub Pages сам, если он ещё не включён,
       # — чтобы не требовать ручного переключения в настройках репозитория.
       - uses: actions/configure-pages@v5
